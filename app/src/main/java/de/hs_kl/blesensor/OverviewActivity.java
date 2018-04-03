@@ -1,29 +1,34 @@
 package de.hs_kl.blesensor;
 
-import android.app.Activity;
+import android.app.Fragment;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-public class OverviewActivity extends Activity
+public class OverviewActivity extends AppCompatActivity
 {
     private final static int REQUEST_ENABLE_BT = 1;
 
     private BluetoothAdapter btAdapter;
+    private BLEScanner bleScanner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
+        setTitle(R.string.app_name);
 
         if (null != savedInstanceState) return;
 
         setupBluetoothAdapter();
         ensureBluetoothIsEnabled();
+
+        this.bleScanner = new BLEScanner(this.btAdapter.getBluetoothLeScanner());
     }
 
     private void setupBluetoothAdapter()
@@ -59,5 +64,19 @@ public class OverviewActivity extends Activity
 
         Toast.makeText(this, R.string.bt_was_not_enabled, Toast.LENGTH_SHORT).show();
         finish();
+    }
+
+    @Override
+    public void onAttachFragment(Fragment fragment)
+    {
+        if (fragment instanceof SearchSensorFragment)
+        {
+            handleAttachmentOfSearchSensorFragment((SearchSensorFragment)fragment);
+        }
+    }
+
+    private void handleAttachmentOfSearchSensorFragment(SearchSensorFragment fragment)
+    {
+        fragment.setBLEScanner(this.bleScanner);
     }
 }
