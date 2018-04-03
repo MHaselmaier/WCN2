@@ -6,23 +6,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Switch;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class ScanResultAdapter extends BaseAdapter
 {
-    private List<SensorData> sensorData;
     private Context context;
+    private TrackedSensorsStorage trackedSensorsStorage;
     private LayoutInflater inflater;
+    private List<SensorData> sensorData;
 
     public ScanResultAdapter(Context context, LayoutInflater inflater)
     {
         this.context = context;
+        this.trackedSensorsStorage = new TrackedSensorsStorage(this.context);
         this.inflater = inflater;
-        this.sensorData = new ArrayList<>();
+        this.sensorData = this.trackedSensorsStorage.getTrackedSensors();
     }
 
     @Override
@@ -54,6 +56,7 @@ public class ScanResultAdapter extends BaseAdapter
         TextView deviceNameView = view.findViewById(R.id.device_name);
         TextView deviceAddressView = view.findViewById(R.id.device_address);
         TextView lastSeenView = view.findViewById(R.id.last_seen);
+        Switch trackSwitch = view.findViewById(R.id.sensor_tracked);
 
         SensorData sensorData = this.sensorData.get(position);
 
@@ -65,11 +68,20 @@ public class ScanResultAdapter extends BaseAdapter
         deviceNameView.setText(name);
         deviceAddressView.setText(sensorData.getMacAddress());
         lastSeenView.setText(getTimeSinceString(sensorData.getTimestamp()));
+        trackSwitch.setChecked(this.trackedSensorsStorage.isTracked(sensorData));
+        trackSwitch.setText(trackSwitch.isChecked() ? R.string.sensor_tracked : R.string.sensor_not_tracked);
+        trackSwitch.setOnCheckedChangeListener(
+                new SensorTrackedChangeListener(this.trackedSensorsStorage, sensorData));
 
         return view;
     }
 
     private String getTimeSinceString(long timeNanoseconds) {
+        if (Long.MAX_VALUE == timeNanoseconds)
+        {
+            return this.context.getResources().getString(R.string.sensor_not_seen);
+        }
+
         String lastSeenText = this.context.getResources().getString(R.string.sensor_last_seen) + " ";
 
         long timeSince = SystemClock.elapsedRealtimeNanos() - timeNanoseconds;

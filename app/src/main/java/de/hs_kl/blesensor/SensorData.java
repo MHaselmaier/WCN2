@@ -33,19 +33,11 @@ public class SensorData
         this.batteryVoltage = calculateBatteryVoltage(rawData[8]);
     }
 
-    public SensorData(byte[] rawData)
+    public SensorData(String deviceName, String macAddress)
     {
-        this.deviceName = "";
-        this.macAddress = "00:00:00:00:00:00";
-        this.timestamp = 0;
-        this.rssi = 0;
-
-        this.companyID = (short)(rawData[0] << 8 | rawData[1]);
-        this.softwareID = rawData[2];
-        this.deviceID = rawData[3];
-        this.temperature = calculateTemperature(rawData[4], rawData[5]);
-        this.relativeHumidity = calculateRelativeHumidity(rawData[6], rawData[7]);
-        this.batteryVoltage = calculateBatteryVoltage(rawData[8]);
+        this.deviceName = deviceName;
+        this.macAddress = macAddress;
+        this.timestamp = Long.MAX_VALUE;
     }
 
     private float calculateTemperature(byte b1, byte b2)

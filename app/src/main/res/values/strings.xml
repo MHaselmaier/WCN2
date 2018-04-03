@@ -9,6 +9,7 @@
     <string name="no_sensors_found">Es wurden keine Sensoren gefunden.</string>
     <string name="sensor_without_name">(Unbenannt)</string>
 
+    <string name="sensor_not_seen">Nicht gefunden</string>
     <string name="sensor_last_seen">Zuletzt gesehen:</string>
     <string name="sensor_seen_just_now">gerade eben</string>
     <string name="sensor_seen_seconds_ago">vor %1$d Sekunden</string>
@@ -16,4 +17,7 @@
     <string name="sensor_seen_minutes_ago">vor %1$d Minuten</string>
     <string name="sensor_seen_an_hour_ago">vor einer Stunde</string>
     <string name="sensor_seen_hours_ago">vor %1$d Stunden</string>
+
+    <string name="sensor_tracked">Verfolgt</string>
+    <string name="sensor_not_tracked">Nicht Verfolgt</string>
 </resources>
