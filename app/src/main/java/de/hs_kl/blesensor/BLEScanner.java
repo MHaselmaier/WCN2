@@ -13,9 +13,6 @@ import java.util.List;
 
 public class BLEScanner
 {
-    // TODO: Set UUID
-    private final static String BLE_SENSOR_SERVICE_UUID = "0x00000000-0000-0000-0000-000000000000";
-
     private BluetoothLeScanner bleScanner;
 
     public BLEScanner(BluetoothLeScanner bleScanner)
@@ -53,7 +50,7 @@ public class BLEScanner
     {
         List<ScanFilter> scanFilters = new ArrayList<>();
         ScanFilter.Builder builder = new ScanFilter.Builder();
-        builder.setServiceUuid(ParcelUuid.fromString(BLEScanner.BLE_SENSOR_SERVICE_UUID));
+        builder.setManufacturerData(Constants.MANUFACTURER_ID, new byte[]{});
         scanFilters.add(builder.build());
         return scanFilters;
     }
@@ -64,7 +61,7 @@ public class BLEScanner
         for (String deviceAddress: deviceAddresses)
         {
             ScanFilter.Builder builder = new ScanFilter.Builder();
-            builder.setServiceUuid(ParcelUuid.fromString(BLEScanner.BLE_SENSOR_SERVICE_UUID));
+            builder.setManufacturerData(Constants.MANUFACTURER_ID, new byte[]{});
             builder.setDeviceAddress(deviceAddress);
             scanFilters.add(builder.build());
         }

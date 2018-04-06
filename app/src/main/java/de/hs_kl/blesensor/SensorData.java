@@ -1,16 +1,14 @@
 package de.hs_kl.blesensor;
 
 import android.bluetooth.le.ScanResult;
+import android.util.Log;
 
 public class SensorData
 {
-    private static final int MANUFACTURER_ID = 0xFFFF;
-
     private String deviceName;
     private String macAddress;
     private long timestamp;
     private int rssi;
-    private short companyID;
     private byte softwareID;
     private byte deviceID;
     private float temperature;
@@ -24,13 +22,15 @@ public class SensorData
         this.timestamp = result.getTimestampNanos();
         this.rssi = result.getRssi();
 
-        byte[] rawData = result.getScanRecord().getManufacturerSpecificData(SensorData.MANUFACTURER_ID);
-        this.companyID = (short)(rawData[0] << 8 | rawData[1]);
-        this.softwareID = rawData[2];
-        this.deviceID = rawData[3];
-        this.temperature = calculateTemperature(rawData[4], rawData[5]);
-        this.relativeHumidity = calculateRelativeHumidity(rawData[6], rawData[7]);
-        this.batteryVoltage = calculateBatteryVoltage(rawData[8]);
+        byte[] rawData = result.getScanRecord().getManufacturerSpecificData(Constants.MANUFACTURER_ID);
+        if (null != rawData && 7 == rawData.length)
+        {
+            this.softwareID = rawData[0];
+            this.deviceID = rawData[1];
+            this.temperature = calculateTemperature(rawData[2], rawData[3]);
+            this.relativeHumidity = calculateRelativeHumidity(rawData[4], rawData[5]);
+            this.batteryVoltage = calculateBatteryVoltage(rawData[6]);
+        }
     }
 
     public SensorData(String deviceName, String macAddress)
@@ -52,7 +52,7 @@ public class SensorData
 
     private float calculateBatteryVoltage(byte b)
     {
-        return b * 4f / 225f;
+        return (b & 0xFF) * 4f / 225f;
     }
 
     public String getDeviceName()
@@ -96,7 +96,6 @@ public class SensorData
                 "\tMAC-Address: " + this.macAddress + "\n" +
                 "\tTimestamp: " + this.timestamp + "\n" +
                 "\tRSSI: " + this.rssi + "dBm\n" +
-                "\tCompanyID: " + this.companyID + "\n" +
                 "\tSoftwareID: " + this.softwareID + "\n" +
                 "\tDeviceID: " + this.deviceID + "\n" +
                 "\tTemperature: " + this.temperature + "°C\n" +
