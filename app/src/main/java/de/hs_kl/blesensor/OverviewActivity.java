@@ -1,6 +1,5 @@
 package de.hs_kl.blesensor;
 
-import android.app.Fragment;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
@@ -9,12 +8,17 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class OverviewActivity extends AppCompatActivity
 {
     private final static int REQUEST_ENABLE_BT = 1;
 
     private BluetoothAdapter btAdapter;
     private BLEScanner bleScanner;
+
+    private List<BLEScannerChangedListener> bleScannerChangedListeners = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -23,12 +27,8 @@ public class OverviewActivity extends AppCompatActivity
         setContentView(R.layout.activity_overview);
         setTitle(R.string.app_name);
 
-        if (null != savedInstanceState) return;
-
         setupBluetoothAdapter();
         ensureBluetoothIsEnabled();
-
-        this.bleScanner = new BLEScanner(this.btAdapter.getBluetoothLeScanner());
     }
 
     private void setupBluetoothAdapter()
@@ -39,10 +39,15 @@ public class OverviewActivity extends AppCompatActivity
 
     private void ensureBluetoothIsEnabled()
     {
-        if (this.btAdapter.isEnabled()) return;
-
-        Intent enableBluetoothIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-        startActivityForResult(enableBluetoothIntent, OverviewActivity.REQUEST_ENABLE_BT);
+        if (this.btAdapter.isEnabled())
+        {
+            createBLEScannerAndNotifyBLEScannerChangedListeners();
+        }
+        else
+        {
+            Intent enableBluetoothIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBluetoothIntent, OverviewActivity.REQUEST_ENABLE_BT);
+        }
     }
 
     @Override
@@ -60,23 +65,39 @@ public class OverviewActivity extends AppCompatActivity
 
     private void handleBluetoothEnableRequest(int resultCode)
     {
-        if (RESULT_OK == resultCode) return;
-
-        Toast.makeText(this, R.string.bt_was_not_enabled, Toast.LENGTH_SHORT).show();
-        finish();
-    }
-
-    @Override
-    public void onAttachFragment(Fragment fragment)
-    {
-        if (fragment instanceof SearchSensorFragment)
+        if (RESULT_OK == resultCode)
         {
-            handleAttachmentOfSearchSensorFragment((SearchSensorFragment)fragment);
+            createBLEScannerAndNotifyBLEScannerChangedListeners();
+        }
+        else
+        {
+            Toast.makeText(this, R.string.bt_was_not_enabled, Toast.LENGTH_SHORT).show();
+            finish();
         }
     }
 
-    private void handleAttachmentOfSearchSensorFragment(SearchSensorFragment fragment)
+    private void createBLEScannerAndNotifyBLEScannerChangedListeners()
     {
-        fragment.setBLEScanner(this.bleScanner);
+        this.bleScanner = new BLEScanner(this.btAdapter.getBluetoothLeScanner());
+        notifyBLEScannerChangedListeners();
+    }
+
+    private void notifyBLEScannerChangedListeners()
+    {
+        for (BLEScannerChangedListener listener: this.bleScannerChangedListeners)
+        {
+            listener.onBLEScannerChanged(this.bleScanner);
+        }
+    }
+
+    public void registerBLEScannerChangedListener(BLEScannerChangedListener listener)
+    {
+        listener.onBLEScannerChanged(this.bleScanner);
+        this.bleScannerChangedListeners.add(listener);
+    }
+
+    public void unregisterBLEScannerChangedListener(BLEScannerChangedListener listener)
+    {
+        this.bleScannerChangedListeners.remove(listener);
     }
 }

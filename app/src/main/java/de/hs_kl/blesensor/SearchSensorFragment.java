@@ -1,9 +1,9 @@
 package de.hs_kl.blesensor;
 
+import android.app.Activity;
 import android.app.ListFragment;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
-import android.bluetooth.le.ScanSettings;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,14 +12,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class SearchSensorFragment extends ListFragment
+public class SearchSensorFragment extends ListFragment implements BLEScannerChangedListener
 {
     private BLEScanner bleScanner;
 
@@ -83,8 +80,17 @@ public class SearchSensorFragment extends ListFragment
         }
     };
 
-    public void setBLEScanner(BLEScanner bleScanner)
+    @Override
+    public void onBLEScannerChanged(BLEScanner bleScanner)
     {
+        if (null != this.bleScanner)
+        {
+            this.bleScanner.stopScanning();
+        }
+        if (isVisible() && null != bleScanner)
+        {
+            bleScanner.scanForSensors(this.scanCallback);
+        }
         this.bleScanner = bleScanner;
     }
 
@@ -119,8 +125,6 @@ public class SearchSensorFragment extends ListFragment
         getListView().setDividerHeight(0);
 
         setEmptyText(getString(R.string.no_sensors_found));
-
-        this.bleScanner.scanForSensors(this.scanCallback);
     }
 
     @Override
@@ -136,11 +140,30 @@ public class SearchSensorFragment extends ListFragment
         switch(item.getItemId())
         {
             case R.id.refresh:
-                this.bleScanner.scanForSensors(this.scanCallback);
-                Toast.makeText(getActivity(), R.string.scan_stated, Toast.LENGTH_LONG);
+                if (null != this.bleScanner)
+                {
+                    this.bleScanner.scanForSensors(this.scanCallback);
+                    Toast.makeText(getActivity(), R.string.scan_stated, Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    Toast.makeText(getActivity(), R.string.scan_failed, Toast.LENGTH_LONG).show();
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        Activity activity = getActivity();
+        if (activity instanceof OverviewActivity)
+        {
+            ((OverviewActivity)activity).registerBLEScannerChangedListener(this);
         }
     }
 
@@ -149,6 +172,15 @@ public class SearchSensorFragment extends ListFragment
     {
         super.onPause();
 
-        this.bleScanner.stopScanning();
+        Activity activity = getActivity();
+        if (activity instanceof OverviewActivity)
+        {
+            ((OverviewActivity)activity).unregisterBLEScannerChangedListener(this);
+        }
+
+        if (null != this.bleScanner)
+        {
+            this.bleScanner.stopScanning();
+        }
     }
 }
