@@ -1,126 +1,55 @@
 package de.hs_kl.blesensor;
 
 import android.app.Activity;
-import android.bluetooth.le.ScanCallback;
+import android.app.FragmentTransaction;
+import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SensorTrackingFragment extends Fragment implements BLEScannerChangedListener
+public class SensorTrackingFragment extends Fragment implements ScanResultListener
 {
-    private BLEScanner bleScanner;
     private List<SensorData> trackedSensors;
 
     private LinearLayout trackedSensorViews;
 
-    private ScanCallback scanCallback = new ScanCallback()
+    @Override
+    public List<ScanFilter> getScanFilter()
     {
-        @Override
-        public void onBatchScanResults(List<ScanResult> results)
+        List<ScanFilter> scanFilters = new ArrayList<>();
+        for (SensorData sensorData: this.trackedSensors)
         {
-            super.onBatchScanResults(results);
-
-            for (ScanResult result: results)
-            {
-                SensorData data = new SensorData(result);
-
-                boolean found = false;
-                for (int i = 0; SensorTrackingFragment.this.trackedSensors.size() > i; ++i)
-                {
-                    if (SensorTrackingFragment.this.trackedSensors.get(i).getMacAddress()
-                            .equals(data.getMacAddress()))
-                    {
-                        SensorTrackingFragment.this.trackedSensors.set(i, data);
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found)
-                {
-                    SensorTrackingFragment.this.trackedSensors.add(data);
-                }
-
-                Log.d(SensorTrackingFragment.class.getSimpleName(), data.toString());
-            }
-            SensorTrackingFragment.this.showTrackedSensors();
+            ScanFilter.Builder builder = new ScanFilter.Builder();
+            builder.setDeviceAddress(sensorData.getMacAddress());
+            scanFilters.add(builder.build());
         }
-
-        @Override
-        public void onScanResult(int callbackType, ScanResult result)
-        {
-            super.onScanResult(callbackType, result);
-
-            SensorData data = new SensorData(result);
-
-            boolean found = false;
-            for (int i = 0; SensorTrackingFragment.this.trackedSensors.size() > i; ++i)
-            {
-                if (SensorTrackingFragment.this.trackedSensors.get(i).getMacAddress()
-                        .equals(data.getMacAddress()))
-                {
-                    SensorTrackingFragment.this.trackedSensors.set(i, data);
-                    found = true;
-                    break;
-                }
-            }
-            if (!found)
-            {
-                SensorTrackingFragment.this.trackedSensors.add(data);
-            }
-
-            Log.d(SensorTrackingFragment.class.getSimpleName(), data.toString());
-            SensorTrackingFragment.this.showTrackedSensors();
-        }
-
-        @Override
-        public void onScanFailed(int errorCode)
-        {
-            super.onScanFailed(errorCode);
-            switch(errorCode)
-            {
-                case SCAN_FAILED_APPLICATION_REGISTRATION_FAILED:
-                    Log.d(SearchSensorFragment.class.getSimpleName(),
-                            "Failed to start scanning: app cannot be registered!");
-                    break;
-                case SCAN_FAILED_FEATURE_UNSUPPORTED:
-                    Log.d(SearchSensorFragment.class.getSimpleName(),
-                            "Failed to start scanning: power optimized scan not supported!");
-                    break;
-                case SCAN_FAILED_INTERNAL_ERROR:
-                    Log.d(SearchSensorFragment.class.getSimpleName(),
-                            "Failed to start scanning: internal error!");
-                    break;
-                default:
-                    Log.d(SearchSensorFragment.class.getSimpleName(),
-                            "Failed to start scanning!");
-                    break;
-            }
-        }
-    };
+        return scanFilters;
+    }
 
     @Override
-    public void onBLEScannerChanged(BLEScanner bleScanner)
+    public void onScanResult(ScanResult result)
     {
-        if (null != this.bleScanner)
+        SensorData sensorData = new SensorData(result);
+        for (int i = 0; this.trackedSensors.size() > i; ++i)
         {
-            this.bleScanner.stopScanning();
+            if (this.trackedSensors.get(i).getMacAddress().equals(sensorData.getMacAddress()))
+            {
+                this.trackedSensors.set(i, sensorData);
+                showTrackedSensors();
+                return;
+            }
         }
-        if (isVisible() && null != bleScanner)
-        {
-            bleScanner.scanForSensors(this.scanCallback);
-        }
-        this.bleScanner = bleScanner;
     }
 
     @Override
@@ -146,6 +75,22 @@ public class SensorTrackingFragment extends Fragment implements BLEScannerChange
         LinearLayout trackedSensors = view.findViewById(R.id.tracked_sensors);
         trackedSensors.addView(scrollView);
 
+        ImageButton edit = view.findViewById(R.id.edit_tracked_sensors);
+        edit.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (MotionEvent.ACTION_DOWN == event.getAction())
+                {
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.fragment, new SearchSensorFragment());
+                    ft.addToBackStack(null);
+                    ft.commit();
+                    return true;
+                }
+                return false;
+            }
+        });
+
         return view;
     }
 
@@ -154,15 +99,10 @@ public class SensorTrackingFragment extends Fragment implements BLEScannerChange
     {
         super.onResume();
 
-        Activity activity = getActivity();
-        if (activity instanceof OverviewActivity)
-        {
-            ((OverviewActivity)activity).registerBLEScannerChangedListener(this);
-        }
+        BLEScanner.registerScanResultListener(this);
 
         this.trackedSensors = TrackedSensorsStorage.getTrackedSensors(getActivity());
         showTrackedSensors();
-        scanForSensorData();
     }
 
     @Override
@@ -170,16 +110,7 @@ public class SensorTrackingFragment extends Fragment implements BLEScannerChange
     {
         super.onPause();
 
-        Activity activity = getActivity();
-        if (activity instanceof OverviewActivity)
-        {
-            ((OverviewActivity)activity).unregisterBLEScannerChangedListener(this);
-        }
-
-        if (null != this.bleScanner)
-        {
-            this.bleScanner.stopScanning();
-        }
+        BLEScanner.unregisterScanResultListener(this);
     }
 
     private void showTrackedSensors()
@@ -203,20 +134,6 @@ public class SensorTrackingFragment extends Fragment implements BLEScannerChange
             batteryLevel.setText(getResources().getString(R.string.battery_voltage, sensorData.getBatteryVoltage()));
 
             this.trackedSensorViews.addView(tracked_sensor_overview);
-        }
-    }
-
-    private void scanForSensorData()
-    {
-        if (null != this.bleScanner)
-        {
-            List<String> deviceAddresses = new ArrayList<>();
-            for (SensorData sensorData : this.trackedSensors)
-            {
-                deviceAddresses.add(sensorData.getMacAddress());
-            }
-
-            this.bleScanner.scanForSensorData(this.scanCallback, deviceAddresses);
         }
     }
 }

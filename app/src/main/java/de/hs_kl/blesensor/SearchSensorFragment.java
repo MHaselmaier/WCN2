@@ -1,97 +1,31 @@
 package de.hs_kl.blesensor;
 
-import android.app.Activity;
 import android.app.ListFragment;
-import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class SearchSensorFragment extends ListFragment implements BLEScannerChangedListener
+public class SearchSensorFragment extends ListFragment implements ScanResultListener
 {
-    private BLEScanner bleScanner;
-
     private ScanResultAdapter scanResultAdapter;
 
-    private ScanCallback scanCallback = new ScanCallback()
+    @Override
+    public List<ScanFilter> getScanFilter()
     {
-        @Override
-        public void onBatchScanResults(List<ScanResult> results)
-        {
-            super.onBatchScanResults(results);
-
-            for (ScanResult result: results)
-            {
-                SensorData data = new SensorData(result);
-                SearchSensorFragment.this.scanResultAdapter.add(data);
-                Log.d(SearchSensorFragment.class.getSimpleName(), data.toString());
-            }
-            SearchSensorFragment.this.scanResultAdapter.notifyDataSetChanged();
-        }
-
-        @Override
-        public void onScanResult(int callbackType, ScanResult result)
-        {
-            super.onScanResult(callbackType, result);
-
-            SensorData data = new SensorData(result);
-            SearchSensorFragment.this.scanResultAdapter.add(data);
-            SearchSensorFragment.this.scanResultAdapter.notifyDataSetChanged();
-            Log.d(SearchSensorFragment.class.getSimpleName(), data.toString());
-        }
-
-        @Override
-        public void onScanFailed(int errorCode)
-        {
-            super.onScanFailed(errorCode);
-            switch(errorCode)
-            {
-                case SCAN_FAILED_ALREADY_STARTED:
-                    Log.d(SearchSensorFragment.class.getSimpleName(),
-                            "Failed to start scanning: already scanning!");
-                    break;
-                case SCAN_FAILED_APPLICATION_REGISTRATION_FAILED:
-                    Log.d(SearchSensorFragment.class.getSimpleName(),
-                            "Failed to start scanning: app cannot be registered!");
-                    break;
-                case SCAN_FAILED_FEATURE_UNSUPPORTED:
-                    Log.d(SearchSensorFragment.class.getSimpleName(),
-                            "Failed to start scanning: power optimized scan not supported!");
-                    break;
-                case SCAN_FAILED_INTERNAL_ERROR:
-                    Log.d(SearchSensorFragment.class.getSimpleName(),
-                            "Failed to start scanning: internal error!");
-                    break;
-                default:
-                    Log.d(SearchSensorFragment.class.getSimpleName(),
-                            "Failed to start scanning!");
-                    break;
-            }
-            Toast.makeText(getActivity(), R.string.scan_failed, Toast.LENGTH_LONG).show();
-        }
-    };
+        return new ArrayList<>();
+    }
 
     @Override
-    public void onBLEScannerChanged(BLEScanner bleScanner)
+    public void onScanResult(ScanResult result)
     {
-        if (null != this.bleScanner)
-        {
-            this.bleScanner.stopScanning();
-        }
-        if (isVisible() && null != bleScanner)
-        {
-            bleScanner.scanForSensors(this.scanCallback);
-        }
-        this.bleScanner = bleScanner;
+        this.scanResultAdapter.add(new SensorData(result));
+        this.scanResultAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -128,43 +62,11 @@ public class SearchSensorFragment extends ListFragment implements BLEScannerChan
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.search_sensor_menu, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch(item.getItemId())
-        {
-            case R.id.refresh:
-                if (null != this.bleScanner)
-                {
-                    this.bleScanner.scanForSensors(this.scanCallback);
-                    Toast.makeText(getActivity(), R.string.scan_stated, Toast.LENGTH_LONG).show();
-                }
-                else
-                {
-                    Toast.makeText(getActivity(), R.string.scan_failed, Toast.LENGTH_LONG).show();
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
     public void onResume()
     {
         super.onResume();
 
-        Activity activity = getActivity();
-        if (activity instanceof OverviewActivity)
-        {
-            ((OverviewActivity)activity).registerBLEScannerChangedListener(this);
-        }
+        BLEScanner.registerScanResultListener(this);
     }
 
     @Override
@@ -172,15 +74,6 @@ public class SearchSensorFragment extends ListFragment implements BLEScannerChan
     {
         super.onPause();
 
-        Activity activity = getActivity();
-        if (activity instanceof OverviewActivity)
-        {
-            ((OverviewActivity)activity).unregisterBLEScannerChangedListener(this);
-        }
-
-        if (null != this.bleScanner)
-        {
-            this.bleScanner.stopScanning();
-        }
+        BLEScanner.unregisterScanResultListener(this);
     }
 }

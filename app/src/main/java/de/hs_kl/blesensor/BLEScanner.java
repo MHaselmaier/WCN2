@@ -3,50 +3,138 @@ package de.hs_kl.blesensor;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
+import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.os.Build;
-import android.os.Handler;
-import android.os.ParcelUuid;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class BLEScanner
 {
-    private BluetoothLeScanner bleScanner;
+    private static BluetoothLeScanner bleScanner;
+    private static Set<ScanResultListener> scanResultListeners = new HashSet<>();
 
-    public BLEScanner(BluetoothLeScanner bleScanner)
-    {
-        this.bleScanner = bleScanner;
-    }
-
-    public void scanForSensors(ScanCallback callback)
-    {
-        scanForSensorsForXMillis(callback, 10000);
-    }
-
-    public void scanForSensorsForXMillis(final ScanCallback callback, int millis)
-    {
-        this.bleScanner.startScan(buildScanFilters(), buildScanSettings(), callback);
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable()
+    private static ScanCallback scanCallback = new ScanCallback() {
+        @Override
+        public void onBatchScanResults(List<ScanResult> results)
         {
-            @Override
-            public void run()
+            super.onBatchScanResults(results);
+
+            for (ScanResult result: results)
             {
-                BLEScanner.this.bleScanner.stopScan(callback);
+                dispatchScanResult(result);
             }
-        }, millis);
-    }
+        }
 
-    public void scanForSensorData(ScanCallback callback, List<String> deviceAddresses)
+        @Override
+        public void onScanResult(int callbackType, ScanResult result)
+        {
+            super.onScanResult(callbackType, result);
+
+            dispatchScanResult(result);
+        }
+
+        private void dispatchScanResult(ScanResult result)
+        {
+            for (ScanResultListener listener: BLEScanner.scanResultListeners)
+            {
+                if (0 == listener.getScanFilter().size())
+                {
+                    listener.onScanResult(result);
+                    continue;
+                }
+                for (ScanFilter scanFilter: listener.getScanFilter())
+                {
+                    if (scanFilter.matches(result))
+                    {
+                        listener.onScanResult(result);
+                        break;
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void onScanFailed(int errorCode)
+        {
+            super.onScanFailed(errorCode);
+            switch(errorCode)
+            {
+                case SCAN_FAILED_ALREADY_STARTED:
+                    Log.d(SearchSensorFragment.class.getSimpleName(),
+                            "Failed to start scanning: already scanning!");
+                    break;
+                case SCAN_FAILED_APPLICATION_REGISTRATION_FAILED:
+                    Log.d(SearchSensorFragment.class.getSimpleName(),
+                            "Failed to start scanning: app cannot be registered!");
+                    break;
+                case SCAN_FAILED_FEATURE_UNSUPPORTED:
+                    Log.d(SearchSensorFragment.class.getSimpleName(),
+                            "Failed to start scanning: power optimized scan not supported!");
+                    break;
+                case SCAN_FAILED_INTERNAL_ERROR:
+                    Log.d(SearchSensorFragment.class.getSimpleName(),
+                            "Failed to start scanning: internal error!");
+                    break;
+                default:
+                    Log.d(SearchSensorFragment.class.getSimpleName(),
+                            "Failed to start scanning!");
+                    break;
+            }
+        }
+    };
+
+    public static void setBluetoothLeScanner(BluetoothLeScanner bleScanner)
     {
-        List<ScanFilter> filters = buildScanFiltersForSpecificDevices(deviceAddresses);
-        ScanSettings settings = buildScanSettings();
-        this.bleScanner.startScan(filters, settings, callback);
+        BLEScanner.stopScan();
+        BLEScanner.bleScanner = bleScanner;
+        if (0 < BLEScanner.scanResultListeners.size())
+        {
+            BLEScanner.startScan();
+        }
     }
 
-    private List<ScanFilter> buildScanFilters()
+    public static void registerScanResultListener(ScanResultListener scanResultlistener)
+    {
+        BLEScanner.scanResultListeners.add(scanResultlistener);
+
+        if (1 == BLEScanner.scanResultListeners.size())
+        {
+            BLEScanner.startScan();
+        }
+    }
+
+    public static void unregisterScanResultListener(ScanResultListener scanResultListener)
+    {
+        BLEScanner.scanResultListeners.remove(scanResultListener);
+
+        if (0 == BLEScanner.scanResultListeners.size())
+        {
+            BLEScanner.stopScan();
+        }
+    }
+
+    private static void startScan()
+    {
+        if (null != BLEScanner.bleScanner)
+        {
+            BLEScanner.bleScanner.startScan(getScanFilters(), getScanSettings(), BLEScanner.scanCallback);
+        }
+    }
+
+    private static void stopScan()
+    {
+        if (null != BLEScanner.bleScanner)
+        {
+            BLEScanner.bleScanner.stopScan(BLEScanner.scanCallback);
+        }
+    }
+
+    private static List<ScanFilter> getScanFilters()
     {
         List<ScanFilter> scanFilters = new ArrayList<>();
         ScanFilter.Builder builder = new ScanFilter.Builder();
@@ -55,45 +143,22 @@ public class BLEScanner
         return scanFilters;
     }
 
-    private List<ScanFilter> buildScanFiltersForSpecificDevices(List<String> deviceAddresses)
-    {
-        List<ScanFilter> scanFilters = new ArrayList<>();
-        for (String deviceAddress: deviceAddresses)
-        {
-            ScanFilter.Builder builder = new ScanFilter.Builder();
-            builder.setManufacturerData(Constants.MANUFACTURER_ID, new byte[]{});
-            builder.setDeviceAddress(deviceAddress);
-            scanFilters.add(builder.build());
-        }
-        return scanFilters;
-    }
-
-    private ScanSettings buildScanSettings()
+    private static ScanSettings getScanSettings()
     {
         ScanSettings.Builder builder = new ScanSettings.Builder();
-        builder.setReportDelay(0);
+        builder.setReportDelay(10);
         builder.setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY);
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
         {
             builder.setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES);
             builder.setMatchMode(ScanSettings.MATCH_MODE_AGGRESSIVE);
             builder.setNumOfMatches(ScanSettings.MATCH_NUM_MAX_ADVERTISEMENT);
         }
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         {
             builder.setLegacy(false);
             builder.setPhy(ScanSettings.PHY_LE_ALL_SUPPORTED);
         }
         return builder.build();
-    }
-
-    public void stopScanning()
-    {
-        stopScanning(null);
-    }
-
-    public void stopScanning(ScanCallback callback)
-    {
-        this.bleScanner.stopScan(callback);
     }
 }

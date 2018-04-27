@@ -9,17 +9,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class OverviewActivity extends AppCompatActivity
 {
-    private final static int REQUEST_ENABLE_BT = 1;
-
     private BluetoothAdapter btAdapter;
-    private BLEScanner bleScanner;
-
-    private List<BLEScannerChangedListener> bleScannerChangedListeners = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -47,19 +39,19 @@ public class OverviewActivity extends AppCompatActivity
     {
         if (this.btAdapter.isEnabled())
         {
-            createBLEScannerAndNotifyBLEScannerChangedListeners();
+            BLEScanner.setBluetoothLeScanner(this.btAdapter.getBluetoothLeScanner());
         }
         else
         {
             Intent enableBluetoothIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBluetoothIntent, OverviewActivity.REQUEST_ENABLE_BT);
+            startActivityForResult(enableBluetoothIntent, Constants.REQUEST_ENABLE_BT);
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent)
     {
-        if (OverviewActivity.REQUEST_ENABLE_BT == requestCode)
+        if (Constants.REQUEST_ENABLE_BT == requestCode)
         {
             handleBluetoothEnableRequest(resultCode);
         }
@@ -73,37 +65,12 @@ public class OverviewActivity extends AppCompatActivity
     {
         if (RESULT_OK == resultCode)
         {
-            createBLEScannerAndNotifyBLEScannerChangedListeners();
+            BLEScanner.setBluetoothLeScanner(this.btAdapter.getBluetoothLeScanner());
         }
         else
         {
             Toast.makeText(this, R.string.bt_was_not_enabled, Toast.LENGTH_SHORT).show();
             finish();
         }
-    }
-
-    private void createBLEScannerAndNotifyBLEScannerChangedListeners()
-    {
-        this.bleScanner = new BLEScanner(this.btAdapter.getBluetoothLeScanner());
-        notifyBLEScannerChangedListeners();
-    }
-
-    private void notifyBLEScannerChangedListeners()
-    {
-        for (BLEScannerChangedListener listener: this.bleScannerChangedListeners)
-        {
-            listener.onBLEScannerChanged(this.bleScanner);
-        }
-    }
-
-    public void registerBLEScannerChangedListener(BLEScannerChangedListener listener)
-    {
-        listener.onBLEScannerChanged(this.bleScanner);
-        this.bleScannerChangedListeners.add(listener);
-    }
-
-    public void unregisterBLEScannerChangedListener(BLEScannerChangedListener listener)
-    {
-        this.bleScannerChangedListeners.remove(listener);
     }
 }
