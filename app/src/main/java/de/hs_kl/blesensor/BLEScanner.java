@@ -130,7 +130,11 @@ public class BLEScanner
     {
         if (null != BLEScanner.bleScanner)
         {
-            BLEScanner.bleScanner.stopScan(BLEScanner.scanCallback);
+            try
+            {
+                BLEScanner.bleScanner.stopScan(BLEScanner.scanCallback);
+            }
+            catch(IllegalStateException e) {}
         }
     }
 

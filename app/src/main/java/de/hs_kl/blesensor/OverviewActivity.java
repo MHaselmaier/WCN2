@@ -3,8 +3,10 @@ package de.hs_kl.blesensor;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
@@ -12,6 +14,19 @@ import android.widget.Toast;
 public class OverviewActivity extends AppCompatActivity
 {
     private BluetoothAdapter btAdapter;
+    private BroadcastReceiver btAdapterChangeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+            int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+            if (BluetoothAdapter.STATE_OFF == state)
+            {
+                BLEScanner.setBluetoothLeScanner(null);
+                Intent enableBluetoothIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBluetoothIntent, Constants.REQUEST_ENABLE_BT);
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -20,6 +35,7 @@ public class OverviewActivity extends AppCompatActivity
         setContentView(R.layout.activity_overview);
         setTitle(R.string.app_name);
 
+        registerReceiver(this.btAdapterChangeReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
         setupBluetoothAdapter();
         ensureBluetoothIsEnabled();
 
@@ -72,5 +88,13 @@ public class OverviewActivity extends AppCompatActivity
             Toast.makeText(this, R.string.bt_was_not_enabled, Toast.LENGTH_SHORT).show();
             finish();
         }
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+
+        unregisterReceiver(this.btAdapterChangeReceiver);
     }
 }
