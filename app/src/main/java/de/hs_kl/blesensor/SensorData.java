@@ -90,6 +90,11 @@ public class SensorData
         return this.relativeHumidity;
     }
 
+    public float getBatteryVoltage()
+    {
+        return batteryVoltage;
+    }
+
     public String toString()
     {
         return "SensorData:\n" +

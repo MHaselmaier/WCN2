@@ -1,5 +1,6 @@
 package de.hs_kl.blesensor;
 
+import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
@@ -29,6 +30,11 @@ public class OverviewActivity extends AppCompatActivity
 
         setupBluetoothAdapter();
         ensureBluetoothIsEnabled();
+
+
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.fragment, new SensorTrackingFragment());
+        ft.commit();
     }
 
     private void setupBluetoothAdapter()

@@ -11,18 +11,12 @@ public class TrackedSensorsStorage
 {
     private final static String TRACKED_SENSORS_PREFERENCES = "tracked_sensors";
 
-    private SharedPreferences sharedPreferences;
-
-    public TrackedSensorsStorage(Context context)
+    public static List<SensorData> getTrackedSensors(Context context)
     {
-        this.sharedPreferences = context.getSharedPreferences(TrackedSensorsStorage.TRACKED_SENSORS_PREFERENCES,
-                Context.MODE_PRIVATE);
-    }
-
-    public List<SensorData> getTrackedSensors()
-    {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(TrackedSensorsStorage.TRACKED_SENSORS_PREFERENCES,
+                                                         Context.MODE_PRIVATE);
         List<SensorData> trackedSensors = new ArrayList<>();
-        for (Map.Entry<String, ?> entry: this.sharedPreferences.getAll().entrySet())
+        for (Map.Entry<String, ?> entry: sharedPreferences.getAll().entrySet())
         {
             String macAddress = entry.getKey();
             String deviceName = (String)entry.getValue();
@@ -31,22 +25,28 @@ public class TrackedSensorsStorage
         return trackedSensors;
     }
 
-    public void trackSensor(SensorData sensorData)
+    public static void trackSensor(Context context, SensorData sensorData)
     {
-        SharedPreferences.Editor editor = this.sharedPreferences.edit();
+        SharedPreferences sharedPreferences = context.getSharedPreferences(TrackedSensorsStorage.TRACKED_SENSORS_PREFERENCES,
+                                                        Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(sensorData.getMacAddress(), sensorData.getDeviceName());
         editor.commit();
     }
 
-    public void untrackSensor(SensorData sensorData)
+    public static void untrackSensor(Context context, SensorData sensorData)
     {
-        SharedPreferences.Editor editor = this.sharedPreferences.edit();
+        SharedPreferences sharedPreferences = context.getSharedPreferences(TrackedSensorsStorage.TRACKED_SENSORS_PREFERENCES,
+                                                        Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(sensorData.getMacAddress());
         editor.commit();
     }
 
-    public boolean isTracked(SensorData sensorData)
+    public static boolean isTracked(Context context, SensorData sensorData)
     {
-        return this.sharedPreferences.contains(sensorData.getMacAddress());
+        SharedPreferences sharedPreferences = context.getSharedPreferences(TrackedSensorsStorage.TRACKED_SENSORS_PREFERENCES,
+                                                        Context.MODE_PRIVATE);
+        return sharedPreferences.contains(sensorData.getMacAddress());
     }
 }

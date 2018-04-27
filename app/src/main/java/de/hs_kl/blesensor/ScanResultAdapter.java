@@ -15,16 +15,14 @@ import java.util.concurrent.TimeUnit;
 public class ScanResultAdapter extends BaseAdapter
 {
     private Context context;
-    private TrackedSensorsStorage trackedSensorsStorage;
     private LayoutInflater inflater;
     private List<SensorData> sensorData;
 
     public ScanResultAdapter(Context context, LayoutInflater inflater)
     {
         this.context = context;
-        this.trackedSensorsStorage = new TrackedSensorsStorage(this.context);
         this.inflater = inflater;
-        this.sensorData = this.trackedSensorsStorage.getTrackedSensors();
+        this.sensorData = TrackedSensorsStorage.getTrackedSensors(this.context);
     }
 
     @Override
@@ -67,72 +65,13 @@ public class ScanResultAdapter extends BaseAdapter
         }
         deviceNameView.setText(name);
         deviceAddressView.setText(sensorData.getMacAddress());
-        lastSeenView.setText(getTimeSinceString(sensorData.getTimestamp()));
-        trackSwitch.setChecked(this.trackedSensorsStorage.isTracked(sensorData));
+        lastSeenView.setText(LastSeenSinceUtil.getTimeSinceString(this.context, sensorData.getTimestamp()));
+        trackSwitch.setChecked(TrackedSensorsStorage.isTracked(this.context, sensorData));
         trackSwitch.setText(trackSwitch.isChecked() ? R.string.sensor_tracked : R.string.sensor_not_tracked);
         trackSwitch.setOnCheckedChangeListener(
-                new SensorTrackedChangeListener(this.trackedSensorsStorage, sensorData));
+                new SensorTrackedChangeListener(this.context, sensorData));
 
         return view;
-    }
-
-    private String getTimeSinceString(long timeNanoseconds) {
-        if (Long.MAX_VALUE == timeNanoseconds)
-        {
-            return this.context.getResources().getString(R.string.sensor_not_seen);
-        }
-
-        String lastSeenText = this.context.getResources().getString(R.string.sensor_last_seen) + " ";
-
-        long timeSince = SystemClock.elapsedRealtimeNanos() - timeNanoseconds;
-        long secondsSince = TimeUnit.SECONDS.convert(timeSince, TimeUnit.NANOSECONDS);
-        long minutesSince = TimeUnit.MINUTES.convert(secondsSince, TimeUnit.SECONDS);
-        long hoursSince = TimeUnit.HOURS.convert(minutesSince, TimeUnit.MINUTES);
-
-        if (60 > secondsSince)
-        {
-            lastSeenText += getSecondsSinceString(secondsSince);
-        }
-        else if (60 > minutesSince)
-        {
-            lastSeenText += getMinutesSinceString(minutesSince);
-        }
-        else
-        {
-            lastSeenText += getHoursSinceString(hoursSince);
-        }
-
-        return lastSeenText;
-    }
-
-    private String getSecondsSinceString(long secondsSince)
-    {
-        if (secondsSince < 5)
-        {
-            return this.context.getResources().getString(R.string.sensor_seen_just_now);
-        }
-
-        return this.context.getResources().getString(R.string.sensor_seen_seconds_ago, secondsSince);
-    }
-
-    private String getMinutesSinceString(long minutesSince)
-    {
-        if (minutesSince == 1)
-        {
-            return this.context.getResources().getString(R.string.sensor_seen_a_minute_ago);
-        }
-
-        return this.context.getResources().getString(R.string.sensor_seen_minutes_ago, minutesSince);
-    }
-
-    private String getHoursSinceString(long hoursSince)
-    {
-        if (hoursSince == 1)
-        {
-            return this.context.getResources().getString(R.string.sensor_seen_an_hour_ago);
-        }
-
-        return this.context.getResources().getString(R.string.sensor_seen_hours_ago, hoursSince);
     }
 
     public void add(SensorData result)

@@ -1,16 +1,16 @@
 package de.hs_kl.blesensor;
 
+import android.content.Context;
 import android.widget.CompoundButton;
 
 public class SensorTrackedChangeListener implements CompoundButton.OnCheckedChangeListener
 {
-    private TrackedSensorsStorage trackedSensorsStorage;
+    private Context context;
     private SensorData sensorData;
 
-    public SensorTrackedChangeListener(TrackedSensorsStorage trackedSensorsStorage,
-                                       SensorData sensorData)
+    public SensorTrackedChangeListener(Context context, SensorData sensorData)
     {
-        this.trackedSensorsStorage = trackedSensorsStorage;
+        this.context = context;
         this.sensorData = sensorData;
     }
 
@@ -19,12 +19,12 @@ public class SensorTrackedChangeListener implements CompoundButton.OnCheckedChan
     {
         if (isChecked)
         {
-            this.trackedSensorsStorage.trackSensor(sensorData);
+            TrackedSensorsStorage.trackSensor(this.context, this.sensorData);
             buttonView.setText(R.string.sensor_tracked);
         }
         else
         {
-            this.trackedSensorsStorage.untrackSensor(sensorData);
+            TrackedSensorsStorage.untrackSensor(this.context, this.sensorData);
             buttonView.setText(R.string.sensor_not_tracked);
         }
     }
