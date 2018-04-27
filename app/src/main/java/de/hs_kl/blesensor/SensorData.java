@@ -17,7 +17,7 @@ public class SensorData
 
     public SensorData(ScanResult result)
     {
-        this.deviceName = result.getDevice().getName();
+        this.deviceName = result.getScanRecord().getDeviceName();
         this.macAddress = result.getDevice().getAddress();
         this.timestamp = result.getTimestampNanos();
         this.rssi = result.getRssi();
