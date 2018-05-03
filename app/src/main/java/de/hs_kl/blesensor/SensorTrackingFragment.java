@@ -6,6 +6,7 @@ import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,7 +25,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     private Dataset dataset = new Dataset();
 
     private List<SensorData> trackedSensors;
-
+    private Handler uiUpdater = new Handler();
     private LinearLayout trackedSensorViews;
 
     @Override
@@ -49,7 +50,6 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
             if (this.trackedSensors.get(i).getMacAddress().equals(sensorData.getMacAddress()))
             {
                 this.trackedSensors.set(i, sensorData);
-                showTrackedSensors();
 
                 DatasetEntry entry = new DatasetEntry(sensorData.getDeviceID(), sensorData.getTemperature(), sensorData.getRelativeHumidity(), "", sensorData.getTimestamp());
                 this.dataset.add(entry);
@@ -116,7 +116,19 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         BLEScanner.registerScanResultListener(this);
 
         this.trackedSensors = TrackedSensorsStorage.getTrackedSensors(getActivity());
-        showTrackedSensors();
+
+        this.uiUpdater.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                if (SensorTrackingFragment.this.isResumed())
+                {
+                    showTrackedSensors();
+                    SensorTrackingFragment.this.uiUpdater.postDelayed(this, 1000);
+                }
+            }
+        });
     }
 
     @Override

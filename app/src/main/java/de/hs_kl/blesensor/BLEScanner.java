@@ -150,7 +150,7 @@ public class BLEScanner
     private static ScanSettings getScanSettings()
     {
         ScanSettings.Builder builder = new ScanSettings.Builder();
-        builder.setReportDelay(10);
+        builder.setReportDelay(0);
         builder.setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
         {

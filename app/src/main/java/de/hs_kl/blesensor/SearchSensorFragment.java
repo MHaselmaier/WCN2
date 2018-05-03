@@ -4,6 +4,7 @@ import android.app.ListFragment;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import java.util.List;
 public class SearchSensorFragment extends ListFragment implements ScanResultListener
 {
     private ScanResultAdapter scanResultAdapter;
+    private Handler uiUpdater = new Handler();
 
     @Override
     public List<ScanFilter> getScanFilter()
@@ -25,7 +27,6 @@ public class SearchSensorFragment extends ListFragment implements ScanResultList
     public void onScanResult(ScanResult result)
     {
         this.scanResultAdapter.add(new SensorData(result));
-        this.scanResultAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -67,6 +68,19 @@ public class SearchSensorFragment extends ListFragment implements ScanResultList
         super.onResume();
 
         BLEScanner.registerScanResultListener(this);
+
+        this.uiUpdater.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                if (SearchSensorFragment.this.isResumed())
+                {
+                    SearchSensorFragment.this.scanResultAdapter.notifyDataSetChanged();
+                    SearchSensorFragment.this.uiUpdater.postDelayed(this, 1000);
+                }
+            }
+        });
     }
 
     @Override
