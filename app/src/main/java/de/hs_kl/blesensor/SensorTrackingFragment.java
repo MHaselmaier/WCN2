@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -20,6 +21,8 @@ import java.util.List;
 
 public class SensorTrackingFragment extends Fragment implements ScanResultListener
 {
+    private Dataset dataset = new Dataset();
+
     private List<SensorData> trackedSensors;
 
     private LinearLayout trackedSensorViews;
@@ -47,6 +50,9 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
             {
                 this.trackedSensors.set(i, sensorData);
                 showTrackedSensors();
+
+                DatasetEntry entry = new DatasetEntry(sensorData.getDeviceID(), sensorData.getTemperature(), sensorData.getRelativeHumidity(), "", sensorData.getTimestamp());
+                this.dataset.add(entry);
                 return;
             }
         }
@@ -65,6 +71,14 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
                              Bundle savedInstanceState)
     {
         View view = getActivity().getLayoutInflater().inflate(R.layout.sensor_tracking, container, false);
+
+        Button activityButton = view.findViewById(R.id.activity_button);
+        activityButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SensorTrackingFragment.this.dataset.writeToFile(getActivity());
+            }
+        });
 
         this.trackedSensorViews = new LinearLayout(getActivity());
         this.trackedSensorViews.setOrientation(LinearLayout.VERTICAL);
