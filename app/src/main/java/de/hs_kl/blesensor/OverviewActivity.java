@@ -11,6 +11,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import de.hs_kl.blesensor.ble_scanner.BLEScanner;
+import de.hs_kl.blesensor.fragments.sensor_tracking.SensorTrackingFragment;
+import de.hs_kl.blesensor.util.Constants;
+
 public class OverviewActivity extends AppCompatActivity
 {
     private BluetoothAdapter btAdapter;

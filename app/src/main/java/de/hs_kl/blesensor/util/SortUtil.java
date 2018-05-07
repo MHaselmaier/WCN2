@@ -1,4 +1,4 @@
-package de.hs_kl.blesensor;
+package de.hs_kl.blesensor.util;
 
 import java.util.Arrays;
 import java.util.Comparator;

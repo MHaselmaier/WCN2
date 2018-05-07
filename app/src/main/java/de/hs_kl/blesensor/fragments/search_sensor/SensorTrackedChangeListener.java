@@ -1,7 +1,11 @@
-package de.hs_kl.blesensor;
+package de.hs_kl.blesensor.fragments.search_sensor;
 
 import android.content.Context;
 import android.widget.CompoundButton;
+
+import de.hs_kl.blesensor.R;
+import de.hs_kl.blesensor.ble_scanner.SensorData;
+import de.hs_kl.blesensor.util.TrackedSensorsStorage;
 
 public class SensorTrackedChangeListener implements CompoundButton.OnCheckedChangeListener
 {

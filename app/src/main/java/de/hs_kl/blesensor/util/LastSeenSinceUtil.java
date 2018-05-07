@@ -1,9 +1,11 @@
-package de.hs_kl.blesensor;
+package de.hs_kl.blesensor.util;
 
 import android.content.Context;
 import android.os.SystemClock;
 
 import java.util.concurrent.TimeUnit;
+
+import de.hs_kl.blesensor.R;
 
 public class LastSeenSinceUtil
 {

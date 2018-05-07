@@ -1,4 +1,4 @@
-package de.hs_kl.blesensor;
+package de.hs_kl.blesensor.ble_scanner;
 
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import de.hs_kl.blesensor.util.Constants;
 
 public class BLEScanner
 {
@@ -44,14 +46,14 @@ public class BLEScanner
             {
                 if (0 == listener.getScanFilter().size())
                 {
-                    listener.onScanResult(result);
+                    listener.onScanResult(new SensorData(result));
                     continue;
                 }
                 for (ScanFilter scanFilter: listener.getScanFilter())
                 {
                     if (scanFilter.matches(result))
                     {
-                        listener.onScanResult(result);
+                        listener.onScanResult(new SensorData(result));
                         break;
                     }
                 }
@@ -65,23 +67,23 @@ public class BLEScanner
             switch(errorCode)
             {
                 case SCAN_FAILED_ALREADY_STARTED:
-                    Log.d(SearchSensorFragment.class.getSimpleName(),
+                    Log.d(BLEScanner.class.getSimpleName(),
                             "Failed to start scanning: already scanning!");
                     break;
                 case SCAN_FAILED_APPLICATION_REGISTRATION_FAILED:
-                    Log.d(SearchSensorFragment.class.getSimpleName(),
+                    Log.d(BLEScanner.class.getSimpleName(),
                             "Failed to start scanning: app cannot be registered!");
                     break;
                 case SCAN_FAILED_FEATURE_UNSUPPORTED:
-                    Log.d(SearchSensorFragment.class.getSimpleName(),
+                    Log.d(BLEScanner.class.getSimpleName(),
                             "Failed to start scanning: power optimized scan not supported!");
                     break;
                 case SCAN_FAILED_INTERNAL_ERROR:
-                    Log.d(SearchSensorFragment.class.getSimpleName(),
+                    Log.d(BLEScanner.class.getSimpleName(),
                             "Failed to start scanning: internal error!");
                     break;
                 default:
-                    Log.d(SearchSensorFragment.class.getSimpleName(),
+                    Log.d(BLEScanner.class.getSimpleName(),
                             "Failed to start scanning!");
                     break;
             }

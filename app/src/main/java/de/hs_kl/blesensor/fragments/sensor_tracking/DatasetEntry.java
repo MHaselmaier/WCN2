@@ -1,4 +1,4 @@
-package de.hs_kl.blesensor;
+package de.hs_kl.blesensor.fragments.sensor_tracking;
 
 public class DatasetEntry
 {

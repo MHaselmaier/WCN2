@@ -1,8 +1,7 @@
-package de.hs_kl.blesensor;
+package de.hs_kl.blesensor.fragments.search_sensor;
 
 import android.app.ListFragment;
 import android.bluetooth.le.ScanFilter;
-import android.bluetooth.le.ScanResult;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -11,6 +10,11 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.hs_kl.blesensor.R;
+import de.hs_kl.blesensor.ble_scanner.SensorData;
+import de.hs_kl.blesensor.ble_scanner.BLEScanner;
+import de.hs_kl.blesensor.ble_scanner.ScanResultListener;
 
 public class SearchSensorFragment extends ListFragment implements ScanResultListener
 {
@@ -24,9 +28,9 @@ public class SearchSensorFragment extends ListFragment implements ScanResultList
     }
 
     @Override
-    public void onScanResult(ScanResult result)
+    public void onScanResult(SensorData result)
     {
-        this.scanResultAdapter.add(new SensorData(result));
+        this.scanResultAdapter.add(result);
     }
 
     @Override

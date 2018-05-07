@@ -1,9 +1,8 @@
-package de.hs_kl.blesensor;
+package de.hs_kl.blesensor.fragments.sensor_tracking;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.bluetooth.le.ScanFilter;
-import android.bluetooth.le.ScanResult;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Handler;
@@ -19,6 +18,14 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.hs_kl.blesensor.ble_scanner.BLEScanner;
+import de.hs_kl.blesensor.R;
+import de.hs_kl.blesensor.ble_scanner.ScanResultListener;
+import de.hs_kl.blesensor.fragments.search_sensor.SearchSensorFragment;
+import de.hs_kl.blesensor.ble_scanner.SensorData;
+import de.hs_kl.blesensor.util.TrackedSensorsStorage;
+import de.hs_kl.blesensor.util.LastSeenSinceUtil;
 
 public class SensorTrackingFragment extends Fragment implements ScanResultListener
 {
@@ -46,18 +53,17 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     }
 
     @Override
-    public void onScanResult(ScanResult result)
+    public void onScanResult(SensorData result)
     {
-        SensorData sensorData = new SensorData(result);
         for (int i = 0; this.trackedSensors.size() > i; ++i)
         {
-            if (this.trackedSensors.get(i).getMacAddress().equals(sensorData.getMacAddress()))
+            if (this.trackedSensors.get(i).getMacAddress().equals(result.getMacAddress()))
             {
-                this.trackedSensors.set(i, sensorData);
+                this.trackedSensors.set(i, result);
 
                 if (this.tracking)
                 {
-                    DatasetEntry entry = new DatasetEntry(sensorData.getDeviceID(), sensorData.getTemperature(), sensorData.getRelativeHumidity(), "", sensorData.getTimestamp());
+                    DatasetEntry entry = new DatasetEntry(result.getDeviceID(), result.getTemperature(), result.getRelativeHumidity(), "", result.getTimestamp());
                     this.dataset.add(entry);
                 }
                 return;

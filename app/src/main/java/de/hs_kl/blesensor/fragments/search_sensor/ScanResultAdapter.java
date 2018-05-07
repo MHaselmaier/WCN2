@@ -1,4 +1,4 @@
-package de.hs_kl.blesensor;
+package de.hs_kl.blesensor.fragments.search_sensor;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,11 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.List;
+
+import de.hs_kl.blesensor.R;
+import de.hs_kl.blesensor.ble_scanner.SensorData;
+import de.hs_kl.blesensor.util.TrackedSensorsStorage;
+import de.hs_kl.blesensor.util.LastSeenSinceUtil;
 
 public class ScanResultAdapter extends BaseAdapter
 {

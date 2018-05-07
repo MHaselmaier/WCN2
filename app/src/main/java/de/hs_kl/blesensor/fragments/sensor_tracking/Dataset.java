@@ -1,4 +1,4 @@
-package de.hs_kl.blesensor;
+package de.hs_kl.blesensor.fragments.sensor_tracking;
 
 import android.content.Context;
 import android.os.Environment;
@@ -12,6 +12,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+
+import de.hs_kl.blesensor.R;
+import de.hs_kl.blesensor.util.Constants;
+import de.hs_kl.blesensor.util.SortUtil;
 
 public class Dataset
 {

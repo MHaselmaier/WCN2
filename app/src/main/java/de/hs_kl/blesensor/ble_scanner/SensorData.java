@@ -1,7 +1,8 @@
-package de.hs_kl.blesensor;
+package de.hs_kl.blesensor.ble_scanner;
 
 import android.bluetooth.le.ScanResult;
-import android.util.Log;
+
+import de.hs_kl.blesensor.util.Constants;
 
 public class SensorData
 {
