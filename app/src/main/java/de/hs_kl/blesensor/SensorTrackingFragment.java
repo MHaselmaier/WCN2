@@ -23,9 +23,13 @@ import java.util.List;
 public class SensorTrackingFragment extends Fragment implements ScanResultListener
 {
     private Dataset dataset = new Dataset();
+    private boolean tracking = false;
+    private long trackingStartTime;
 
     private List<SensorData> trackedSensors;
     private Handler uiUpdater = new Handler();
+    private Button activityButton;
+    private TextView activityTime;
     private LinearLayout trackedSensorViews;
 
     @Override
@@ -51,8 +55,11 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
             {
                 this.trackedSensors.set(i, sensorData);
 
-                DatasetEntry entry = new DatasetEntry(sensorData.getDeviceID(), sensorData.getTemperature(), sensorData.getRelativeHumidity(), "", sensorData.getTimestamp());
-                this.dataset.add(entry);
+                if (this.tracking)
+                {
+                    DatasetEntry entry = new DatasetEntry(sensorData.getDeviceID(), sensorData.getTemperature(), sensorData.getRelativeHumidity(), "", sensorData.getTimestamp());
+                    this.dataset.add(entry);
+                }
                 return;
             }
         }
@@ -72,11 +79,19 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     {
         View view = getActivity().getLayoutInflater().inflate(R.layout.sensor_tracking, container, false);
 
-        Button activityButton = view.findViewById(R.id.activity_button);
-        activityButton.setOnClickListener(new View.OnClickListener() {
+        this.activityTime = view.findViewById(R.id.activity_time);
+        this.activityButton = view.findViewById(R.id.activity_button);
+        this.activityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SensorTrackingFragment.this.dataset.writeToFile(getActivity());
+                if (!SensorTrackingFragment.this.tracking)
+                {
+                    startTracking();
+                }
+                else
+                {
+                    stopTracking();
+                }
             }
         });
 
@@ -108,6 +123,19 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         return view;
     }
 
+    private void startTracking()
+    {
+        SensorTrackingFragment.this.dataset.clear();
+        SensorTrackingFragment.this.tracking = true;
+        SensorTrackingFragment.this.trackingStartTime = System.currentTimeMillis();
+    }
+
+    private void stopTracking()
+    {
+        SensorTrackingFragment.this.dataset.writeToFile(getActivity());
+        SensorTrackingFragment.this.tracking = false;
+    }
+
     @Override
     public void onResume()
     {
@@ -124,6 +152,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
             {
                 if (SensorTrackingFragment.this.isResumed())
                 {
+                    updateTrackingTime();
                     showTrackedSensors();
                     SensorTrackingFragment.this.uiUpdater.postDelayed(this, 1000);
                 }
@@ -137,6 +166,34 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         super.onPause();
 
         BLEScanner.unregisterScanResultListener(this);
+    }
+
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+
+        if (this.tracking)
+        {
+            this.dataset.writeToFile(getActivity());
+        }
+    }
+
+    private void updateTrackingTime()
+    {
+        if (this.tracking)
+        {
+            int trackedTime = (int)(System.currentTimeMillis() - this.trackingStartTime) / 1000;
+            int seconds = trackedTime % 60;
+            int minutes = trackedTime / 60;
+            this.activityTime.setText(getResources().getString(R.string.time, minutes, seconds));
+            this.activityButton.setText(R.string.activity_button_stop);
+        }
+        else
+        {
+            this.activityTime.setText(R.string.no_time);
+            this.activityButton.setText(R.string.activity_button_start);
+        }
     }
 
     private void showTrackedSensors()

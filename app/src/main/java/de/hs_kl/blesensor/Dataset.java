@@ -30,6 +30,12 @@ public class Dataset
         this.entries.add(entry);
     }
 
+    public void clear()
+    {
+        this.sensorIDs.clear();
+        this.entries.clear();
+    }
+
     public void writeToFile(Context context)
     {
         try
