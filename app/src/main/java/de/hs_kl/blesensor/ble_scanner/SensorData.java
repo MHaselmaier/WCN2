@@ -34,9 +34,9 @@ public class SensorData
         }
     }
 
-    public SensorData(String deviceName, String macAddress)
+    public SensorData(byte deviceID, String macAddress)
     {
-        this.deviceName = deviceName;
+        this.deviceID = deviceID;
         this.macAddress = macAddress;
         this.timestamp = Long.MAX_VALUE;
     }

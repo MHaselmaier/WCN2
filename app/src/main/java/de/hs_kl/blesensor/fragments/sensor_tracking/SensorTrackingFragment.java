@@ -211,8 +211,8 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         for (SensorData sensorData: this.trackedSensors) {
             View tracked_sensor_overview = activity.getLayoutInflater().inflate(R.layout.tracked_sensor_overview, null, false);
 
-            TextView sensorName = tracked_sensor_overview.findViewById(R.id.sensor_name);
-            sensorName.setText(sensorData.getDeviceName());
+            TextView sensorID = tracked_sensor_overview.findViewById(R.id.sensor_id);
+            sensorID.setText(getResources().getString(R.string.sensor_id, sensorData.getDeviceID()));
             TextView lastSeen = tracked_sensor_overview.findViewById(R.id.last_seen);
             lastSeen.setText(LastSeenSinceUtil.getTimeSinceString(getActivity(), sensorData.getTimestamp()));
             TextView temperature = tracked_sensor_overview.findViewById(R.id.temperature);

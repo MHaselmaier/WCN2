@@ -24,13 +24,13 @@
             app:srcCompat="@drawable/ic_sensor_warning" />
 
         <TextView
-            android:id="@+id/sensor_name"
+            android:id="@+id/sensor_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="16sp"
             android:textStyle="bold"
-            tools:text="WCN Beacon" />
+            tools:text="WCN1" />
 
         <TextView
             android:id="@+id/last_seen"
@@ -75,7 +75,7 @@
             android:layout_weight="1"
             android:textAlignment="center"
             android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@+id/sensor_name"
+            app:layout_constraintTop_toBottomOf="@+id/sensor_id"
             tools:text="3,54 V" />
     </LinearLayout>
 

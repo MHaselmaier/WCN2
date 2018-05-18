@@ -63,12 +63,8 @@ public class ScanResultAdapter extends BaseAdapter
             trackSwitch.setOnCheckedChangeListener(new SensorTrackedChangeListener(this.context, sensorData));
         }
 
-        TextView deviceNameView = view.findViewById(R.id.device_name);
-        String name = sensorData.getDeviceName();
-        if (null == name) {
-            name = this.context.getResources().getString(R.string.sensor_without_name);
-        }
-        deviceNameView.setText(name);
+        TextView deviceID = view.findViewById(R.id.device_id);
+        deviceID.setText(this.context.getResources().getString(R.string.sensor_id, sensorData.getDeviceID()));
 
         TextView lastSeenView = view.findViewById(R.id.last_seen);
         lastSeenView.setText(LastSeenSinceUtil.getTimeSinceString(this.context, sensorData.getTimestamp()));

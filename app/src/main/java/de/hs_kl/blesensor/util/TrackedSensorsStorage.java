@@ -19,8 +19,8 @@ public class TrackedSensorsStorage
         for (Map.Entry<String, ?> entry: sharedPreferences.getAll().entrySet())
         {
             String macAddress = entry.getKey();
-            String deviceName = (String)entry.getValue();
-            trackedSensors.add(new SensorData(deviceName, macAddress));
+            byte deviceID = ((Integer)entry.getValue()).byteValue();
+            trackedSensors.add(new SensorData(deviceID, macAddress));
         }
         return trackedSensors;
     }
@@ -30,7 +30,7 @@ public class TrackedSensorsStorage
         SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.TRACKED_SENSORS_PREFERENCES,
                                                         Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(sensorData.getMacAddress(), sensorData.getDeviceName());
+        editor.putInt(sensorData.getMacAddress(), sensorData.getDeviceID());
         editor.commit();
     }
 
