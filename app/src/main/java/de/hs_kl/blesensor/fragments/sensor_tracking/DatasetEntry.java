@@ -3,23 +3,31 @@ package de.hs_kl.blesensor.fragments.sensor_tracking;
 public class DatasetEntry
 {
     private byte sensorID;
+    private String sensorMACAddress;
     private float temperature;
     private float humidity;
     private String activity;
     private long timestamp;
 
-    public DatasetEntry(byte sensorID, float temperature, float humidity, String activity, long timestamp)
+    public DatasetEntry(byte sensorID, String sensorMACAddress, float temperature, float humidity,
+                        String activity, long timestamp)
     {
         this.sensorID = sensorID;
+        this.sensorMACAddress = sensorMACAddress;
         this.temperature = temperature;
         this.humidity = humidity;
         this.activity = activity;
-        this.timestamp = timestamp;
+        this.timestamp = ((timestamp / 1000) / 60) * 100 + (((timestamp / 1000) % 60) * 100) / 60;
     }
 
     public byte getSensorID()
     {
         return this.sensorID;
+    }
+
+    public String getSensorMACAddress()
+    {
+        return this.sensorMACAddress;
     }
 
     public float getTemperature()
@@ -37,9 +45,9 @@ public class DatasetEntry
         return this.activity;
     }
 
-    public long getTimestamp()
+    public float getTimestamp()
     {
-        return this.timestamp;
+        return this.timestamp / 100f;
     }
 
     @Override

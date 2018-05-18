@@ -7,75 +7,60 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import de.hs_kl.blesensor.R;
 import de.hs_kl.blesensor.util.Constants;
-import de.hs_kl.blesensor.util.SortUtil;
 
 public class Dataset
 {
-    private Set<Byte> sensorIDs = new TreeSet<>();
-    private List<DatasetEntry> entries = new ArrayList<>();
+    private String measurementHeader = "Here you can put a comment, which is placed as a header\n" +
+            "in the measurement file";
+    private SortedMap<Byte, String> sensorInfo = new TreeMap<>();
+    private SortedMap<Integer, SortedMap<Byte, DatasetEntry>> entries = new TreeMap<>();
+
+    public void setMeasurementHeader(String measurementHeader)
+    {
+        this.measurementHeader = measurementHeader;
+    }
 
     public void add(DatasetEntry entry)
     {
-        this.sensorIDs.add(entry.getSensorID());
+        this.sensorInfo.put(entry.getSensorID(), entry.getSensorMACAddress());
 
-        if (this.entries.contains(entry))
+        int key = (int)(entry.getTimestamp() * 100);
+        if (!this.entries.containsKey(key))
         {
-            this.entries.remove(entry);
+            this.entries.put(key, new TreeMap<Byte, DatasetEntry>());
         }
-
-        this.entries.add(entry);
+        this.entries.get(key).put(entry.getSensorID(), entry);
     }
 
     public void clear()
     {
-        this.sensorIDs.clear();
+        this.sensorInfo.clear();
         this.entries.clear();
     }
 
     public void writeToFile(Context context)
     {
+        writeToFile(context, null);
+    }
+
+    public void writeToFile(Context context, String filename)
+    {
         try
         {
-            if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
-            {
-                throw new Exception();
-            }
-            SortUtil.sort(this.entries, new DatasetEntryComparator());
-            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
-                                 Constants.DATA_DIRECTORY + File.separator + System.currentTimeMillis() + ".csv");
-            if (!file.getParentFile().exists())
-            {
-                file.getParentFile().mkdirs();
-            }
-            file.createNewFile();
-            PrintWriter outputStream = new PrintWriter(file);
+            PrintWriter outputStream = createOutputStream(filename);
 
-            outputStream.write("timestamp");
-            for (Byte id: this.sensorIDs)
-            {
-                outputStream.write(", sensor" + id + "_temperature, sensor" + id + "_humidity");
-            }
-            outputStream.write("\n");
+            writeMeasurementHeader(outputStream);
+            writeSensorInfo(outputStream);
+            writeSensorData(outputStream);
 
-            long lastTimestamp = this.entries.get(0).getTimestamp();
-            outputStream.write("" + lastTimestamp);
-            for (DatasetEntry entry: this.entries)
-            {
-                if (entry.getTimestamp() > lastTimestamp)
-                {
-                    outputStream.write("\n" + entry.getTimestamp());
-                }
-
-                outputStream.write(", " + entry.getTemperature() + ", " + entry.getHumidity());
-            }
             outputStream.close();
         }
         catch (Exception e)
@@ -85,18 +70,90 @@ public class Dataset
         }
     }
 
-    private static class DatasetEntryComparator implements Comparator<DatasetEntry>
+    private PrintWriter createOutputStream(String filename) throws Exception
     {
-        @Override
-        public int compare(DatasetEntry a, DatasetEntry b)
+        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
         {
-            if (a.getTimestamp() == b.getTimestamp())
+            throw new Exception();
+        }
+
+        if (null == filename || filename.equals(""))
+        {
+            filename = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
+        }
+
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
+                Constants.DATA_DIRECTORY + File.separator + filename + ".txt");
+        file.getParentFile().mkdirs();
+        file.createNewFile();
+
+        return new PrintWriter(file);
+    }
+
+    private void writeMeasurementHeader(PrintWriter outputStream)
+    {
+        outputStream.write(this.measurementHeader + "\n\n");
+    }
+
+    private void writeSensorInfo(PrintWriter outputStream)
+    {
+        outputStream.write("Sensor ID\tMAC Address\tMnemonic\n");
+
+        for (Map.Entry<Byte, String> entry: this.sensorInfo.entrySet())
+        {
+            outputStream.format("%d\t%s\t%s\n", entry.getKey(), entry.getValue(), "comment !"); // TODO: Add Mnemonic
+        }
+
+        outputStream.write("\n");
+    }
+
+    private void writeSensorData(PrintWriter outputStream)
+    {
+        outputStream.write("Time [min]\t");
+        for (Map.Entry<Byte, String> entry: this.sensorInfo.entrySet())
+        {
+            outputStream.format("Temperature [°C] %d\tRelative Humidity [%%] %d\t", entry.getKey(), entry.getKey());
+        }
+        outputStream.write("Action\n");
+
+        prepareEntriesForWrite();
+
+        for (Map.Entry<Integer, SortedMap<Byte, DatasetEntry>> timestamp: this.entries.entrySet())
+        {
+            outputStream.format("%.2f", timestamp.getKey() / 100f);
+
+            for (Map.Entry<Byte, DatasetEntry> entry: timestamp.getValue().entrySet())
             {
-                return a.getSensorID() - b.getSensorID();
+                outputStream.format("\t%.1f\t%.1f", entry.getValue().getTemperature(), entry.getValue().getHumidity());
             }
-            else
+
+            DatasetEntry firstEntry = (DatasetEntry)timestamp.getValue().values().toArray()[0];
+            outputStream.format("\t%s\n", firstEntry.getActivity());
+        }
+    }
+
+    private void prepareEntriesForWrite()
+    {
+        Byte[] sensorIDs = new Byte[this.sensorInfo.size()];
+        this.sensorInfo.keySet().toArray(sensorIDs);
+
+        for (Map.Entry<Integer, SortedMap<Byte, DatasetEntry>> entry: this.entries.entrySet())
+        {
+            if (entry.getValue().size() != sensorIDs.length)
             {
-                return (int)(a.getTimestamp() - b.getTimestamp());
+                int minutes = entry.getKey() / 100;
+                int seconds = (int)(((entry.getKey() % 100) / 100f) * 60);
+                int timestamp = minutes * 60 * 1000 + seconds * 1000;
+                String activity = ((DatasetEntry)entry.getValue().values().toArray()[0]).getActivity();
+
+                for (byte sensorID: sensorIDs)
+                {
+                    if (!entry.getValue().containsKey(sensorID))
+                    {
+                        entry.getValue().put(sensorID, new DatasetEntry(sensorID, "",
+                                Float.NaN, Float.NaN, activity, timestamp));
+                    }
+                }
             }
         }
     }

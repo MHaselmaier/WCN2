@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
 
     private List<SensorData> trackedSensors;
     private Handler uiUpdater = new Handler();
+    private Spinner activities;
     private Button activityButton;
     private TextView activityTime;
     private LinearLayout trackedSensorViews;
@@ -63,7 +65,9 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
 
                 if (this.tracking)
                 {
-                    DatasetEntry entry = new DatasetEntry(result.getDeviceID(), result.getTemperature(), result.getRelativeHumidity(), "", result.getTimestamp());
+                    DatasetEntry entry = new DatasetEntry(result.getDeviceID(), result.getMacAddress(),
+                            result.getTemperature(), result.getRelativeHumidity(), (String)this.activities.getSelectedItem(),
+                            result.getTimestamp() - this.trackingStartTime);
                     this.dataset.add(entry);
                 }
                 return;
@@ -85,6 +89,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     {
         View view = getActivity().getLayoutInflater().inflate(R.layout.sensor_tracking, container, false);
 
+        this.activities = view.findViewById(R.id.activities);
         this.activityTime = view.findViewById(R.id.activity_time);
         this.activityButton = view.findViewById(R.id.activity_button);
         this.activityButton.setOnClickListener(new View.OnClickListener() {

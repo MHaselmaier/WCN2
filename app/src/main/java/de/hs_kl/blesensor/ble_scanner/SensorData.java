@@ -20,7 +20,8 @@ public class SensorData
     {
         this.deviceName = result.getScanRecord().getDeviceName();
         this.macAddress = result.getDevice().getAddress();
-        this.timestamp = result.getTimestampNanos();
+        this.timestamp = (System.currentTimeMillis() - android.os.SystemClock.elapsedRealtime())
+                            + result.getTimestampNanos() / 1_000_000;
         this.rssi = result.getRssi();
 
         byte[] rawData = result.getScanRecord().getManufacturerSpecificData(Constants.MANUFACTURER_ID);
