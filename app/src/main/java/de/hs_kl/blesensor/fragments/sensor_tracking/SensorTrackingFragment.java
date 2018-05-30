@@ -6,16 +6,19 @@ import android.bluetooth.le.ScanFilter;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Handler;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,10 +39,12 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
 
     private List<SensorData> trackedSensors;
     private Handler uiUpdater = new Handler();
-    private Spinner activities;
+    private ToggleButton action;
     private Button activityButton;
     private TextView activityTime;
+    private CardView sensorOverview;
     private LinearLayout trackedSensorViews;
+    private ScrollView actionOverview;
 
     @Override
     public List<ScanFilter> getScanFilter()
@@ -66,7 +71,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
                 if (this.tracking)
                 {
                     DatasetEntry entry = new DatasetEntry(result.getDeviceID(), result.getMacAddress(),
-                            result.getTemperature(), result.getRelativeHumidity(), (String)this.activities.getSelectedItem(),
+                            result.getTemperature(), result.getRelativeHumidity(), this.action.getText().toString(),
                             result.getTimestamp() - this.trackingStartTime);
                     this.dataset.add(entry);
                 }
@@ -89,7 +94,6 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     {
         View view = getActivity().getLayoutInflater().inflate(R.layout.sensor_tracking, container, false);
 
-        this.activities = view.findViewById(R.id.activities);
         this.activityTime = view.findViewById(R.id.activity_time);
         this.activityButton = view.findViewById(R.id.activity_button);
         this.activityButton.setOnClickListener(new View.OnClickListener() {
@@ -109,6 +113,11 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         this.trackedSensorViews = new LinearLayout(getActivity());
         this.trackedSensorViews.setOrientation(LinearLayout.VERTICAL);
 
+        this.sensorOverview = view.findViewById(R.id.sensor_overview);
+        this.actionOverview = view.findViewById(R.id.action_overview);
+        this.actionOverview.setVisibility(View.GONE);
+        addActionToggleButtons((GridLayout)this.actionOverview.findViewById(R.id.actions));
+
         ScrollView scrollView = new ScrollView(getActivity());
         scrollView.addView(trackedSensorViews);
 
@@ -116,22 +125,64 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         trackedSensors.addView(scrollView);
 
         ImageButton edit = view.findViewById(R.id.edit_tracked_sensors);
-        edit.setOnTouchListener(new View.OnTouchListener() {
+        edit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (MotionEvent.ACTION_DOWN == event.getAction())
-                {
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.fragment, new SearchSensorFragment());
-                    ft.addToBackStack(null);
-                    ft.commit();
-                    return true;
-                }
-                return false;
+            public void onClick(View view) {
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.fragment, new SearchSensorFragment());
+                ft.addToBackStack(null);
+                ft.commit();
             }
         });
 
         return view;
+    }
+
+    private void addActionToggleButtons(GridLayout gridLayout)
+    {
+        String[] actions = getResources().getStringArray(R.array.activities);
+        for (String action: actions)
+        {
+            ConstraintLayout constraintLayout = new ConstraintLayout(getActivity());
+            constraintLayout.setLayoutParams(new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            ToggleButton toggleButton = new ToggleButton(getActivity());
+            toggleButton.setTextOff(action);
+            toggleButton.setTextOn(action);
+            toggleButton.setText(action);
+            constraintLayout.addView(toggleButton);
+            toggleButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (null != SensorTrackingFragment.this.action)
+                    {
+                        SensorTrackingFragment.this.action.setChecked(false);
+                    }
+                    if (view == SensorTrackingFragment.this.action)
+                    {
+                        SensorTrackingFragment.this.action = null;
+                    }
+                    else
+                    {
+                        SensorTrackingFragment.this.action = (ToggleButton)view;
+                        SensorTrackingFragment.this.action.setChecked(true);
+                    }
+                }
+            });
+
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.setDimensionRatio(toggleButton.getId(), "1:1");
+            constraintSet.connect(toggleButton.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
+            constraintSet.connect(toggleButton.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+            constraintSet.connect(toggleButton.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+            constraintSet.connect(toggleButton.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+            constraintSet.applyTo(constraintLayout);
+
+            GridLayout.LayoutParams gridParams = new GridLayout.LayoutParams();
+            gridParams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
+            gridLayout.addView(constraintLayout, gridParams);
+        }
     }
 
     private void startTracking()
@@ -139,12 +190,20 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         SensorTrackingFragment.this.dataset.clear();
         SensorTrackingFragment.this.tracking = true;
         SensorTrackingFragment.this.trackingStartTime = System.currentTimeMillis();
+        updateTrackingTime();
+
+        this.sensorOverview.setVisibility(View.GONE);
+        this.actionOverview.setVisibility(View.VISIBLE);
     }
 
     private void stopTracking()
     {
         SensorTrackingFragment.this.dataset.writeToFile(getActivity());
         SensorTrackingFragment.this.tracking = false;
+        updateTrackingTime();
+
+        this.sensorOverview.setVisibility(View.VISIBLE);
+        this.actionOverview.setVisibility(View.GONE);
     }
 
     @Override
@@ -214,7 +273,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
 
         this.trackedSensorViews.removeAllViews();
         for (SensorData sensorData: this.trackedSensors) {
-            View tracked_sensor_overview = activity.getLayoutInflater().inflate(R.layout.tracked_sensor_overview, null, false);
+            View tracked_sensor_overview = activity.getLayoutInflater().inflate(R.layout.tracked_sensor_overview, this.trackedSensorViews, false);
 
             TextView sensorID = tracked_sensor_overview.findViewById(R.id.sensor_id);
             sensorID.setText(getResources().getString(R.string.sensor_id, sensorData.getDeviceID()));
