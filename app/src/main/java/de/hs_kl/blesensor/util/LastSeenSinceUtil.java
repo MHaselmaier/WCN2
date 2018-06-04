@@ -1,7 +1,6 @@
 package de.hs_kl.blesensor.util;
 
 import android.content.Context;
-import android.os.SystemClock;
 
 import java.util.concurrent.TimeUnit;
 
@@ -9,16 +8,16 @@ import de.hs_kl.blesensor.R;
 
 public class LastSeenSinceUtil
 {
-    public static String getTimeSinceString(Context context, long timeNanoseconds) {
-        if (Long.MAX_VALUE == timeNanoseconds)
+    public static String getTimeSinceString(Context context, long timeMilliseconds) {
+        if (Long.MAX_VALUE == timeMilliseconds)
         {
             return context.getResources().getString(R.string.sensor_not_seen);
         }
 
         String lastSeenText = context.getResources().getString(R.string.sensor_last_seen) + " ";
 
-        long timeSince = SystemClock.elapsedRealtimeNanos() - timeNanoseconds;
-        long secondsSince = TimeUnit.SECONDS.convert(timeSince, TimeUnit.NANOSECONDS);
+        long timeSince = System.currentTimeMillis() - timeMilliseconds;
+        long secondsSince = TimeUnit.SECONDS.convert(timeSince, TimeUnit.MILLISECONDS);
         long minutesSince = TimeUnit.MINUTES.convert(secondsSince, TimeUnit.SECONDS);
         long hoursSince = TimeUnit.HOURS.convert(minutesSince, TimeUnit.MINUTES);
 
