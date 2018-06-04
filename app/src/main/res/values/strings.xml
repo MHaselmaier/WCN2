@@ -39,4 +39,9 @@
     <string name="temperature">%1$.2f °C</string>
     <string name="humidity">%1$.2f %%</string>
     <string name="battery_voltage">%1$.2f V</string>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="measurement_header">Messungs Beschreibung:</string>
+    <string name="measurement_comment">Hier können Sie eine Beschreibung der Messung angeben, welche als Kopfzeile in die Messungs-Datei eingefügt wird</string>
 </resources>

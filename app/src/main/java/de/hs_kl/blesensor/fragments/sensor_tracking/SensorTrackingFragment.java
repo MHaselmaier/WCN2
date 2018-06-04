@@ -1,8 +1,10 @@
 package de.hs_kl.blesensor.fragments.sensor_tracking;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.bluetooth.le.ScanFilter;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Handler;
@@ -13,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -70,8 +73,14 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
 
                 if (this.tracking)
                 {
+                    String action = "";
+                    if (null != this.action)
+                    {
+                        action = this.action.getText().toString();
+                    }
+
                     DatasetEntry entry = new DatasetEntry(result.getSensorID(), result.getMacAddress(),
-                            result.getTemperature(), result.getRelativeHumidity(), this.action.getText().toString(),
+                            result.getTemperature(), result.getRelativeHumidity(), action,
                             result.getTimestamp() - this.trackingStartTime);
                     this.dataset.add(entry);
                 }
@@ -96,12 +105,45 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
 
         this.measurementTime = view.findViewById(R.id.measurement_time);
         this.measurementButton = view.findViewById(R.id.measurement_button);
-        this.measurementButton.setOnClickListener(new View.OnClickListener() {
+        this.measurementButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View v) {
                 if (!SensorTrackingFragment.this.tracking)
                 {
-                    startTracking();
+                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+
+                    View dialog = LayoutInflater.from(getActivity()).inflate(R.layout.measurement_dialog, (ViewGroup)getView(), false);
+                    dialogBuilder.setView(dialog);
+                    //View dialog = getActivity().getLayoutInflater().inflate(R.layout.measurement_dialog, (ViewGroup)getView(), false);
+                    final EditText measurementHeader = dialog.findViewById(R.id.measurement_header);
+
+                    dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            dialog.dismiss();
+                            String measurementHeaderInput = measurementHeader.getText().toString();
+                            if (0 == measurementHeaderInput.trim().length())
+                            {
+                                measurementHeaderInput = getResources().getString(R.string.measurement_comment);
+                            }
+                            SensorTrackingFragment.this.dataset.setMeasurementHeader(measurementHeaderInput);
+                            startTracking();
+                        }
+                    });
+
+                    dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    dialogBuilder.show();
                 }
                 else
                 {
