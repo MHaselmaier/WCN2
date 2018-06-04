@@ -128,7 +128,7 @@ public class Dataset
             }
 
             DatasetEntry firstEntry = (DatasetEntry)timestamp.getValue().values().toArray()[0];
-            outputStream.format("\t%s\n", firstEntry.getActivity());
+            outputStream.format("\t%s\n", firstEntry.getAction());
         }
     }
 
@@ -144,14 +144,14 @@ public class Dataset
                 int minutes = entry.getKey() / 100;
                 int seconds = (int)(((entry.getKey() % 100) / 100f) * 60);
                 int timestamp = minutes * 60 * 1000 + seconds * 1000;
-                String activity = ((DatasetEntry)entry.getValue().values().toArray()[0]).getActivity();
+                String action = ((DatasetEntry)entry.getValue().values().toArray()[0]).getAction();
 
                 for (byte sensorID: sensorIDs)
                 {
                     if (!entry.getValue().containsKey(sensorID))
                     {
                         entry.getValue().put(sensorID, new DatasetEntry(sensorID, "",
-                                Float.NaN, Float.NaN, activity, timestamp));
+                                Float.NaN, Float.NaN, action, timestamp));
                     }
                 }
             }

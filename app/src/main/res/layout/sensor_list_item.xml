@@ -32,14 +32,14 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/device_id"
+            android:id="@+id/sensor_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16sp"
             tools:text="WCN1" />
 
         <TextView
-            android:id="@+id/device_address"
+            android:id="@+id/sensor_mac_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="12sp"

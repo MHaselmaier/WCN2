@@ -6,17 +6,17 @@ public class DatasetEntry
     private String sensorMACAddress;
     private float temperature;
     private float humidity;
-    private String activity;
+    private String action;
     private long timestamp;
 
     public DatasetEntry(byte sensorID, String sensorMACAddress, float temperature, float humidity,
-                        String activity, long timestamp)
+                        String action, long timestamp)
     {
         this.sensorID = sensorID;
         this.sensorMACAddress = sensorMACAddress;
         this.temperature = temperature;
         this.humidity = humidity;
-        this.activity = activity;
+        this.action = action;
         this.timestamp = ((timestamp / 1000) / 60) * 100 + (((timestamp / 1000) % 60) * 100) / 60;
     }
 
@@ -40,9 +40,9 @@ public class DatasetEntry
         return this.humidity;
     }
 
-    public String getActivity()
+    public String getAction()
     {
-        return this.activity;
+        return this.action;
     }
 
     public float getTimestamp()

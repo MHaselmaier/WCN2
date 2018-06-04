@@ -21,7 +21,7 @@
     <string name="sensor_tracked">Verfolgt</string>
     <string name="sensor_not_tracked">Nicht Verfolgt</string>
 
-    <string-array name="activities">
+    <string-array name="actions">
         <item>Laufen</item>
         <item>Schwimmen</item>
         <item>Rad Fahren</item>
@@ -29,8 +29,8 @@
     </string-array>
     <string name="time">%1$02d:%2$02d</string>
     <string name="no_time">--:--</string>
-    <string name="activity_button_start">Aktivität starten</string>
-    <string name="activity_button_stop">Aktivität stoppen</string>
+    <string name="measurement_button_start">Messung starten</string>
+    <string name="measurement_button_stop">Messung stoppen</string>
     <string name="tracked_sensors">Verfolgte Sensoren</string>
     <string name="sensor_warning">Warnung</string>
     <string name="tracked_sensors_edit">Bearbeiten</string>

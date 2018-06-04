@@ -40,8 +40,8 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     private List<SensorData> trackedSensors;
     private Handler uiUpdater = new Handler();
     private ToggleButton action;
-    private Button activityButton;
-    private TextView activityTime;
+    private Button measurementButton;
+    private TextView measurementTime;
     private CardView sensorOverview;
     private LinearLayout trackedSensorViews;
     private ScrollView actionOverview;
@@ -70,7 +70,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
 
                 if (this.tracking)
                 {
-                    DatasetEntry entry = new DatasetEntry(result.getDeviceID(), result.getMacAddress(),
+                    DatasetEntry entry = new DatasetEntry(result.getSensorID(), result.getMacAddress(),
                             result.getTemperature(), result.getRelativeHumidity(), this.action.getText().toString(),
                             result.getTimestamp() - this.trackingStartTime);
                     this.dataset.add(entry);
@@ -94,9 +94,9 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     {
         View view = getActivity().getLayoutInflater().inflate(R.layout.sensor_tracking, container, false);
 
-        this.activityTime = view.findViewById(R.id.activity_time);
-        this.activityButton = view.findViewById(R.id.activity_button);
-        this.activityButton.setOnClickListener(new View.OnClickListener() {
+        this.measurementTime = view.findViewById(R.id.measurement_time);
+        this.measurementButton = view.findViewById(R.id.measurement_button);
+        this.measurementButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!SensorTrackingFragment.this.tracking)
@@ -140,7 +140,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
 
     private void addActionToggleButtons(GridLayout gridLayout)
     {
-        String[] actions = getResources().getStringArray(R.array.activities);
+        String[] actions = getResources().getStringArray(R.array.actions);
         for (String action: actions)
         {
             ConstraintLayout constraintLayout = new ConstraintLayout(getActivity());
@@ -256,13 +256,13 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
             int trackedTime = (int)(System.currentTimeMillis() - this.trackingStartTime) / 1000;
             int seconds = trackedTime % 60;
             int minutes = trackedTime / 60;
-            this.activityTime.setText(getResources().getString(R.string.time, minutes, seconds));
-            this.activityButton.setText(R.string.activity_button_stop);
+            this.measurementTime.setText(getResources().getString(R.string.time, minutes, seconds));
+            this.measurementButton.setText(R.string.measurement_button_stop);
         }
         else
         {
-            this.activityTime.setText(R.string.no_time);
-            this.activityButton.setText(R.string.activity_button_start);
+            this.measurementTime.setText(R.string.no_time);
+            this.measurementButton.setText(R.string.measurement_button_start);
         }
     }
 
@@ -276,7 +276,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
             View tracked_sensor_overview = activity.getLayoutInflater().inflate(R.layout.tracked_sensor_overview, this.trackedSensorViews, false);
 
             TextView sensorID = tracked_sensor_overview.findViewById(R.id.sensor_id);
-            sensorID.setText(getResources().getString(R.string.sensor_id, sensorData.getDeviceID()));
+            sensorID.setText(getResources().getString(R.string.sensor_id, sensorData.getSensorID()));
             TextView lastSeen = tracked_sensor_overview.findViewById(R.id.last_seen);
             lastSeen.setText(LastSeenSinceUtil.getTimeSinceString(getActivity(), sensorData.getTimestamp()));
             TextView temperature = tracked_sensor_overview.findViewById(R.id.temperature);
