@@ -9,9 +9,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Toast;
 
 import de.hs_kl.blesensor.ble_scanner.BLEScanner;
+import de.hs_kl.blesensor.fragments.manage_measurements.ManageMeasurementsFragment;
+import de.hs_kl.blesensor.fragments.search_sensor.SearchSensorFragment;
 import de.hs_kl.blesensor.fragments.sensor_tracking.SensorTrackingFragment;
 import de.hs_kl.blesensor.util.Constants;
 
@@ -43,6 +46,44 @@ public class OverviewActivity extends AppCompatActivity
         setupBluetoothAdapter();
         ensureBluetoothIsEnabled();
 
+        View overview = findViewById(R.id.overview);
+        overview.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.fragment, new SensorTrackingFragment());
+                ft.addToBackStack(null);
+                ft.commit();
+            }
+        });
+
+        View measurement = findViewById(R.id.measurement);
+        measurement.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.fragment, new ManageMeasurementsFragment());
+                ft.addToBackStack(null);
+                ft.commit();
+            }
+        });
+
+        View sensor = findViewById(R.id.sensor);
+        sensor.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.fragment, new SearchSensorFragment());
+                ft.addToBackStack(null);
+                ft.commit();
+            }
+        });
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.fragment, new SensorTrackingFragment());

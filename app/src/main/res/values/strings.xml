@@ -2,6 +2,10 @@
     <string name="app_name">BLESensor</string>
     <string name="bt_was_not_enabled">Bluetooth wurde nicht eingeschaltet, wird allerdings zum Betrieb dieser App benötigt.</string>
 
+    <string name="overview">Übersicht</string>
+    <string name="measurement">Messungen</string>
+    <string name="sensor">Sensoren</string>
+
     <string name="scan_again">Erneut suchen</string>
     <string name="scan_for_sensors">Nach Sensoren suchen</string>
     <string name="scan_stated">Suche gestartet...</string>
