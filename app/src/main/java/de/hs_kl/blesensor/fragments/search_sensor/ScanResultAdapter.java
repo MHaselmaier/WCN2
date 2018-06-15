@@ -51,7 +51,8 @@ public class ScanResultAdapter extends BaseAdapter
     {
         SensorData sensorData = this.sensorData.get(position);
 
-        if (null == view) {
+        if (null == view)
+        {
             view = this.inflater.inflate(R.layout.sensor_list_item, null);
 
             TextView sensorMacAddress = view.findViewById(R.id.sensor_mac_address);

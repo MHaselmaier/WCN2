@@ -44,4 +44,10 @@
     <string name="cancel">Abbrechen</string>
     <string name="measurement_header">Messungs Beschreibung:</string>
     <string name="measurement_comment">Hier können Sie eine Beschreibung der Messung angeben, welche als Kopfzeile in die Messungs-Datei eingefügt wird</string>
+
+    <string name="more">Mehr</string>
+    <string name="share">Teilen</string>
+    <string name="delete">Löschen</string>
+    <string name="deleted">Wurde gelöscht</string>
+    <string name="delete_failed">Löschen fehlgeschlagen</string>
 </resources>
