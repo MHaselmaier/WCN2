@@ -1,6 +1,9 @@
 package de.hs_kl.blesensor.fragments.manage_measurements;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,10 +44,13 @@ public class MeasurementMenu extends PopupMenu implements View.OnClickListener, 
         switch (item.getItemId())
         {
         case R.id.share:
-            // TODO
-            Toast.makeText(this.context, "Not yet implemented!", Toast.LENGTH_LONG).show();
-            Log.e(MeasurementMenu.class.getSimpleName(), "Sharing not yet implemented!");
-            return false;
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(this.context, "de.hs_kl.fileprovider", this.measurement));
+            shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            String title = this.context.getResources().getString(R.string.share);
+            this.context.startActivity(Intent.createChooser(shareIntent, title));
+            return true;
         case R.id.delete:
             if (this.measurement.delete())
             {
