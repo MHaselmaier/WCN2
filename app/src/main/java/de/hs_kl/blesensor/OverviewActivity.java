@@ -11,7 +11,9 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
@@ -52,6 +54,7 @@ public class OverviewActivity extends AppCompatActivity
         setupBluetoothAdapter();
         ensureBluetoothIsEnabled();
 
+        final DrawerLayout drawer = findViewById(R.id.drawer);
         View overview = findViewById(R.id.overview);
         overview.setOnClickListener(new View.OnClickListener()
         {
@@ -62,6 +65,7 @@ public class OverviewActivity extends AppCompatActivity
                 ft.replace(R.id.fragment, new SensorTrackingFragment());
                 ft.addToBackStack(null);
                 ft.commit();
+                drawer.closeDrawers();
             }
         });
 
@@ -75,6 +79,7 @@ public class OverviewActivity extends AppCompatActivity
                 ft.replace(R.id.fragment, new ManageMeasurementsFragment());
                 ft.addToBackStack(null);
                 ft.commit();
+                drawer.closeDrawers();
             }
         });
 
@@ -88,6 +93,7 @@ public class OverviewActivity extends AppCompatActivity
                 ft.replace(R.id.fragment, new SearchSensorFragment());
                 ft.addToBackStack(null);
                 ft.commit();
+                drawer.closeDrawers();
             }
         });
 
