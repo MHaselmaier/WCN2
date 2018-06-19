@@ -1,5 +1,6 @@
 package de.hs_kl.blesensor;
 
+import android.Manifest;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
@@ -7,7 +8,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -39,6 +43,8 @@ public class OverviewActivity extends AppCompatActivity
         setContentView(R.layout.activity_overview);
         setTitle(R.string.app_name);
 
+        requestPermissions();
+
         registerReceiver(this.btAdapterChangeReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
         setupBluetoothAdapter();
         ensureBluetoothIsEnabled();
@@ -47,6 +53,32 @@ public class OverviewActivity extends AppCompatActivity
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.fragment, new SensorTrackingFragment());
         ft.commit();
+    }
+
+    private void requestPermissions()
+    {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return;
+
+        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.REQUEST_PERMISSIONS);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    {
+        for (int i = 0; permissions.length > i; ++i)
+        {
+            if ((Manifest.permission.ACCESS_FINE_LOCATION.equals(permissions[i]) && PackageManager.PERMISSION_DENIED == grantResults[i]) ||
+                (Manifest.permission.ACCESS_COARSE_LOCATION.equals(permissions[i]) && PackageManager.PERMISSION_DENIED == grantResults[i]))
+            {
+                Toast.makeText(this, R.string.denied_permission_location, Toast.LENGTH_LONG).show();
+                finish();
+            }
+            else if (Manifest.permission.WRITE_EXTERNAL_STORAGE.equals(permissions[i]) && PackageManager.PERMISSION_DENIED == grantResults[i])
+            {
+                Toast.makeText(this, R.string.denied_permission_write_external_storage, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     private void setupBluetoothAdapter()

@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">BLESensor</string>
     <string name="bt_was_not_enabled">Bluetooth wurde nicht eingeschaltet, wird allerdings zum Betrieb dieser App benötigt.</string>
+    <string name="denied_permission_location">Die App benötigt Zugriff auf die Position, um die Sensordaten empfangen zu können.</string>
+    <string name="denied_permission_write_external_storage">Die App benötigt Zugriff auf den Speicher, um die Messungen zu speichern.</string>
 
     <string name="scan_again">Erneut suchen</string>
     <string name="scan_for_sensors">Nach Sensoren suchen</string>
