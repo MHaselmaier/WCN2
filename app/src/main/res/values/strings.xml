@@ -4,6 +4,10 @@
     <string name="denied_permission_location">Die App benötigt Zugriff auf die Position, um die Sensordaten empfangen zu können.</string>
     <string name="denied_permission_write_external_storage">Die App benötigt Zugriff auf den Speicher, um die Messungen zu speichern.</string>
 
+    <string name="overview">Übersicht</string>
+    <string name="measurement">Messungen</string>
+    <string name="sensor">Sensoren</string>
+
     <string name="scan_again">Erneut suchen</string>
     <string name="scan_for_sensors">Nach Sensoren suchen</string>
     <string name="scan_stated">Suche gestartet...</string>
