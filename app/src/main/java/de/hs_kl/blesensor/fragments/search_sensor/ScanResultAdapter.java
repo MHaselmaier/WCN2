@@ -1,10 +1,15 @@
 package de.hs_kl.blesensor.fragments.search_sensor;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -47,13 +52,49 @@ public class ScanResultAdapter extends BaseAdapter
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup parent)
+    public View getView(final int position, View view, ViewGroup parent)
     {
-        SensorData sensorData = this.sensorData.get(position);
+        final SensorData sensorData = this.sensorData.get(position);
 
         if (null == view)
         {
             view = this.inflater.inflate(R.layout.sensor_list_item, null);
+
+            final ImageButton mnemonicEdit = view.findViewById(R.id.mnemonic_edit);
+            mnemonicEdit.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ScanResultAdapter.this.context);
+
+                    View dialog = LayoutInflater.from(ScanResultAdapter.this.context).inflate(R.layout.mnemonic_dialog, null);
+                    dialogBuilder.setView(dialog);
+
+                    final EditText mnemonic = dialog.findViewById(R.id.mnemonic);
+                    dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            dialog.dismiss();
+                            ScanResultAdapter.this.getItem(position).setMnemonic(mnemonic.getText().toString());
+                            ScanResultAdapter.this.notifyDataSetInvalidated();
+                        }
+                    });
+
+                    dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    dialogBuilder.show();
+                }
+            });
 
             TextView sensorMacAddress = view.findViewById(R.id.sensor_mac_address);
             sensorMacAddress.setText(sensorData.getMacAddress());
@@ -63,6 +104,9 @@ public class ScanResultAdapter extends BaseAdapter
             trackSwitch.setText(trackSwitch.isChecked() ? R.string.sensor_tracked : R.string.sensor_not_tracked);
             trackSwitch.setOnCheckedChangeListener(new SensorTrackedChangeListener(this.context, sensorData));
         }
+
+        TextView mnemonic = view.findViewById(R.id.mnemonic);
+        mnemonic.setText(this.context.getResources().getString(R.string.mnemonic, sensorData.getMnemonic()));
 
         TextView sensorID = view.findViewById(R.id.sensor_id);
         sensorID.setText(this.context.getResources().getString(R.string.sensor_id, sensorData.getSensorID()));

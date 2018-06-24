@@ -7,7 +7,8 @@ public class Constants
 
     public static final int MANUFACTURER_ID = 0xFFFF;
 
-    public static final String TRACKED_SENSORS_PREFERENCES = "tracked_sensors";
+    public static final String TRACKED_SENSORS_ID = "tracked_sensors_id";
+    public static final String TRACKED_SENSORS_MNEMONIC = "tracked_sensors_mnemonic";
 
     public static final String DATA_DIRECTORY = "BLE_DATA";
 }

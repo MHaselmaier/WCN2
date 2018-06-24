@@ -5,6 +5,7 @@ import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
+import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 
@@ -17,6 +18,7 @@ import de.hs_kl.blesensor.util.Constants;
 
 public class BLEScanner
 {
+    private static Context context;
     private static BluetoothLeScanner bleScanner;
     private static Set<ScanResultListener> scanResultListeners = new HashSet<>();
 
@@ -46,14 +48,14 @@ public class BLEScanner
             {
                 if (0 == listener.getScanFilter().size())
                 {
-                    listener.onScanResult(new SensorData(result));
+                    listener.onScanResult(new SensorData(result, BLEScanner.context));
                     continue;
                 }
                 for (ScanFilter scanFilter: listener.getScanFilter())
                 {
                     if (scanFilter.matches(result))
                     {
-                        listener.onScanResult(new SensorData(result));
+                        listener.onScanResult(new SensorData(result, BLEScanner.context));
                         break;
                     }
                 }
@@ -89,6 +91,11 @@ public class BLEScanner
             }
         }
     };
+
+    public static void setContext(Context context)
+    {
+        BLEScanner.context = context;
+    }
 
     public static void setBluetoothLeScanner(BluetoothLeScanner bleScanner)
     {

@@ -15,11 +15,11 @@ import java.util.TreeMap;
 
 import de.hs_kl.blesensor.R;
 import de.hs_kl.blesensor.util.Constants;
+import de.hs_kl.blesensor.util.TrackedSensorsStorage;
 
 public class Dataset
 {
-    private String measurementHeader = "Here you can put a comment, which is placed as a header\n" +
-            "in the measurement file";
+    private String measurementHeader = null;
     private SortedMap<Byte, String> sensorInfo = new TreeMap<>();
     private SortedMap<Integer, SortedMap<Byte, DatasetEntry>> entries = new TreeMap<>();
 
@@ -57,8 +57,8 @@ public class Dataset
         {
             PrintWriter outputStream = createOutputStream(filename);
 
-            writeMeasurementHeader(outputStream);
-            writeSensorInfo(outputStream);
+            writeMeasurementHeader(outputStream, context);
+            writeSensorInfo(outputStream, context);
             writeSensorData(outputStream);
 
             outputStream.close();
@@ -90,18 +90,26 @@ public class Dataset
         return new PrintWriter(file);
     }
 
-    private void writeMeasurementHeader(PrintWriter outputStream)
+    private void writeMeasurementHeader(PrintWriter outputStream, Context context)
     {
-        outputStream.write(this.measurementHeader + "\n\n");
+        if (null != this.measurementHeader)
+        {
+            outputStream.write(this.measurementHeader + "\n\n");
+        }
+        else
+        {
+            outputStream.write(context.getResources().getString(R.string.measurement_comment) + "\n\n");
+        }
     }
 
-    private void writeSensorInfo(PrintWriter outputStream)
+    private void writeSensorInfo(PrintWriter outputStream, Context context)
     {
         outputStream.write("Sensor ID\tMAC Address\tMnemonic\n");
 
         for (Map.Entry<Byte, String> entry: this.sensorInfo.entrySet())
         {
-            outputStream.format("%d\t%s\t%s\n", entry.getKey(), entry.getValue(), "comment !"); // TODO: Add Mnemonic
+            outputStream.format("%d\t%s\t%s\n", entry.getKey(), entry.getValue(),
+                    TrackedSensorsStorage.getMnemonic(context, entry.getValue()));
         }
 
         outputStream.write("\n");

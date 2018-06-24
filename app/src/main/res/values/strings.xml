@@ -14,6 +14,7 @@
     <string name="scan_failed">Suche gescheitert!</string>
     <string name="no_sensors_found">Es wurden keine Sensoren gefunden.</string>
 
+    <string name="mnemonic">[%1s]</string>
     <string name="sensor_id">WCN%1d</string>
     <string name="sensor_not_seen">Nicht gefunden</string>
     <string name="sensor_last_seen">Zuletzt gesehen:</string>
@@ -50,6 +51,8 @@
     <string name="cancel">Abbrechen</string>
     <string name="measurement_header">Messungs Beschreibung:</string>
     <string name="measurement_comment">Hier können Sie eine Beschreibung der Messung angeben, welche als Kopfzeile in die Messungs-Datei eingefügt wird</string>
+    <string name="mnemonic_header">Mnemonic:</string>
+    <string name="mnemonic_comment">Kommentar !</string>
 
     <string name="more">Mehr</string>
     <string name="share">Teilen</string>

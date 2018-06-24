@@ -1,12 +1,14 @@
 package de.hs_kl.blesensor.ble_scanner;
 
 import android.bluetooth.le.ScanResult;
+import android.content.Context;
 
 import de.hs_kl.blesensor.util.Constants;
+import de.hs_kl.blesensor.util.TrackedSensorsStorage;
 
 public class SensorData
 {
-    private String sensorName;
+    private String mnemonic;
     private String macAddress;
     private long timestamp;
     private int rssi;
@@ -16,9 +18,8 @@ public class SensorData
     private float relativeHumidity;
     private float batteryVoltage;
 
-    public SensorData(ScanResult result)
+    public SensorData(ScanResult result, Context context)
     {
-        this.sensorName = result.getScanRecord().getDeviceName();
         this.macAddress = result.getDevice().getAddress();
         this.timestamp = (System.currentTimeMillis() - android.os.SystemClock.elapsedRealtime())
                             + result.getTimestampNanos() / 1_000_000;
@@ -33,11 +34,14 @@ public class SensorData
             this.relativeHumidity = calculateRelativeHumidity(rawData[4], rawData[5]);
             this.batteryVoltage = calculateBatteryVoltage(rawData[6]);
         }
+
+        this.mnemonic = TrackedSensorsStorage.getMnemonic(context, this.macAddress);
     }
 
-    public SensorData(byte sensorID, String macAddress)
+    public SensorData(byte sensorID, String mnemonic, String macAddress)
     {
         this.sensorID = sensorID;
+        this.mnemonic = mnemonic;
         this.macAddress = macAddress;
         this.timestamp = Long.MAX_VALUE;
     }
@@ -57,9 +61,9 @@ public class SensorData
         return (b & 0xFF) * 4f / 225f;
     }
 
-    public String getSensorName()
+    public String getMnemonic()
     {
-        return this.sensorName;
+        return this.mnemonic;
     }
 
     public String getMacAddress()
@@ -97,9 +101,15 @@ public class SensorData
         return batteryVoltage;
     }
 
+    public void setMnemonic(String mnemonic)
+    {
+        this.mnemonic = mnemonic;
+    }
+
     public String toString()
     {
         return "SensorData:\n" +
+                "\tMnemonic: " + this.mnemonic + "\n" +
                 "\tMAC-Address: " + this.macAddress + "\n" +
                 "\tTimestamp: " + this.timestamp + "\n" +
                 "\tRSSI: " + this.rssi + "dBm\n" +

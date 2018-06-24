@@ -115,9 +115,8 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
 
                     View dialog = LayoutInflater.from(getActivity()).inflate(R.layout.measurement_dialog, (ViewGroup)getView(), false);
                     dialogBuilder.setView(dialog);
-                    //View dialog = getActivity().getLayoutInflater().inflate(R.layout.measurement_dialog, (ViewGroup)getView(), false);
-                    final EditText measurementHeader = dialog.findViewById(R.id.measurement_header);
 
+                    final EditText measurementHeader = dialog.findViewById(R.id.measurement_header);
                     dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
                     {
                         @Override

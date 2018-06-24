@@ -40,8 +40,7 @@ public class SearchSensorFragment extends ListFragment implements ScanResultList
         setHasOptionsMenu(true);
         setRetainInstance(true);
 
-        this.scanResultAdapter = new ScanResultAdapter(getActivity().getApplicationContext(),
-                LayoutInflater.from(getActivity()));
+        this.scanResultAdapter = new ScanResultAdapter(getActivity(), LayoutInflater.from(getActivity()));
     }
 
     @Override

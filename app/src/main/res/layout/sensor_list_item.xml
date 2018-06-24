@@ -24,32 +24,63 @@
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
         android:orientation="vertical"
-        android:paddingTop="0dp"
         app:layout_constraintRight_toLeftOf="@+id/sensor_tracked"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/sensor_id"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            tools:text="WCN1" />
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/sensor_mac_address"
+            <TextView
+                android:id="@+id/mnemonic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="[Linker Arm]" />
+
+            <ImageButton
+                android:id="@+id/mnemonic_edit"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/tracked_sensors_edit"
+                android:scaleType="fitXY"
+                android:tint="@color/colorPrimary"
+                app:layout_constraintRight_toRightOf="parent"
+                app:srcCompat="@drawable/ic_edit" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            tools:text="00:00:00:00:00:00" />
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/sensor_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="WCN1" />
+
+            <TextView
+                android:id="@+id/sensor_mac_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="00:00:00:00:00:00" />
+
+        </android.support.constraint.ConstraintLayout>
 
         <TextView
             android:id="@+id/last_seen"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
+            android:textSize="14sp"
             tools:text="Not found" />
 
     </LinearLayout>
