@@ -16,7 +16,7 @@ public class TrackedSensorsStorage
     {
         SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.TRACKED_SENSORS_MNEMONIC,
                 Context.MODE_PRIVATE);
-        return sharedPreferences.getString(macAddress, null);
+        return sharedPreferences.getString(macAddress, "null");
     }
 
     public static List<SensorData> getTrackedSensors(Context context)
@@ -43,13 +43,13 @@ public class TrackedSensorsStorage
                                                         Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(sensorData.getMacAddress(), sensorData.getSensorID());
-        editor.apply();
+        editor.commit();
 
         sharedPreferences = context.getSharedPreferences(Constants.TRACKED_SENSORS_MNEMONIC,
-                Context.MODE_PRIVATE);
+                                                        Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         editor.putString(sensorData.getMacAddress(), sensorData.getMnemonic());
-        editor.apply();
+        editor.commit();
     }
 
     public static void untrackSensor(Context context, SensorData sensorData)
@@ -58,13 +58,13 @@ public class TrackedSensorsStorage
                                                         Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(sensorData.getMacAddress());
-        editor.apply();
+        editor.commit();
 
         sharedPreferences = context.getSharedPreferences(Constants.TRACKED_SENSORS_MNEMONIC,
                 Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         editor.remove(sensorData.getMacAddress());
-        editor.apply();
+        editor.commit();
     }
 
     public static boolean isTracked(Context context, SensorData sensorData)

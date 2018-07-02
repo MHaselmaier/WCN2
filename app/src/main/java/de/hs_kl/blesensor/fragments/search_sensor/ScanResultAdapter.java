@@ -78,8 +78,10 @@ public class ScanResultAdapter extends BaseAdapter
                         public void onClick(DialogInterface dialog, int which)
                         {
                             dialog.dismiss();
-                            ScanResultAdapter.this.getItem(position).setMnemonic(mnemonic.getText().toString());
+                            sensorData.setMnemonic(mnemonic.getText().toString());
                             ScanResultAdapter.this.notifyDataSetInvalidated();
+
+                            TrackedSensorsStorage.trackSensor(ScanResultAdapter.this.context, sensorData);
                         }
                     });
 

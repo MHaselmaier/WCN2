@@ -151,19 +151,12 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
             }
         });
 
-        this.trackedSensorViews = new LinearLayout(getActivity());
-        this.trackedSensorViews.setOrientation(LinearLayout.VERTICAL);
+        this.trackedSensorViews = view.findViewById(R.id.tracked_sensors);
 
         this.sensorOverview = view.findViewById(R.id.sensor_overview);
         this.actionOverview = view.findViewById(R.id.action_overview);
         this.actionOverview.setVisibility(View.GONE);
         addActionToggleButtons((GridLayout)this.actionOverview.findViewById(R.id.actions));
-
-        ScrollView scrollView = new ScrollView(getActivity());
-        scrollView.addView(trackedSensorViews);
-
-        LinearLayout trackedSensors = view.findViewById(R.id.tracked_sensors);
-        trackedSensors.addView(scrollView);
 
         ImageButton edit = view.findViewById(R.id.edit_tracked_sensors);
         edit.setOnClickListener(new View.OnClickListener() {
