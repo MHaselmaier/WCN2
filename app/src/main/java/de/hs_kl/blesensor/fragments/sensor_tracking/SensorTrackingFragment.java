@@ -8,8 +8,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Handler;
-import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +29,7 @@ import de.hs_kl.blesensor.R;
 import de.hs_kl.blesensor.ble_scanner.ScanResultListener;
 import de.hs_kl.blesensor.fragments.search_sensor.SearchSensorFragment;
 import de.hs_kl.blesensor.ble_scanner.SensorData;
+import de.hs_kl.blesensor.util.DefinedActionStorage;
 import de.hs_kl.blesensor.util.TrackedSensorsStorage;
 import de.hs_kl.blesensor.util.LastSeenSinceUtil;
 
@@ -174,18 +173,23 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
 
     private void addActionToggleButtons(GridLayout gridLayout)
     {
-        String[] actions = getResources().getStringArray(R.array.actions);
+        String[] actions = DefinedActionStorage.getDefinedActions(getActivity());
+
+        if (0 == actions.length)
+        {
+            TextView info = new TextView(getActivity());
+            info.setText(R.string.uses_default_action);
+            gridLayout.addView(info);
+            return;
+        }
+
         for (String action: actions)
         {
-            ConstraintLayout constraintLayout = new ConstraintLayout(getActivity());
-            constraintLayout.setLayoutParams(new ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT));
-
-            ToggleButton toggleButton = new ToggleButton(getActivity());
+            View view = getActivity().getLayoutInflater().inflate(R.layout.action_button, gridLayout, false);
+            ToggleButton toggleButton = view.findViewById(R.id.button);
             toggleButton.setTextOff(action);
             toggleButton.setTextOn(action);
             toggleButton.setText(action);
-            constraintLayout.addView(toggleButton);
             toggleButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -204,18 +208,14 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
                     }
                 }
             });
-
-            ConstraintSet constraintSet = new ConstraintSet();
-            constraintSet.setDimensionRatio(toggleButton.getId(), "1:1");
-            constraintSet.connect(toggleButton.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
-            constraintSet.connect(toggleButton.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
-            constraintSet.connect(toggleButton.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
-            constraintSet.connect(toggleButton.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
-            constraintSet.applyTo(constraintLayout);
-
-            GridLayout.LayoutParams gridParams = new GridLayout.LayoutParams();
-            gridParams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
-            gridLayout.addView(constraintLayout, gridParams);
+            gridLayout.addView(view);
+        }
+        if (1 == actions.length)
+        {
+            // add extra invisible view so the single button is not spread over the whole screen
+            View view = getActivity().getLayoutInflater().inflate(R.layout.action_button, gridLayout, false);
+            view.setVisibility(View.INVISIBLE);
+            gridLayout.addView(view);
         }
     }
 

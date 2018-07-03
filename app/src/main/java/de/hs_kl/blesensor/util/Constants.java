@@ -10,5 +10,7 @@ public class Constants
     public static final String TRACKED_SENSORS_ID = "tracked_sensors_id";
     public static final String TRACKED_SENSORS_MNEMONIC = "tracked_sensors_mnemonic";
 
+    public static final String DEFINED_ACTIONS = "defined_actions";
+
     public static final String DATA_DIRECTORY = "BLE_DATA";
 }

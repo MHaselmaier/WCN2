@@ -28,12 +28,6 @@
     <string name="sensor_tracked">Verfolgt</string>
     <string name="sensor_not_tracked">Nicht Verfolgt</string>
 
-    <string-array name="actions">
-        <item>Laufen</item>
-        <item>Schwimmen</item>
-        <item>Rad Fahren</item>
-        <item>Hampelmann</item>
-    </string-array>
     <string name="time">%1$02d:%2$02d</string>
     <string name="no_time">--:--</string>
     <string name="measurement_button_start">Messung starten</string>
@@ -42,6 +36,7 @@
     <string name="sensor_warning">Warnung</string>
     <string name="tracked_sensors_edit">Bearbeiten</string>
     <string name="failed_to_write_file">Datei konnte nicht erstellt werden</string>
+    <string name="uses_default_action">Es wurden keine Aktionen definiert.</string>
 
     <string name="temperature">%1$.2f °C</string>
     <string name="humidity">%1$.2f %%</string>
@@ -59,4 +54,12 @@
     <string name="delete">Löschen</string>
     <string name="deleted">Wurde gelöscht</string>
     <string name="delete_failed">Löschen fehlgeschlagen</string>
+
+    <string name="add">Hinzufügen</string>
+    <string name="remove">Entfernen</string>
+    <string name="defined_actions">Definierte Aktionen:</string>
+    <string name="no_actions_defined">Keine Aktionen definiert</string>
+
+    <string name="action_header">Neue Aktion:</string>
+    <string name="action_comment">Aktion</string>
 </resources>
