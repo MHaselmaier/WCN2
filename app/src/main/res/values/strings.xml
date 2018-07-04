@@ -33,7 +33,7 @@
     <string name="no_time">--:--</string>
     <string name="measurement_button_start">Messung starten</string>
     <string name="measurement_button_stop">Messung stoppen</string>
-    <string name="tracked_sensors">Verfolgte Sensoren</string>
+    <string name="tracked_sensors">Verfolgte Sensoren:</string>
     <string name="sensor_warning">Warnung</string>
     <string name="tracked_sensors_edit">Bearbeiten</string>
     <string name="failed_to_write_file">Datei konnte nicht erstellt werden</string>
@@ -50,6 +50,7 @@
     <string name="mnemonic_header">Mnemonic:</string>
     <string name="mnemonic_comment">Kommentar !</string>
 
+    <string name="saved_measurements">Gespeicherte Messungen:</string>
     <string name="more">Mehr</string>
     <string name="share">Teilen</string>
     <string name="delete">Löschen</string>
