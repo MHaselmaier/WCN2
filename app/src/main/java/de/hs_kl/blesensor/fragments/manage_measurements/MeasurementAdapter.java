@@ -59,13 +59,13 @@ public class MeasurementAdapter extends BaseAdapter
         if (null == view)
         {
             view = this.inflater.inflate(R.layout.measurement_item, null);
-
-            TextView label = view.findViewById(R.id.label);
-            label.setText(measurement.getName());
-
-            ImageButton more = view.findViewById(R.id.more);
-            more.setOnClickListener(new MeasurementMenu(this.context, more, measurement, this));
         }
+
+        TextView label = view.findViewById(R.id.label);
+        label.setText(measurement.getName());
+
+        ImageButton more = view.findViewById(R.id.more);
+        more.setOnClickListener(new MeasurementMenu(this.context, more, measurement, this));
 
         return view;
     }
