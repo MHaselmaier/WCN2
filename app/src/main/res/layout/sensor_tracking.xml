@@ -64,20 +64,29 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/tracked_sensors"
-                    android:textSize="24sp"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    android:textSize="26sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
 
                 <ImageButton
                     android:id="@+id/edit_tracked_sensors"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/tracked_sensors_edit"
                     android:scaleType="fitXY"
-                    android:tint="@color/colorPrimary"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:srcCompat="@drawable/ic_edit" />
+                    android:src="@drawable/ic_edit"
+                    android:tint="@color/colorPrimaryDark"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
             </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
 
             <ScrollView
                 android:layout_width="match_parent"
