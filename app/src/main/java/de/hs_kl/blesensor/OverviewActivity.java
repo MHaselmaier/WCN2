@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import de.hs_kl.blesensor.ble_scanner.BLEScanner;
+import de.hs_kl.blesensor.fragments.actions.ActionsFragment;
 import de.hs_kl.blesensor.fragments.manage_measurements.ManageMeasurementsFragment;
 import de.hs_kl.blesensor.fragments.search_sensor.SearchSensorFragment;
 import de.hs_kl.blesensor.fragments.sensor_tracking.SensorTrackingFragment;
@@ -77,6 +78,18 @@ public class OverviewActivity extends AppCompatActivity
             {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.replace(R.id.fragment, new ManageMeasurementsFragment());
+                ft.addToBackStack(null);
+                ft.commit();
+                drawer.closeDrawers();
+            }
+        });
+
+        View action = findViewById(R.id.action);
+        action.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.fragment, new ActionsFragment());
                 ft.addToBackStack(null);
                 ft.commit();
                 drawer.closeDrawers();

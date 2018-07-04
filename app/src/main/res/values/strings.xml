@@ -6,6 +6,7 @@
 
     <string name="overview">Übersicht</string>
     <string name="measurement">Messungen</string>
+    <string name="action">Aktionen</string>
     <string name="sensor">Sensoren</string>
 
     <string name="scan_again">Erneut suchen</string>
