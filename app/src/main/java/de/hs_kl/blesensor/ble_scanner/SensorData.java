@@ -8,7 +8,7 @@ import de.hs_kl.blesensor.util.TrackedSensorsStorage;
 
 public class SensorData
 {
-    private String mnemonic = "null";
+    private String mnemonic;
     private String macAddress;
     private long timestamp;
     private int rssi;
