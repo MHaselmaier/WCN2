@@ -1,12 +1,13 @@
 package de.hs_kl.blesensor.fragments.search_sensor;
 
-import android.app.ListFragment;
+import android.app.Fragment;
 import android.bluetooth.le.ScanFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ import de.hs_kl.blesensor.ble_scanner.SensorData;
 import de.hs_kl.blesensor.ble_scanner.BLEScanner;
 import de.hs_kl.blesensor.ble_scanner.ScanResultListener;
 
-public class SearchSensorFragment extends ListFragment implements ScanResultListener
+public class SearchSensorFragment extends Fragment implements ScanResultListener
 {
     private ScanResultAdapter scanResultAdapter;
     private Handler uiUpdater = new Handler();
@@ -47,22 +48,13 @@ public class SearchSensorFragment extends ListFragment implements ScanResultList
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState)
     {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
+        View view = getActivity().getLayoutInflater().inflate(R.layout.search_sensor, container, false);
 
-        setListAdapter(this.scanResultAdapter);
+
+        ListView sensors = view.findViewById(R.id.sensors);
+        sensors.setAdapter(this.scanResultAdapter);
 
         return view;
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState)
-    {
-        super.onViewCreated(view, savedInstanceState);
-
-        getListView().setDivider(null);
-        getListView().setDividerHeight(0);
-
-        setEmptyText(getString(R.string.no_sensors_found));
     }
 
     @Override

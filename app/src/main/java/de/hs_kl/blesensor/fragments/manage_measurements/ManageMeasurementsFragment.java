@@ -11,8 +11,6 @@ import de.hs_kl.blesensor.R;
 
 public class ManageMeasurementsFragment extends Fragment
 {
-    private ListView measurements;
-
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -27,8 +25,8 @@ public class ManageMeasurementsFragment extends Fragment
     {
         View view = getActivity().getLayoutInflater().inflate(R.layout.manage_measurement, container, false);
 
-        this.measurements = view.findViewById(R.id.measurements);
-        this.measurements.setAdapter(new MeasurementAdapter(getActivity(), inflater));
+        ListView measurements = view.findViewById(R.id.measurements);
+        measurements.setAdapter(new MeasurementAdapter(getActivity(), inflater));
 
         return view;
     }

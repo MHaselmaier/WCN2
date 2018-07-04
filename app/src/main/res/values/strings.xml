@@ -15,6 +15,7 @@
     <string name="scan_failed">Suche gescheitert!</string>
     <string name="no_sensors_found">Es wurden keine Sensoren gefunden.</string>
 
+    <string name="found_sensors">Gefundene Sensoren:</string>
     <string name="mnemonic">[%1s]</string>
     <string name="sensor_id">WCN%1d</string>
     <string name="sensor_not_seen">Nicht gefunden</string>
