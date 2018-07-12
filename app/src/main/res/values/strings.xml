@@ -3,6 +3,9 @@
     <string name="bt_was_not_enabled">Bluetooth was not enabled but it is needed to run the app.</string>
     <string name="denied_permission_location">The app needs to access your location to receive sensor data.</string>
     <string name="denied_permission_write_external_storage">The app needs to access your file storage to save measurements.</string>
+    <string name="allow">Allow</string>
+    <string name="deny">Deny</string>
+    <string name="enable_location">WCN App wants to turn on Location Service</string>
 
     <string name="overview">Overview</string>
     <string name="measurement">Measurements</string>
