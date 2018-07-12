@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.bluetooth.le.ScanFilter;
 import android.content.DialogInterface;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -21,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +44,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
 
     private List<SensorData> trackedSensors;
     private Handler uiUpdater = new Handler();
-    private ToggleButton action;
+    private Button action;
     private Button measurementButton;
     private TextView measurementTime;
     private CardView sensorOverview;
@@ -189,16 +189,14 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         for (String action: actions)
         {
             View view = getActivity().getLayoutInflater().inflate(R.layout.action_button, gridLayout, false);
-            ToggleButton toggleButton = view.findViewById(R.id.button);
-            toggleButton.setTextOff(action);
-            toggleButton.setTextOn(action);
-            toggleButton.setText(action);
-            toggleButton.setOnClickListener(new View.OnClickListener() {
+            Button button = view.findViewById(R.id.button);
+            button.setText(action);
+            button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (null != SensorTrackingFragment.this.action)
                     {
-                        SensorTrackingFragment.this.action.setChecked(false);
+                        SensorTrackingFragment.this.action.getBackground().clearColorFilter();
                     }
                     if (view == SensorTrackingFragment.this.action)
                     {
@@ -206,8 +204,8 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
                     }
                     else
                     {
-                        SensorTrackingFragment.this.action = (ToggleButton)view;
-                        SensorTrackingFragment.this.action.setChecked(true);
+                        SensorTrackingFragment.this.action = (Button)view;
+                        SensorTrackingFragment.this.action.getBackground().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
                     }
                 }
             });
@@ -238,6 +236,11 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         SensorTrackingFragment.this.dataset.writeToFile(getActivity());
         SensorTrackingFragment.this.tracking = false;
         updateTrackingTime();
+
+        if (null != SensorTrackingFragment.this.action)
+        {
+            SensorTrackingFragment.this.action.getBackground().clearColorFilter();
+        }
 
         this.sensorOverview.setVisibility(View.VISIBLE);
         this.actionOverview.setVisibility(View.GONE);
