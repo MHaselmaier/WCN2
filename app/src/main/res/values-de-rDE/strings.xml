@@ -1,0 +1,68 @@
+<resources>
+    <string name="app_name">WCN App</string>
+    <string name="bt_was_not_enabled">Bluetooth wurde nicht eingeschaltet, wird allerdings zum Betrieb dieser App benötigt.</string>
+    <string name="denied_permission_location">Die App benötigt Zugriff auf die Position, um die Sensordaten empfangen zu können.</string>
+    <string name="denied_permission_write_external_storage">Die App benötigt Zugriff auf den Speicher, um die Messungen zu speichern.</string>
+
+    <string name="overview">Übersicht</string>
+    <string name="measurement">Messungen</string>
+    <string name="action">Aktionen</string>
+    <string name="sensor">Sensoren</string>
+
+    <string name="scan_again">Erneut suchen</string>
+    <string name="scan_for_sensors">Nach Sensoren suchen</string>
+    <string name="scan_stated">Suche gestartet...</string>
+    <string name="scan_failed">Suche gescheitert!</string>
+    <string name="no_sensors_found">Es wurden keine Sensoren gefunden.</string>
+
+    <string name="found_sensors">Gefundene Sensoren:</string>
+    <string name="mnemonic">[%1s]</string>
+    <string name="sensor_id">WCN%1d</string>
+    <string name="sensor_not_seen">Nicht gefunden</string>
+    <string name="sensor_last_seen">Zuletzt gesehen:</string>
+    <string name="sensor_seen_just_now">gerade eben</string>
+    <string name="sensor_seen_seconds_ago">vor %1$d Sekunden</string>
+    <string name="sensor_seen_a_minute_ago">vor einer Minute</string>
+    <string name="sensor_seen_minutes_ago">vor %1$d Minuten</string>
+    <string name="sensor_seen_an_hour_ago">vor einer Stunde</string>
+    <string name="sensor_seen_hours_ago">vor %1$d Stunden</string>
+
+    <string name="sensor_tracked">Verfolgt</string>
+    <string name="sensor_not_tracked">Nicht Verfolgt</string>
+
+    <string name="time">%1$02d:%2$02d</string>
+    <string name="no_time">--:--</string>
+    <string name="measurement_button_start">Messung starten</string>
+    <string name="measurement_button_stop">Messung stoppen</string>
+    <string name="tracked_sensors">Verfolgte Sensoren:</string>
+    <string name="sensor_warning">Warnung</string>
+    <string name="tracked_sensors_edit">Bearbeiten</string>
+    <string name="failed_to_write_file">Datei konnte nicht erstellt werden</string>
+    <string name="uses_default_action">Es wurden keine Aktionen definiert.</string>
+
+    <string name="temperature">%1$.2f °C</string>
+    <string name="humidity">%1$.2f %%</string>
+    <string name="batterylevel">Batterie Status</string>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="measurement_header">Messungs Beschreibung:</string>
+    <string name="measurement_comment">Hier können Sie eine Beschreibung der Messung angeben, welche als Kopfzeile in die Messungs-Datei eingefügt wird</string>
+    <string name="mnemonic_header">Mnemonic:</string>
+    <string name="mnemonic_comment">Kommentar !</string>
+
+    <string name="saved_measurements">Gespeicherte Messungen:</string>
+    <string name="more">Mehr</string>
+    <string name="share">Teilen</string>
+    <string name="delete">Löschen</string>
+    <string name="deleted">Wurde gelöscht</string>
+    <string name="delete_failed">Löschen fehlgeschlagen</string>
+
+    <string name="add">Hinzufügen</string>
+    <string name="remove">Entfernen</string>
+    <string name="defined_actions">Definierte Aktionen:</string>
+    <string name="no_actions_defined">Keine Aktionen definiert</string>
+
+    <string name="action_header">Neue Aktion:</string>
+    <string name="action_comment">Aktion</string>
+</resources>
