@@ -42,7 +42,7 @@
 
     <string name="temperature">%1$.2f °C</string>
     <string name="humidity">%1$.2f %%</string>
-    <string name="battery_voltage">%1$.2f V</string>
+    <string name="batterylevel">Batterie Status</string>
 
     <string name="ok">OK</string>
     <string name="cancel">Abbrechen</string>

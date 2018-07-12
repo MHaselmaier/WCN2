@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.bluetooth.le.ScanFilter;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Handler;
@@ -16,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -29,6 +31,7 @@ import de.hs_kl.blesensor.R;
 import de.hs_kl.blesensor.ble_scanner.ScanResultListener;
 import de.hs_kl.blesensor.fragments.search_sensor.SearchSensorFragment;
 import de.hs_kl.blesensor.ble_scanner.SensorData;
+import de.hs_kl.blesensor.util.Constants;
 import de.hs_kl.blesensor.util.DefinedActionStorage;
 import de.hs_kl.blesensor.util.TrackedSensorsStorage;
 import de.hs_kl.blesensor.util.LastSeenSinceUtil;
@@ -319,10 +322,48 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
             temperature.setText(getResources().getString(R.string.temperature, sensorData.getTemperature()));
             TextView humidity = tracked_sensor_overview.findViewById(R.id.humidity);
             humidity.setText(getResources().getString(R.string.humidity, sensorData.getRelativeHumidity()));
-            TextView batteryLevel = tracked_sensor_overview.findViewById(R.id.battery_level);
-            batteryLevel.setText(getResources().getString(R.string.battery_voltage, sensorData.getBatteryVoltage()));
+            ImageView batteryLevel = tracked_sensor_overview.findViewById(R.id.battery_level);
+            batteryLevel.setImageDrawable(getBatteryLevelDrawable(sensorData.getBatteryVoltage()));
 
             this.trackedSensorViews.addView(tracked_sensor_overview);
+        }
+    }
+
+    private Drawable getBatteryLevelDrawable(float batteryVoltage)
+    {
+        int percentage = (int)(Math.max(0, Math.min(batteryVoltage / Constants.MAX_VOLTAGE, 1)) * 100);
+
+        if (20 > percentage)
+        {
+            return getResources().getDrawable(R.drawable.ic_battery_almost_empty);
+        }
+        else if (30 > percentage)
+        {
+            return getResources().getDrawable(R.drawable.ic_battery_20);
+        }
+        else if (50 > percentage)
+        {
+            return getResources().getDrawable(R.drawable.ic_battery_30);
+        }
+        else if (60 > percentage)
+        {
+            return getResources().getDrawable(R.drawable.ic_battery_50);
+        }
+        else if (80 > percentage)
+        {
+            return getResources().getDrawable(R.drawable.ic_battery_60);
+        }
+        else if (90 > percentage)
+        {
+            return getResources().getDrawable(R.drawable.ic_battery_80);
+        }
+        else if (95 > percentage)
+        {
+            return getResources().getDrawable(R.drawable.ic_battery_90);
+        }
+        else
+        {
+            return getResources().getDrawable(R.drawable.ic_battery_full);
         }
     }
 }
