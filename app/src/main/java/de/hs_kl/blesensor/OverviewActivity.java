@@ -2,6 +2,8 @@ package de.hs_kl.blesensor;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
@@ -55,6 +57,9 @@ public class OverviewActivity extends AppCompatActivity
         }
     };
 
+    private Fragment currentView;
+    private Fragment[] views;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -72,17 +77,21 @@ public class OverviewActivity extends AppCompatActivity
         registerReceiver(this.locationModeChangeReceiver, new IntentFilter((LocationManager.MODE_CHANGED_ACTION)));
         ensureLocationIsEnabled();
 
+        setupDrawer();
+        setupWCNViews();
+    }
+
+    private void setupDrawer()
+    {
         final DrawerLayout drawer = findViewById(R.id.drawer);
+        
         View overview = findViewById(R.id.overview);
         overview.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment, new SensorTrackingFragment());
-                ft.addToBackStack(null);
-                ft.commit();
+                changeViewTo(Constants.WCNView.SENSOR_TRACKING);
                 drawer.closeDrawers();
             }
         });
@@ -93,10 +102,7 @@ public class OverviewActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment, new ManageMeasurementsFragment());
-                ft.addToBackStack(null);
-                ft.commit();
+                changeViewTo(Constants.WCNView.MANAGE_MEASUREMENT);
                 drawer.closeDrawers();
             }
         });
@@ -105,10 +111,7 @@ public class OverviewActivity extends AppCompatActivity
         action.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment, new ActionsFragment());
-                ft.addToBackStack(null);
-                ft.commit();
+                changeViewTo(Constants.WCNView.ACTIONS);
                 drawer.closeDrawers();
             }
         });
@@ -119,16 +122,38 @@ public class OverviewActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment, new SearchSensorFragment());
-                ft.addToBackStack(null);
-                ft.commit();
+                changeViewTo(Constants.WCNView.SEARCH_SENSOR);
                 drawer.closeDrawers();
             }
         });
+    }
 
+    public void changeViewTo(Constants.WCNView view)
+    {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.fragment, new SensorTrackingFragment());
+        ft.hide(this.currentView);
+        this.currentView = this.views[view.ordinal()];
+        ft.show(this.currentView);
+        ft.commit();
+    }
+
+    private void setupWCNViews()
+    {
+        FragmentManager manager = getFragmentManager();
+
+        this.views = new Fragment[Constants.WCNView.values().length];
+        this.views[Constants.WCNView.SENSOR_TRACKING.ordinal()] = manager.findFragmentById(R.id.sensor_tracking_fragment);
+        this.views[Constants.WCNView.SEARCH_SENSOR.ordinal()] = manager.findFragmentById(R.id.search_sensor_fragment);
+        this.views[Constants.WCNView.MANAGE_MEASUREMENT.ordinal()] = manager.findFragmentById(R.id.manage_measurement_fragment);
+        this.views[Constants.WCNView.ACTIONS.ordinal()] = manager.findFragmentById(R.id.actions_fragment);
+
+        FragmentTransaction ft = manager.beginTransaction();
+        for (Fragment view: this.views)
+        {
+            ft.hide(view);
+        }
+        this.currentView = this.views[Constants.WCNView.SENSOR_TRACKING.ordinal()];
+        ft.show(currentView);
         ft.commit();
     }
 

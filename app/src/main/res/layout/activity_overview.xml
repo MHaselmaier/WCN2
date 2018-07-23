@@ -12,9 +12,23 @@
         android:layout_height="match_parent"
         tools:context="de.hs_kl.blesensor.OverviewActivity">
 
-        <FrameLayout
-            android:id="@+id/fragment"
-            android:layout_weight="1"
+        <fragment android:name="de.hs_kl.blesensor.fragments.sensor_tracking.SensorTrackingFragment"
+            android:id="@+id/sensor_tracking_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <fragment android:name="de.hs_kl.blesensor.fragments.search_sensor.SearchSensorFragment"
+            android:id="@+id/search_sensor_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <fragment android:name="de.hs_kl.blesensor.fragments.manage_measurements.ManageMeasurementsFragment"
+            android:id="@+id/manage_measurement_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <fragment android:name="de.hs_kl.blesensor.fragments.actions.ActionsFragment"
+            android:id="@+id/actions_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

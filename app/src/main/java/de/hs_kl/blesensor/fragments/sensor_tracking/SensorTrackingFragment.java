@@ -26,6 +26,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hs_kl.blesensor.OverviewActivity;
 import de.hs_kl.blesensor.ble_scanner.BLEScanner;
 import de.hs_kl.blesensor.R;
 import de.hs_kl.blesensor.ble_scanner.ScanResultListener;
@@ -164,10 +165,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment, new SearchSensorFragment());
-                ft.addToBackStack(null);
-                ft.commit();
+                ((OverviewActivity)getActivity()).changeViewTo(Constants.WCNView.SEARCH_SENSOR);
             }
         });
 
