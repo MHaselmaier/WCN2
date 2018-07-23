@@ -109,9 +109,10 @@ public class ActionsFragment extends Fragment
         }
         else
         {
-            TextView empty = new TextView(getActivity());
-            empty.setText(R.string.no_actions_defined);
-            actionList.addView(empty);
+            View emptyView = getActivity().getLayoutInflater().inflate(R.layout.empty_list_item, actionList, false);
+            TextView label = emptyView.findViewById(R.id.label);
+            label.setText(R.string.no_actions_defined);
+            actionList.addView(emptyView);
         }
     }
 }

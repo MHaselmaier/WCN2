@@ -28,6 +28,8 @@ public class ManageMeasurementsFragment extends Fragment
         ListView measurements = view.findViewById(R.id.measurements);
         measurements.setAdapter(new MeasurementAdapter(getActivity(), inflater));
 
+        measurements.setEmptyView(view.findViewById(R.id.empty_list_item));
+
         return view;
     }
 }

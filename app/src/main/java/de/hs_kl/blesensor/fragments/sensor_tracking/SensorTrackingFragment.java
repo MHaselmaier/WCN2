@@ -180,9 +180,8 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
 
         if (0 == actions.length)
         {
-            TextView info = new TextView(getActivity());
-            info.setText(R.string.uses_default_action);
-            gridLayout.addView(info);
+            View emptyView = getActivity().getLayoutInflater().inflate(R.layout.empty_actions, gridLayout, false);
+            gridLayout.addView(emptyView);
             return;
         }
 
@@ -329,6 +328,14 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
             batteryLevel.setImageDrawable(getBatteryLevelDrawable(sensorData.getBatteryVoltage()));
 
             this.trackedSensorViews.addView(tracked_sensor_overview);
+        }
+
+        if (0 == this.trackedSensors.size())
+        {
+            View emptyView = getActivity().getLayoutInflater().inflate(R.layout.empty_list_item, this.trackedSensorViews, false);
+            TextView label = emptyView.findViewById(R.id.label);
+            label.setText(R.string.no_sensors_found);
+            this.trackedSensorViews.addView(emptyView);
         }
     }
 

@@ -53,6 +53,7 @@
     <string name="measurement_comment">Hier können Sie eine Beschreibung der Messung angeben, welche als Kopfzeile in die Messungs-Datei eingefügt wird</string>
     <string name="mnemonic_header">Mnemonic:</string>
     <string name="mnemonic_comment">Kommentar !</string>
+    <string name="no_measurements_saved">Keine Messungen gespeichert.</string>
 
     <string name="saved_measurements">Gespeicherte Messungen:</string>
     <string name="more">Mehr</string>
@@ -64,7 +65,7 @@
     <string name="add">Hinzufügen</string>
     <string name="remove">Entfernen</string>
     <string name="defined_actions">Definierte Aktionen:</string>
-    <string name="no_actions_defined">Keine Aktionen definiert</string>
+    <string name="no_actions_defined">Keine Aktionen definiert.</string>
 
     <string name="action_header">Neue Aktion:</string>
     <string name="action_comment">Aktion</string>

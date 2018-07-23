@@ -54,6 +54,8 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
         ListView sensors = view.findViewById(R.id.sensors);
         sensors.setAdapter(this.scanResultAdapter);
 
+        sensors.setEmptyView(view.findViewById(R.id.empty_list_item));
+
         return view;
     }
 

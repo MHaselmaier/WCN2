@@ -53,6 +53,7 @@
     <string name="measurement_comment">Here you can describe the measurement. It will be saved inside the resulting file as an header.</string>
     <string name="mnemonic_header">Mnemonic:</string>
     <string name="mnemonic_comment">Comment !</string>
+    <string name="no_measurements_saved">No Measurements saved.</string>
 
     <string name="saved_measurements">Saved Measurements:</string>
     <string name="more">More</string>
@@ -64,7 +65,7 @@
     <string name="add">Add</string>
     <string name="remove">Remove</string>
     <string name="defined_actions">Defined Actions:</string>
-    <string name="no_actions_defined">No actions defined.</string>
+    <string name="no_actions_defined">No Actions defined.</string>
 
     <string name="action_header">New Action:</string>
     <string name="action_comment">Action</string>
