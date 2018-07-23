@@ -56,10 +56,7 @@ public class ScanResultAdapter extends BaseAdapter
     {
         final SensorData sensorData = this.sensorData.get(position);
 
-        if (null == view)
-        {
-            view = this.inflater.inflate(R.layout.sensor_list_item, null);
-        }
+        view = this.inflater.inflate(R.layout.sensor_list_item, null);
 
         final ImageButton mnemonicEdit = view.findViewById(R.id.mnemonic_edit);
         mnemonicEdit.setOnClickListener(new View.OnClickListener()
