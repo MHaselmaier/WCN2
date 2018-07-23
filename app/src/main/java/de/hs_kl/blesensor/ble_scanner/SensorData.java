@@ -48,12 +48,12 @@ public class SensorData
 
     private float calculateTemperature(byte b1, byte b2)
     {
-        return 175f * ((b1 << 8) + b2) / 65535f - 45;
+        return 175f * (((b1 & 0xFF) << 8) + (b2 & 0xFF)) / 65535f - 45;
     }
 
     private float calculateRelativeHumidity(byte b1, byte b2)
     {
-        return 100f * ((b1 << 8) + b2) / 65535f;
+        return 100f * (((b1 & 0xFF) << 8) + (b2 & 0xFF)) / 65535f;
     }
 
     private float calculateBatteryVoltage(byte b)
