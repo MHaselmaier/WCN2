@@ -122,6 +122,10 @@ public class ScanResultAdapter extends BaseAdapter
 
         TextView mnemonic = view.findViewById(R.id.mnemonic);
         mnemonic.setText(this.context.getResources().getString(R.string.mnemonic, sensorData.getMnemonic()));
+        if (sensorData.getMnemonic().equals("null"))
+        {
+            mnemonic.setVisibility(View.GONE);
+        }
 
         TextView sensorID = view.findViewById(R.id.sensor_id);
         sensorID.setText(this.context.getResources().getString(R.string.sensor_id, sensorData.getSensorID()));
