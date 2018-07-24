@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -42,10 +43,10 @@ public class ActionsFragment extends Fragment
             {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
 
-                View dialog = LayoutInflater.from(getActivity()).inflate(R.layout.action_dialog, (ViewGroup)getView(), false);
-                dialogBuilder.setView(dialog);
+                View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.action_dialog, (ViewGroup)getView(), false);
+                dialogBuilder.setView(dialogView);
 
-                final EditText newAction = dialog.findViewById(R.id.action);
+                final EditText newAction = dialogView.findViewById(R.id.action);
 
                 dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
                 {
@@ -72,7 +73,9 @@ public class ActionsFragment extends Fragment
                     }
                 });
 
-                dialogBuilder.show();
+                AlertDialog dialog = dialogBuilder.create();
+                dialog.show();
+                dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
             }
         });
 

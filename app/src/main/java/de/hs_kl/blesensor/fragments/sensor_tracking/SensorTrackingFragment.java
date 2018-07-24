@@ -13,6 +13,7 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
@@ -116,10 +117,10 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
                 {
                     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
 
-                    View dialog = LayoutInflater.from(getActivity()).inflate(R.layout.measurement_dialog, (ViewGroup)getView(), false);
-                    dialogBuilder.setView(dialog);
+                    View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.measurement_dialog, (ViewGroup)getView(), false);
+                    dialogBuilder.setView(dialogView);
 
-                    final EditText measurementHeader = dialog.findViewById(R.id.measurement_header);
+                    final EditText measurementHeader = dialogView.findViewById(R.id.measurement_header);
                     dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
                     {
                         @Override
@@ -145,7 +146,9 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
                         }
                     });
 
-                    dialogBuilder.show();
+                    AlertDialog dialog = dialogBuilder.create();
+                    dialog.show();
+                    dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                 }
                 else
                 {

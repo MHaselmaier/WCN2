@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -67,10 +68,10 @@ public class ScanResultAdapter extends BaseAdapter
             {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ScanResultAdapter.this.context);
 
-                View dialog = LayoutInflater.from(ScanResultAdapter.this.context).inflate(R.layout.mnemonic_dialog, null);
-                dialogBuilder.setView(dialog);
+                View dialogView = LayoutInflater.from(ScanResultAdapter.this.context).inflate(R.layout.mnemonic_dialog, null);
+                dialogBuilder.setView(dialogView);
 
-                final EditText mnemonic = dialog.findViewById(R.id.mnemonic);
+                final EditText mnemonic = dialogView.findViewById(R.id.mnemonic);
                 if (!sensorData.getMnemonic().equals("null"))
                 {
                     mnemonic.setText(sensorData.getMnemonic());
@@ -105,7 +106,9 @@ public class ScanResultAdapter extends BaseAdapter
                     }
                 });
 
-                dialogBuilder.show();
+                AlertDialog dialog = dialogBuilder.create();
+                dialog.show();
+                dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
             }
         });
 
