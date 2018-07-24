@@ -43,6 +43,12 @@ public class MeasurementMenu extends PopupMenu implements View.OnClickListener, 
     {
         switch (item.getItemId())
         {
+        case R.id.open:
+            Intent openIntent = new Intent(Intent.ACTION_VIEW);
+            openIntent.setDataAndType(FileProvider.getUriForFile(this.context, "de.hs_kl.fileprovider", this.measurement), "text/plain");
+            openIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            this.context.startActivity(openIntent);
+            return true;
         case R.id.share:
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");

@@ -1,7 +1,9 @@
 package de.hs_kl.blesensor.fragments.manage_measurements;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Environment;
+import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,7 +63,7 @@ public class MeasurementAdapter extends BaseAdapter
     @Override
     public View getView(int position, View view, ViewGroup parent)
     {
-        File measurement = this.measurements.get(position);
+        final File measurement = this.measurements.get(position);
 
         if (null == view)
         {
@@ -70,6 +72,15 @@ public class MeasurementAdapter extends BaseAdapter
 
         TextView label = view.findViewById(R.id.label);
         label.setText(measurement.getName());
+        label.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent openIntent = new Intent(Intent.ACTION_VIEW);
+                openIntent.setDataAndType(FileProvider.getUriForFile(MeasurementAdapter.this.context, "de.hs_kl.fileprovider", measurement), "text/plain");
+                openIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                MeasurementAdapter.this.context.startActivity(openIntent);
+            }
+        });
 
         ImageButton more = view.findViewById(R.id.more);
         more.setOnClickListener(new MeasurementMenu(this.context, more, measurement, this));
