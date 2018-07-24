@@ -339,7 +339,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
             TextView humidity = tracked_sensor_overview.findViewById(R.id.humidity);
             humidity.setText(getResources().getString(R.string.humidity, sensorData.getRelativeHumidity()));
             ImageView batteryLevel = tracked_sensor_overview.findViewById(R.id.battery_level);
-            batteryLevel.setImageDrawable(getBatteryLevelDrawable(sensorData.getBatteryVoltage()));
+            batteryLevel.setImageDrawable(sensorData.getBatteryLevelDrawable(getResources()));
 
             this.trackedSensorViews.addView(tracked_sensor_overview);
         }
@@ -350,44 +350,6 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
             TextView label = emptyView.findViewById(R.id.label);
             label.setText(R.string.no_sensors_found);
             this.trackedSensorViews.addView(emptyView);
-        }
-    }
-
-    private Drawable getBatteryLevelDrawable(float batteryVoltage)
-    {
-        int percentage = (int)(Math.max(0, Math.min(batteryVoltage / Constants.MAX_VOLTAGE, 1)) * 100);
-
-        if (20 > percentage)
-        {
-            return getResources().getDrawable(R.drawable.ic_battery_almost_empty);
-        }
-        else if (30 > percentage)
-        {
-            return getResources().getDrawable(R.drawable.ic_battery_20);
-        }
-        else if (50 > percentage)
-        {
-            return getResources().getDrawable(R.drawable.ic_battery_30);
-        }
-        else if (60 > percentage)
-        {
-            return getResources().getDrawable(R.drawable.ic_battery_50);
-        }
-        else if (80 > percentage)
-        {
-            return getResources().getDrawable(R.drawable.ic_battery_60);
-        }
-        else if (90 > percentage)
-        {
-            return getResources().getDrawable(R.drawable.ic_battery_80);
-        }
-        else if (95 > percentage)
-        {
-            return getResources().getDrawable(R.drawable.ic_battery_90);
-        }
-        else
-        {
-            return getResources().getDrawable(R.drawable.ic_battery_full);
         }
     }
 }

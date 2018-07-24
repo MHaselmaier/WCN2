@@ -9,6 +9,7 @@ public class Constants
     public static final int MANUFACTURER_ID = 0xFFFF;
 
     public static final float MAX_VOLTAGE = 3.8f;
+    public static final float MIN_VOLTAGE = 3.1f;
 
     public static final String TRACKED_SENSORS_ID = "tracked_sensors_id";
     public static final String TRACKED_SENSORS_MNEMONIC = "tracked_sensors_mnemonic";

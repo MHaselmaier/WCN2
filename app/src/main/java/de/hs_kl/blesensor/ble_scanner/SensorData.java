@@ -2,7 +2,10 @@ package de.hs_kl.blesensor.ble_scanner;
 
 import android.bluetooth.le.ScanResult;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 
+import de.hs_kl.blesensor.R;
 import de.hs_kl.blesensor.util.Constants;
 import de.hs_kl.blesensor.util.TrackedSensorsStorage;
 
@@ -99,6 +102,45 @@ public class SensorData
     public float getBatteryVoltage()
     {
         return batteryVoltage;
+    }
+
+    public Drawable getBatteryLevelDrawable(Resources resources)
+    {
+        float voltage = Math.max(Math.min(this.batteryVoltage, Constants.MAX_VOLTAGE), Constants.MIN_VOLTAGE);
+        float percentage = (voltage - Constants.MIN_VOLTAGE) / (Constants.MAX_VOLTAGE - Constants.MIN_VOLTAGE);
+
+        if (.2 > percentage)
+        {
+            return resources.getDrawable(R.drawable.ic_battery_almost_empty);
+        }
+        else if (.3 > percentage)
+        {
+            return resources.getDrawable(R.drawable.ic_battery_20);
+        }
+        else if (.5 > percentage)
+        {
+            return resources.getDrawable(R.drawable.ic_battery_30);
+        }
+        else if (.6 > percentage)
+        {
+            return resources.getDrawable(R.drawable.ic_battery_50);
+        }
+        else if (.8 > percentage)
+        {
+            return resources.getDrawable(R.drawable.ic_battery_60);
+        }
+        else if (.9 > percentage)
+        {
+            return resources.getDrawable(R.drawable.ic_battery_80);
+        }
+        else if (.95 > percentage)
+        {
+            return resources.getDrawable(R.drawable.ic_battery_90);
+        }
+        else
+        {
+            return resources.getDrawable(R.drawable.ic_battery_full);
+        }
     }
 
     public void setMnemonic(String mnemonic)

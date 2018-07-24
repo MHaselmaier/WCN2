@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -124,6 +125,9 @@ public class ScanResultAdapter extends BaseAdapter
 
         TextView lastSeenView = view.findViewById(R.id.last_seen);
         lastSeenView.setText(LastSeenSinceUtil.getTimeSinceString(this.context, sensorData.getTimestamp()));
+
+        ImageView batteryLevel = view.findViewById(R.id.battery_level);
+        batteryLevel.setImageDrawable(sensorData.getBatteryLevelDrawable(this.context.getResources()));
 
         return view;
     }
