@@ -340,6 +340,8 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
             humidity.setText(getResources().getString(R.string.humidity, sensorData.getRelativeHumidity()));
             ImageView batteryLevel = tracked_sensor_overview.findViewById(R.id.battery_level);
             batteryLevel.setImageDrawable(sensorData.getBatteryLevelDrawable(getResources()));
+            ImageView signalStrength = tracked_sensor_overview.findViewById(R.id.signal_strength);
+            signalStrength.setImageDrawable(sensorData.getSignalStrengthDrawable(getResources()));
 
             this.trackedSensorViews.addView(tracked_sensor_overview);
         }

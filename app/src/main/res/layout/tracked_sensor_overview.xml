@@ -87,14 +87,36 @@
             android:textSize="16sp"
             tools:text="36,9 %" />
 
-        <ImageView
-            android:id="@+id/battery_level"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:contentDescription="@string/batterylevel"
-            android:tint="@color/colorPrimaryDark"
-            app:srcCompat="@drawable/ic_battery_almost_empty" />
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/battery_level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/batterylevel"
+                android:tint="@color/colorPrimaryDark"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/signal_strength"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_battery_almost_empty" />
+
+            <ImageView
+                android:id="@+id/signal_strength"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/signalstrength"
+                android:tint="@color/colorPrimaryDark"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/battery_level"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_signal_0" />
+        </android.support.constraint.ConstraintLayout>
+
     </LinearLayout>
 
     <View

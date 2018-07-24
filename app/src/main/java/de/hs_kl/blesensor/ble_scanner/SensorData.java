@@ -84,6 +84,11 @@ public class SensorData
         return this.rssi;
     }
 
+    public Drawable getSignalStrengthDrawable(Resources resources)
+    {
+        return resources.getDrawable(R.drawable.ic_signal_100);
+    }
+
     public byte getSensorID()
     {
         return this.sensorID;

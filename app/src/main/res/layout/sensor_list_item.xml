@@ -119,15 +119,14 @@
             android:id="@+id/signal_strength"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/batterylevel"
+            android:contentDescription="@string/signalstrength"
             android:scaleType="fitXY"
             android:tint="@color/colorPrimaryDark"
-            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/battery_level"
-            app:srcCompat="@drawable/ic_battery_almost_empty" />
+            app:srcCompat="@drawable/ic_signal_0" />
     </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

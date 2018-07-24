@@ -129,6 +129,9 @@ public class ScanResultAdapter extends BaseAdapter
         ImageView batteryLevel = view.findViewById(R.id.battery_level);
         batteryLevel.setImageDrawable(sensorData.getBatteryLevelDrawable(this.context.getResources()));
 
+        ImageView signalStrength = view.findViewById(R.id.signal_strength);
+        signalStrength.setImageDrawable(sensorData.getSignalStrengthDrawable(this.context.getResources()));
+
         return view;
     }
 
