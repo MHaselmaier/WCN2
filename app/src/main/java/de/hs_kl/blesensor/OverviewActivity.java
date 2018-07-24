@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.Stack;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.hs_kl.blesensor.ble_scanner.BLEScanner;
@@ -57,6 +58,7 @@ public class OverviewActivity extends AppCompatActivity
 
     private Fragment currentView;
     private Fragment[] views;
+    private Stack<Fragment> viewBackStack = new Stack<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -151,11 +153,31 @@ public class OverviewActivity extends AppCompatActivity
 
     public void changeViewTo(Constants.WCNView view)
     {
+        this.viewBackStack.remove(this.views[view.ordinal()]);
+        this.viewBackStack.push(this.currentView);
+
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.hide(this.currentView);
         this.currentView = this.views[view.ordinal()];
         ft.show(this.currentView);
         ft.commit();
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if (0 < this.viewBackStack.size())
+        {
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.hide(this.currentView);
+            this.currentView = this.viewBackStack.pop();
+            ft.show(this.currentView);
+            ft.commit();
+        }
+        else
+        {
+            finish();
+        }
     }
 
     private void setupWCNViews()
@@ -348,5 +370,6 @@ public class OverviewActivity extends AppCompatActivity
         super.onDestroy();
 
         unregisterReceiver(this.btAdapterChangeReceiver);
+        unregisterReceiver(this.locationModeChangeReceiver);
     }
 }
