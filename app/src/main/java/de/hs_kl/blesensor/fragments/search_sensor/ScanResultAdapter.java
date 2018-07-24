@@ -74,7 +74,7 @@ public class ScanResultAdapter extends BaseAdapter
                 final EditText mnemonic = dialogView.findViewById(R.id.mnemonic);
                 if (!sensorData.getMnemonic().equals("null"))
                 {
-                    mnemonic.setText(sensorData.getMnemonic());
+                    mnemonic.append(sensorData.getMnemonic());
                 }
 
                 dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
