@@ -2,7 +2,6 @@ package de.hs_kl.blesensor.fragments.sensor_tracking;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.FragmentTransaction;
 import android.bluetooth.le.ScanFilter;
 import android.content.DialogInterface;
 import android.graphics.PorterDuff;
@@ -30,7 +29,6 @@ import de.hs_kl.blesensor.OverviewActivity;
 import de.hs_kl.blesensor.ble_scanner.BLEScanner;
 import de.hs_kl.blesensor.R;
 import de.hs_kl.blesensor.ble_scanner.ScanResultListener;
-import de.hs_kl.blesensor.fragments.search_sensor.SearchSensorFragment;
 import de.hs_kl.blesensor.ble_scanner.SensorData;
 import de.hs_kl.blesensor.util.Constants;
 import de.hs_kl.blesensor.util.DefinedActionStorage;
@@ -98,6 +96,8 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         setRetainInstance(true);
+
+        this.trackedSensors = TrackedSensorsStorage.getTrackedSensors(getActivity());
     }
 
     @Override
@@ -174,8 +174,9 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
 
     private void addActionToggleButtons(GridLayout gridLayout)
     {
-        String[] actions = DefinedActionStorage.getDefinedActions(getActivity());
+        gridLayout.removeAllViews();
 
+        String[] actions = DefinedActionStorage.getDefinedActions(getActivity());
         if (0 == actions.length)
         {
             View emptyView = getActivity().getLayoutInflater().inflate(R.layout.empty_actions, gridLayout, false);
@@ -249,15 +250,26 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         super.onResume();
 
         BLEScanner.registerScanResultListener(this);
+    }
 
-        this.trackedSensors = TrackedSensorsStorage.getTrackedSensors(getActivity());
+    @Override
+    public void onPause()
+    {
+        super.onPause();
 
+        BLEScanner.unregisterScanResultListener(this);
+
+        startUIUpdater();
+    }
+
+    private void startUIUpdater()
+    {
         this.uiUpdater.post(new Runnable()
         {
             @Override
             public void run()
             {
-                if (SensorTrackingFragment.this.isResumed())
+                if (!SensorTrackingFragment.this.isHidden())
                 {
                     updateTrackingTime();
                     showTrackedSensors();
@@ -268,11 +280,15 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     }
 
     @Override
-    public void onPause()
+    public void onHiddenChanged(boolean hidden)
     {
-        super.onPause();
+        if (!hidden)
+        {
+            startUIUpdater();
+            this.trackedSensors = TrackedSensorsStorage.getTrackedSensors(getActivity());
+            addActionToggleButtons((GridLayout)this.actionOverview.findViewById(R.id.actions));
 
-        BLEScanner.unregisterScanResultListener(this);
+        }
     }
 
     @Override

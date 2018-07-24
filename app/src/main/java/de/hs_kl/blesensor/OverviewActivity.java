@@ -84,7 +84,7 @@ public class OverviewActivity extends AppCompatActivity
     private void setupDrawer()
     {
         final DrawerLayout drawer = findViewById(R.id.drawer);
-        
+
         View overview = findViewById(R.id.overview);
         overview.setOnClickListener(new View.OnClickListener()
         {

@@ -28,9 +28,16 @@ public class MeasurementAdapter extends BaseAdapter
         this.context = context;
         this.inflater = inflater;
 
+        loadFiles();
+    }
+
+    public void loadFiles()
+    {
         String measurementPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) +
-                                 File.separator + Constants.DATA_DIRECTORY;
+                File.separator + Constants.DATA_DIRECTORY;
         this.measurements = new ArrayList<>(Arrays.asList(new File(measurementPath).listFiles()));
+
+        notifyDataSetInvalidated();
     }
 
     @Override

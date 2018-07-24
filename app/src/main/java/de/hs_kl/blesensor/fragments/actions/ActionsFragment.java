@@ -115,4 +115,13 @@ public class ActionsFragment extends Fragment
             actionList.addView(emptyView);
         }
     }
+
+    @Override
+    public void onHiddenChanged(boolean hidden)
+    {
+        if (!hidden)
+        {
+            loadActionViews((LinearLayout)getView().findViewById(R.id.actions));
+        }
+    }
 }

@@ -66,18 +66,32 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
 
         BLEScanner.registerScanResultListener(this);
 
+        startUIUpdater();
+    }
+
+    private void startUIUpdater()
+    {
         this.uiUpdater.post(new Runnable()
         {
             @Override
             public void run()
             {
-                if (SearchSensorFragment.this.isResumed())
+                if (!SearchSensorFragment.this.isHidden())
                 {
                     SearchSensorFragment.this.scanResultAdapter.notifyDataSetChanged();
                     SearchSensorFragment.this.uiUpdater.postDelayed(this, 1000);
                 }
             }
         });
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden)
+    {
+        if (!hidden)
+        {
+            startUIUpdater();
+        }
     }
 
     @Override

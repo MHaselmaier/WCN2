@@ -11,6 +11,8 @@ import de.hs_kl.blesensor.R;
 
 public class ManageMeasurementsFragment extends Fragment
 {
+    private MeasurementAdapter adapter;
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -26,10 +28,20 @@ public class ManageMeasurementsFragment extends Fragment
         View view = getActivity().getLayoutInflater().inflate(R.layout.manage_measurement, container, false);
 
         ListView measurements = view.findViewById(R.id.measurements);
-        measurements.setAdapter(new MeasurementAdapter(getActivity(), inflater));
+        this.adapter = new MeasurementAdapter(getActivity(), inflater);
+        measurements.setAdapter(this.adapter);
 
         measurements.setEmptyView(view.findViewById(R.id.empty_list_item));
 
         return view;
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden)
+    {
+        if (!hidden)
+        {
+            this.adapter.loadFiles();
+        }
     }
 }
