@@ -20,16 +20,14 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.hs_kl.blesensor.ble_scanner.BLEScanner;
-import de.hs_kl.blesensor.fragments.actions.ActionsFragment;
-import de.hs_kl.blesensor.fragments.manage_measurements.ManageMeasurementsFragment;
-import de.hs_kl.blesensor.fragments.search_sensor.SearchSensorFragment;
-import de.hs_kl.blesensor.fragments.sensor_tracking.SensorTrackingFragment;
 import de.hs_kl.blesensor.util.Constants;
 
 public class OverviewActivity extends AppCompatActivity
@@ -66,6 +64,8 @@ public class OverviewActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
         setTitle(R.string.app_name);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home);
 
         requestPermissions();
 
@@ -84,6 +84,27 @@ public class OverviewActivity extends AppCompatActivity
     private void setupDrawer()
     {
         final DrawerLayout drawer = findViewById(R.id.drawer);
+
+        drawer.addDrawerListener(new DrawerLayout.DrawerListener()
+        {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {}
+
+            @Override
+            public void onDrawerOpened(View drawerView)
+            {
+                getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView)
+            {
+                getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home);
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {}
+        });
 
         View overview = findViewById(R.id.overview);
         overview.setOnClickListener(new View.OnClickListener()
@@ -163,6 +184,29 @@ public class OverviewActivity extends AppCompatActivity
 
         ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.REQUEST_PERMISSIONS);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch(item.getItemId())
+        {
+        case android.R.id.home:
+            DrawerLayout drawer = findViewById(R.id.drawer);
+            if (drawer.isDrawerOpen(Gravity.START))
+            {
+                drawer.closeDrawers();
+                getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home);
+            }
+            else
+            {
+                drawer.openDrawer(Gravity.START);
+                getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
+            }
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
