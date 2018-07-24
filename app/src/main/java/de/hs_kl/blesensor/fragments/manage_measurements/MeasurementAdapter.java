@@ -37,7 +37,15 @@ public class MeasurementAdapter extends BaseAdapter
     {
         String measurementPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) +
                 File.separator + Constants.DATA_DIRECTORY;
-        this.measurements = new ArrayList<>(Arrays.asList(new File(measurementPath).listFiles()));
+        File[] files = new File(measurementPath).listFiles();
+        if (null != files)
+        {
+            this.measurements = new ArrayList<>(Arrays.asList(files));
+        }
+        else
+        {
+            this.measurements = new ArrayList<>();
+        }
 
         notifyDataSetInvalidated();
     }
