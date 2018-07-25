@@ -33,6 +33,8 @@ import de.hs_kl.blesensor.util.Constants;
 
 public class OverviewActivity extends AppCompatActivity
 {
+    public static boolean isVisible;
+
     private BluetoothAdapter btAdapter;
     private BroadcastReceiver btAdapterChangeReceiver = new BroadcastReceiver() {
         @Override
@@ -229,6 +231,22 @@ public class OverviewActivity extends AppCompatActivity
         default:
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        OverviewActivity.isVisible = true;
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+
+        OverviewActivity.isVisible = false;
     }
 
     @Override

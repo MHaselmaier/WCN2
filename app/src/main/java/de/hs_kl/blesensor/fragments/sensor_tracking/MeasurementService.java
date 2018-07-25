@@ -6,8 +6,13 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.le.ScanFilter;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.IBinder;
 
@@ -30,6 +35,32 @@ public class MeasurementService extends Service implements ScanResultListener
     private static Dataset dataset = new Dataset();;
     public static String action = "";
     public static long startTime = Long.MIN_VALUE;
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+            if (!OverviewActivity.isVisible)
+            {
+                int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+                if (BluetoothAdapter.STATE_OFF == state || intent.getAction().equals(LocationManager.MODE_CHANGED_ACTION))
+                {
+                    BLEScanner.setBluetoothLeScanner(null);
+                    intent = new Intent(MeasurementService.this, OverviewActivity.class);
+                    startActivity(intent);
+                }
+            }
+        }
+    };
+
+    @Override
+    public void onCreate()
+    {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+        filter.addAction(LocationManager.MODE_CHANGED_ACTION);
+        registerReceiver(this.broadcastReceiver, filter);
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
@@ -101,6 +132,7 @@ public class MeasurementService extends Service implements ScanResultListener
     @Override
     public void onDestroy()
     {
+        unregisterReceiver(this.broadcastReceiver);
         MeasurementService.dataset.writeToFile(this);
         BLEScanner.unregisterScanResultListener(this);
         stopSelf();
