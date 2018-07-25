@@ -11,6 +11,9 @@ public class Constants
     public static final float MAX_VOLTAGE = 3.8f;
     public static final float MIN_VOLTAGE = 3.1f;
 
+    public static final float MAX_SIGNAL_STRENGTH = -40;
+    public static final float MIN_SIGNAL_STRENGTH = -100;
+
     public static final String TRACKED_SENSORS_ID = "tracked_sensors_id";
     public static final String TRACKED_SENSORS_MNEMONIC = "tracked_sensors_mnemonic";
 

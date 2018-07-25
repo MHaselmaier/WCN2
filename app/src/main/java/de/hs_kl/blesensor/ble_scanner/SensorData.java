@@ -86,7 +86,31 @@ public class SensorData
 
     public Drawable getSignalStrengthDrawable(Resources resources)
     {
-        return resources.getDrawable(R.drawable.ic_signal_100);
+        long timeSince = System.currentTimeMillis() - this.timestamp;
+        if (Long.MAX_VALUE == this.timestamp || 3000 < timeSince)
+        {
+            return resources.getDrawable(R.drawable.ic_signal_0);
+        }
+
+        float signalStrength = Math.max(Math.min(this.rssi, Constants.MAX_SIGNAL_STRENGTH), Constants.MIN_SIGNAL_STRENGTH);
+        float percentage = (signalStrength - Constants.MIN_SIGNAL_STRENGTH) / (Constants.MAX_SIGNAL_STRENGTH - Constants.MIN_SIGNAL_STRENGTH);
+
+        if (.25 >= percentage)
+        {
+            return resources.getDrawable(R.drawable.ic_signal_25);
+        }
+        else if (.5 >= percentage)
+        {
+            return resources.getDrawable(R.drawable.ic_signal_50);
+        }
+        else if (.75 >= percentage)
+        {
+            return resources.getDrawable(R.drawable.ic_signal_75);
+        }
+        else
+        {
+            return resources.getDrawable(R.drawable.ic_signal_100);
+        }
     }
 
     public byte getSensorID()
@@ -114,7 +138,8 @@ public class SensorData
         float voltage = Math.max(Math.min(this.batteryVoltage, Constants.MAX_VOLTAGE), Constants.MIN_VOLTAGE);
         float percentage = (voltage - Constants.MIN_VOLTAGE) / (Constants.MAX_VOLTAGE - Constants.MIN_VOLTAGE);
 
-        if (.2 > percentage)
+        long timeSince = System.currentTimeMillis() - this.timestamp;
+        if (.2 > percentage || Long.MAX_VALUE == this.timestamp || 3000 < timeSince)
         {
             return resources.getDrawable(R.drawable.ic_battery_almost_empty);
         }
