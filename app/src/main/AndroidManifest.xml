@@ -34,6 +34,9 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/paths" />
         </provider>
-    </application>
 
+        <service
+            android:name=".fragments.sensor_tracking.MeasurementService"
+            android:exported="false" />
+    </application>
 </manifest>

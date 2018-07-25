@@ -71,4 +71,7 @@
 
     <string name="action_header">Neue Aktion:</string>
     <string name="action_comment">Aktion</string>
+
+    <string name="notification_title">Messung wird ausgeführt...</string>
+    <string name="notification_description">Aktuell werden die Sensor-Data aufgezeichent und werden später in einer Messungs-Datei gespeichert.</string>
 </resources>

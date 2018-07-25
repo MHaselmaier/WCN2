@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.le.ScanFilter;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Handler;
@@ -38,7 +38,6 @@ import de.hs_kl.blesensor.util.LastSeenSinceUtil;
 
 public class SensorTrackingFragment extends Fragment implements ScanResultListener
 {
-    private Dataset dataset = new Dataset();
     private boolean tracking = false;
     private long trackingStartTime;
 
@@ -72,20 +71,6 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
             if (this.trackedSensors.get(i).getMacAddress().equals(result.getMacAddress()))
             {
                 this.trackedSensors.set(i, result);
-
-                if (this.tracking)
-                {
-                    String action = "";
-                    if (null != this.action)
-                    {
-                        action = this.action.getText().toString();
-                    }
-
-                    DatasetEntry entry = new DatasetEntry(result.getSensorID(), result.getMacAddress(),
-                            result.getTemperature(), result.getRelativeHumidity(), action,
-                            result.getTimestamp() - this.trackingStartTime);
-                    this.dataset.add(entry);
-                }
                 return;
             }
         }
@@ -132,8 +117,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
                             {
                                 measurementHeaderInput = getResources().getString(R.string.measurement_comment);
                             }
-                            SensorTrackingFragment.this.dataset.setMeasurementHeader(measurementHeaderInput);
-                            startTracking();
+                            startTracking(measurementHeaderInput);
                         }
                     });
 
@@ -175,6 +159,38 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         return view;
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceBundle)
+    {
+        super.onViewCreated(view, savedInstanceBundle);
+
+        if (Long.MIN_VALUE != MeasurementService.startTime)
+        {
+            this.tracking = true;
+            this.trackingStartTime = MeasurementService.startTime;
+
+            this.sensorOverview.setVisibility(View.GONE);
+            this.actionOverview.setVisibility(View.VISIBLE);
+            updateTrackingTime();
+
+            GridLayout actions = this.actionOverview.findViewById(R.id.actions);
+            int amountChildren = actions.getChildCount();
+            for (int i = 0; amountChildren > i; ++i)
+            {
+                Button button = actions.getChildAt(i).findViewById(R.id.button);
+                if (null != button)
+                {
+                    if (MeasurementService.action.equals(button.getText().toString()))
+                    {
+                        this.action = button;
+                        SensorTrackingFragment.this.action.getBackground().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
     private void addActionToggleButtons(GridLayout gridLayout)
     {
         gridLayout.removeAllViews();
@@ -202,11 +218,13 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
                     if (view == SensorTrackingFragment.this.action)
                     {
                         SensorTrackingFragment.this.action = null;
+                        MeasurementService.action = "";
                     }
                     else
                     {
                         SensorTrackingFragment.this.action = (Button)view;
                         SensorTrackingFragment.this.action.getBackground().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
+                        MeasurementService.action = SensorTrackingFragment.this.action.getText().toString();
                     }
                 }
             });
@@ -221,12 +239,16 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         }
     }
 
-    private void startTracking()
+    private void startTracking(String header)
     {
-        SensorTrackingFragment.this.dataset.clear();
-        SensorTrackingFragment.this.tracking = true;
-        SensorTrackingFragment.this.trackingStartTime = System.currentTimeMillis();
+        this.tracking = true;
+        this.trackingStartTime = System.currentTimeMillis();
         updateTrackingTime();
+
+        Intent intent = new Intent(getActivity(), MeasurementService.class);
+        intent.setAction(MeasurementService.ACTION_START);
+        intent.putExtra(Constants.MEASUREMENT_HEADER, header);
+        getActivity().startService(intent);
 
         this.sensorOverview.setVisibility(View.GONE);
         this.actionOverview.setVisibility(View.VISIBLE);
@@ -234,7 +256,10 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
 
     private void stopTracking()
     {
-        SensorTrackingFragment.this.dataset.writeToFile(getActivity());
+        Intent intent = new Intent(getActivity(), MeasurementService.class);
+        intent.setAction(MeasurementService.ACTION_STOP);
+        getActivity().stopService(intent);
+
         SensorTrackingFragment.this.tracking = false;
         updateTrackingTime();
 
@@ -272,7 +297,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
             @Override
             public void run()
             {
-                if (!SensorTrackingFragment.this.isHidden())
+                if (SensorTrackingFragment.this.isVisible())
                 {
                     updateTrackingTime();
                     showTrackedSensors();
@@ -291,17 +316,6 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
             this.trackedSensors = TrackedSensorsStorage.getTrackedSensors(getActivity());
             addActionToggleButtons((GridLayout)this.actionOverview.findViewById(R.id.actions));
 
-        }
-    }
-
-    @Override
-    public void onStop()
-    {
-        super.onStop();
-
-        if (this.tracking)
-        {
-            this.dataset.writeToFile(getActivity());
         }
     }
 

@@ -21,6 +21,11 @@ public class Constants
 
     public static final String DATA_DIRECTORY = "BLE_DATA";
 
+    public static final String MEASUREMENT_HEADER = "measurement_header";
+
+    public static final int NOTIFICATION_ID = 1;
+    public static final String NOTIFICATION_CHANNEL_ID = "notification_channel_id";
+
     public enum WCNView
     {
         SENSOR_TRACKING, SEARCH_SENSOR, MANAGE_MEASUREMENT, ACTIONS
