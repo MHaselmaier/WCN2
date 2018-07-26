@@ -29,6 +29,7 @@ import java.util.Stack;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.hs_kl.blesensor.ble_scanner.BLEScanner;
+import de.hs_kl.blesensor.fragments.sensor_tracking.MeasurementService;
 import de.hs_kl.blesensor.util.Constants;
 
 public class OverviewActivity extends AppCompatActivity
@@ -258,6 +259,8 @@ public class OverviewActivity extends AppCompatActivity
                 (Manifest.permission.ACCESS_COARSE_LOCATION.equals(permissions[i]) && PackageManager.PERMISSION_DENIED == grantResults[i]))
             {
                 Toast.makeText(this, R.string.denied_permission_location, Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(this, MeasurementService.class);
+                stopService(intent);
                 finish();
             }
             else if (Manifest.permission.WRITE_EXTERNAL_STORAGE.equals(permissions[i]) && PackageManager.PERMISSION_DENIED == grantResults[i])
@@ -290,7 +293,7 @@ public class OverviewActivity extends AppCompatActivity
     {
         try
         {
-            if (0 != Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE))
+            if (Settings.Secure.LOCATION_MODE_OFF != Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE))
             {
                 BLEScanner.setBluetoothLeScanner(this.btAdapter.getBluetoothLeScanner());
                 return;
@@ -330,6 +333,8 @@ public class OverviewActivity extends AppCompatActivity
                 if (!accepted.get())
                 {
                     Toast.makeText(OverviewActivity.this, R.string.denied_permission_location, Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(OverviewActivity.this, MeasurementService.class);
+                    stopService(intent);
                     finish();
                 }
             }
@@ -364,6 +369,8 @@ public class OverviewActivity extends AppCompatActivity
         else
         {
             Toast.makeText(this, R.string.bt_was_not_enabled, Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this, MeasurementService.class);
+            stopService(intent);
             finish();
         }
     }
@@ -373,6 +380,8 @@ public class OverviewActivity extends AppCompatActivity
         try {
             if (0 == Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE)) {
                 Toast.makeText(OverviewActivity.this, R.string.denied_permission_location, Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(this, MeasurementService.class);
+                stopService(intent);
                 finish();
                 return;
             }

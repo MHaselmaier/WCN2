@@ -15,6 +15,7 @@ import android.content.IntentFilter;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.IBinder;
+import android.provider.Settings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,13 +43,20 @@ public class MeasurementService extends Service implements ScanResultListener
         {
             if (!OverviewActivity.isVisible)
             {
-                int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
-                if (BluetoothAdapter.STATE_OFF == state || intent.getAction().equals(LocationManager.MODE_CHANGED_ACTION))
+                try
                 {
-                    BLEScanner.setBluetoothLeScanner(null);
-                    intent = new Intent(MeasurementService.this, OverviewActivity.class);
-                    startActivity(intent);
+                    int bluetoothState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+                    int locationMode = Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE);
+                    if (BluetoothAdapter.STATE_OFF == bluetoothState || Settings.Secure.LOCATION_MODE_OFF == locationMode)
+                    {
+                        BLEScanner.setBluetoothLeScanner(null);
+                        intent = new Intent(MeasurementService.this, OverviewActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                                Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
                 }
+                catch (Exception e) {}
             }
         }
     };
@@ -134,6 +142,8 @@ public class MeasurementService extends Service implements ScanResultListener
     {
         unregisterReceiver(this.broadcastReceiver);
         MeasurementService.dataset.writeToFile(this);
+        MeasurementService.action = "";
+        MeasurementService.startTime = Long.MIN_VALUE;
         BLEScanner.unregisterScanResultListener(this);
         stopSelf();
     }
