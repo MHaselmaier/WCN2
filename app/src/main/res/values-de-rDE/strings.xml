@@ -43,8 +43,8 @@
     <string name="failed_to_write_file">Datei konnte nicht erstellt werden</string>
     <string name="uses_default_action">Es wurden keine Aktionen definiert.</string>
 
-    <string name="temperature">%1$.2f °C</string>
-    <string name="humidity">%1$.2f %%</string>
+    <string name="temperature">%1$.1f °C</string>
+    <string name="humidity">%1$.1f %%</string>
     <string name="batterylevel">Batterie Status</string>
     <string name="signalstrength">Signal Stärke</string>
 

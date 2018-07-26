@@ -43,8 +43,8 @@
     <string name="failed_to_write_file">Failed to write file</string>
     <string name="uses_default_action">No actions defined.</string>
 
-    <string name="temperature">%1$.2f °C</string>
-    <string name="humidity">%1$.2f %%</string>
+    <string name="temperature">%1$.1f °C</string>
+    <string name="humidity">%1$.1f %%</string>
     <string name="batterylevel">Battery level</string>
     <string name="signalstrength">Signal strength</string>
 
