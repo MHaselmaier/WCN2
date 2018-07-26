@@ -1,11 +1,11 @@
 <resources>
-    <string name="app_name">WCN App</string>
+    <string name="app_name">WCN2 App</string>
     <string name="bt_was_not_enabled">Bluetooth wurde nicht eingeschaltet, wird allerdings zum Betrieb dieser App benötigt.</string>
     <string name="denied_permission_location">Die App benötigt Zugriff auf die Position, um die Sensordaten empfangen zu können.</string>
     <string name="denied_permission_write_external_storage">Die App benötigt Zugriff auf den Speicher, um die Messungen zu speichern.</string>
     <string name="allow">Zulassen</string>
     <string name="deny">Ablehnen</string>
-    <string name="enable_location">WCN App fordert die Berechtigung, den Standort zu aktivieren</string>
+    <string name="enable_location">WCN2 App fordert die Berechtigung, den Standort zu aktivieren</string>
 
     <string name="overview">Übersicht</string>
     <string name="measurement">Messungen</string>

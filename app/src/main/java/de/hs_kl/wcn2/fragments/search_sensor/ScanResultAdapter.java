@@ -1,4 +1,4 @@
-package de.hs_kl.blesensor.fragments.search_sensor;
+package de.hs_kl.wcn2.fragments.search_sensor;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -17,10 +17,10 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import de.hs_kl.blesensor.R;
-import de.hs_kl.blesensor.ble_scanner.SensorData;
-import de.hs_kl.blesensor.util.TrackedSensorsStorage;
-import de.hs_kl.blesensor.util.LastSeenSinceUtil;
+import de.hs_kl.wcn2.R;
+import de.hs_kl.wcn2.ble_scanner.SensorData;
+import de.hs_kl.wcn2.util.TrackedSensorsStorage;
+import de.hs_kl.wcn2.util.LastSeenSinceUtil;
 
 public class ScanResultAdapter extends BaseAdapter
 {

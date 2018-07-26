@@ -1,4 +1,4 @@
-package de.hs_kl.blesensor.fragments.manage_measurements;
+package de.hs_kl.wcn2.fragments.manage_measurements;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import java.io.File;
 
-import de.hs_kl.blesensor.R;
+import de.hs_kl.wcn2.R;
 
 public class MeasurementMenu extends PopupMenu implements View.OnClickListener, PopupMenu.OnMenuItemClickListener
 {

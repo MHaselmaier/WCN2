@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "de.hs_kl.blesensor"
+        applicationId "de.hs_kl.wcn2"
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 1

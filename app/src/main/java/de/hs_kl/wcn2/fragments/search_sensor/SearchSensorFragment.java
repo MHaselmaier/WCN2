@@ -1,4 +1,4 @@
-package de.hs_kl.blesensor.fragments.search_sensor;
+package de.hs_kl.wcn2.fragments.search_sensor;
 
 import android.app.Fragment;
 import android.bluetooth.le.ScanFilter;
@@ -12,10 +12,10 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hs_kl.blesensor.R;
-import de.hs_kl.blesensor.ble_scanner.SensorData;
-import de.hs_kl.blesensor.ble_scanner.BLEScanner;
-import de.hs_kl.blesensor.ble_scanner.ScanResultListener;
+import de.hs_kl.wcn2.R;
+import de.hs_kl.wcn2.ble_scanner.SensorData;
+import de.hs_kl.wcn2.ble_scanner.BLEScanner;
+import de.hs_kl.wcn2.ble_scanner.ScanResultListener;
 
 public class SearchSensorFragment extends Fragment implements ScanResultListener
 {

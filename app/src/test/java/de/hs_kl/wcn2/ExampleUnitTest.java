@@ -1,4 +1,4 @@
-package de.hs_kl.blesensor;
+package de.hs_kl.wcn2;
 
 import org.junit.Test;
 

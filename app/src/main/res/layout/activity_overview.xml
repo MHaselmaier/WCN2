@@ -10,24 +10,24 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="de.hs_kl.blesensor.OverviewActivity">
+        tools:context="de.hs_kl.wcn2.OverviewActivity">
 
-        <fragment android:name="de.hs_kl.blesensor.fragments.sensor_tracking.SensorTrackingFragment"
+        <fragment android:name="de.hs_kl.wcn2.fragments.sensor_tracking.SensorTrackingFragment"
             android:id="@+id/sensor_tracking_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <fragment android:name="de.hs_kl.blesensor.fragments.search_sensor.SearchSensorFragment"
+        <fragment android:name="de.hs_kl.wcn2.fragments.search_sensor.SearchSensorFragment"
             android:id="@+id/search_sensor_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <fragment android:name="de.hs_kl.blesensor.fragments.manage_measurements.ManageMeasurementsFragment"
+        <fragment android:name="de.hs_kl.wcn2.fragments.manage_measurements.ManageMeasurementsFragment"
             android:id="@+id/manage_measurement_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <fragment android:name="de.hs_kl.blesensor.fragments.actions.ActionsFragment"
+        <fragment android:name="de.hs_kl.wcn2.fragments.actions.ActionsFragment"
             android:id="@+id/actions_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
@@ -52,7 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                tools:context="de.hs_kl.blesensor.OverviewActivity">
+                tools:context="de.hs_kl.wcn2.OverviewActivity">
 
                 <ImageView
                     android:id="@+id/overview_image"
@@ -81,7 +81,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                tools:context="de.hs_kl.blesensor.OverviewActivity">
+                tools:context="de.hs_kl.wcn2.OverviewActivity">
 
                 <ImageView
                     android:id="@+id/measurement_image"
@@ -110,7 +110,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                tools:context="de.hs_kl.blesensor.OverviewActivity">
+                tools:context="de.hs_kl.wcn2.OverviewActivity">
 
                 <ImageView
                     android:id="@+id/action_image"
@@ -139,7 +139,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                tools:context="de.hs_kl.blesensor.OverviewActivity">
+                tools:context="de.hs_kl.wcn2.OverviewActivity">
 
                 <ImageView
                     android:id="@+id/sensor_image"

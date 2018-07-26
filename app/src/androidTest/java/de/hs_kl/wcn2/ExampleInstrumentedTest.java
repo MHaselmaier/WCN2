@@ -1,4 +1,4 @@
-package de.hs_kl.blesensor;
+package de.hs_kl.wcn2;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("de.hs_kl.blesensor", appContext.getPackageName());
+        assertEquals("de.hs_kl.wcn2", appContext.getPackageName());
     }
 }

@@ -1,4 +1,4 @@
-package de.hs_kl.blesensor.util;
+package de.hs_kl.wcn2.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.hs_kl.blesensor.ble_scanner.SensorData;
+import de.hs_kl.wcn2.ble_scanner.SensorData;
 
 public class TrackedSensorsStorage
 {

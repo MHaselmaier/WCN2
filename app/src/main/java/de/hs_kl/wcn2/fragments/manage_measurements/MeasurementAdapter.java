@@ -1,4 +1,4 @@
-package de.hs_kl.blesensor.fragments.manage_measurements;
+package de.hs_kl.wcn2.fragments.manage_measurements;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import de.hs_kl.blesensor.R;
-import de.hs_kl.blesensor.util.Constants;
+import de.hs_kl.wcn2.R;
+import de.hs_kl.wcn2.util.Constants;
 
 public class MeasurementAdapter extends BaseAdapter
 {

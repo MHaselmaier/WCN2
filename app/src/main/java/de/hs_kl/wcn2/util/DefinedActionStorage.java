@@ -1,4 +1,4 @@
-package de.hs_kl.blesensor.util;
+package de.hs_kl.wcn2.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;

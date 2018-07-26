@@ -1,4 +1,4 @@
-package de.hs_kl.blesensor.fragments.sensor_tracking;
+package de.hs_kl.wcn2.fragments.sensor_tracking;
 
 import android.app.Activity;
 import android.app.Notification;
@@ -20,18 +20,18 @@ import android.provider.Settings;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hs_kl.blesensor.OverviewActivity;
-import de.hs_kl.blesensor.R;
-import de.hs_kl.blesensor.ble_scanner.BLEScanner;
-import de.hs_kl.blesensor.ble_scanner.ScanResultListener;
-import de.hs_kl.blesensor.ble_scanner.SensorData;
-import de.hs_kl.blesensor.util.Constants;
-import de.hs_kl.blesensor.util.TrackedSensorsStorage;
+import de.hs_kl.wcn2.OverviewActivity;
+import de.hs_kl.wcn2.R;
+import de.hs_kl.wcn2.ble_scanner.BLEScanner;
+import de.hs_kl.wcn2.ble_scanner.ScanResultListener;
+import de.hs_kl.wcn2.ble_scanner.SensorData;
+import de.hs_kl.wcn2.util.Constants;
+import de.hs_kl.wcn2.util.TrackedSensorsStorage;
 
 public class MeasurementService extends Service implements ScanResultListener
 {
-    public static final String ACTION_START = "de.hs_kl.blesensor.fragments.sensor_tracking.MeasurementService.START";
-    public static final String ACTION_STOP = "de.hs_kl.blesensor.fragments.sensor_tracking.MeasurementService.STOP";
+    public static final String ACTION_START = "de.hs_kl.wcn2.fragments.sensor_tracking.MeasurementService.START";
+    public static final String ACTION_STOP = "de.hs_kl.wcn2.fragments.sensor_tracking.MeasurementService.STOP";
 
     private static Dataset dataset = new Dataset();;
     public static String action = "";

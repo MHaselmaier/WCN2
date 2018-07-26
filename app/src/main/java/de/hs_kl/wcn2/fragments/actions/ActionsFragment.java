@@ -1,4 +1,4 @@
-package de.hs_kl.blesensor.fragments.actions;
+package de.hs_kl.wcn2.fragments.actions;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -13,8 +13,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import de.hs_kl.blesensor.R;
-import de.hs_kl.blesensor.util.DefinedActionStorage;
+import de.hs_kl.wcn2.R;
+import de.hs_kl.wcn2.util.DefinedActionStorage;
 
 public class ActionsFragment extends Fragment
 {

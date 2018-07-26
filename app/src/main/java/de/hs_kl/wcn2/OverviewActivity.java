@@ -1,4 +1,4 @@
-package de.hs_kl.blesensor;
+package de.hs_kl.wcn2;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -28,9 +28,9 @@ import android.widget.Toast;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import de.hs_kl.blesensor.ble_scanner.BLEScanner;
-import de.hs_kl.blesensor.fragments.sensor_tracking.MeasurementService;
-import de.hs_kl.blesensor.util.Constants;
+import de.hs_kl.wcn2.ble_scanner.BLEScanner;
+import de.hs_kl.wcn2.fragments.sensor_tracking.MeasurementService;
+import de.hs_kl.wcn2.util.Constants;
 
 public class OverviewActivity extends AppCompatActivity
 {

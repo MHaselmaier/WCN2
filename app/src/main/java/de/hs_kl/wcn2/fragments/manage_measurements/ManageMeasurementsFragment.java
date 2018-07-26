@@ -1,4 +1,4 @@
-package de.hs_kl.blesensor.fragments.manage_measurements;
+package de.hs_kl.wcn2.fragments.manage_measurements;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import de.hs_kl.blesensor.R;
+import de.hs_kl.wcn2.R;
 
 public class ManageMeasurementsFragment extends Fragment
 {

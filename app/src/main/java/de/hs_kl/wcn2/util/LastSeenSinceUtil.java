@@ -1,10 +1,10 @@
-package de.hs_kl.blesensor.util;
+package de.hs_kl.wcn2.util;
 
 import android.content.Context;
 
 import java.util.concurrent.TimeUnit;
 
-import de.hs_kl.blesensor.R;
+import de.hs_kl.wcn2.R;
 
 public class LastSeenSinceUtil
 {
