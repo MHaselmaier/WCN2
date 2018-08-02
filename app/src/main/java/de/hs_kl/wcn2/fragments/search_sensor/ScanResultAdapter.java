@@ -47,6 +47,11 @@ public class ScanResultAdapter extends BaseAdapter
         return this.sensorData.get(position);
     }
 
+    public SensorData getItem(String macAddress)
+    {
+        return this.sensorData.get(getPosition(macAddress));
+    }
+
     @Override
     public long getItemId(int position)
     {
@@ -58,59 +63,16 @@ public class ScanResultAdapter extends BaseAdapter
     {
         final SensorData sensorData = this.sensorData.get(position);
 
-        view = this.inflater.inflate(R.layout.sensor_list_item, null);
-
-        final ImageButton mnemonicEdit = view.findViewById(R.id.mnemonic_edit);
-        mnemonicEdit.setOnClickListener(new View.OnClickListener()
+        if (null == view)
         {
-            @Override
-            public void onClick(View v)
-            {
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ScanResultAdapter.this.context);
+            view = this.inflater.inflate(R.layout.sensor_list_item, null);
 
-                View dialogView = LayoutInflater.from(ScanResultAdapter.this.context).inflate(R.layout.mnemonic_dialog, null);
-                dialogBuilder.setView(dialogView);
+            ImageButton mnemonicEdit = view.findViewById(R.id.mnemonic_edit);
+            mnemonicEdit.setOnClickListener(new MnemonicEditOnClickListener(this.context, this));
 
-                final EditText mnemonic = dialogView.findViewById(R.id.mnemonic);
-                if (!sensorData.getMnemonic().equals("null"))
-                {
-                    mnemonic.append(sensorData.getMnemonic());
-                }
-
-                dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        dialog.dismiss();
-
-                        String newMnemonic = mnemonic.getText().toString().trim();
-                        if (0 == newMnemonic.length())
-                        {
-                            newMnemonic = "null";
-                        }
-
-                        sensorData.setMnemonic(newMnemonic);
-                        ScanResultAdapter.this.notifyDataSetInvalidated();
-
-                        TrackedSensorsStorage.trackSensor(ScanResultAdapter.this.context, sensorData);
-                    }
-                });
-
-                dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        dialog.dismiss();
-                    }
-                });
-
-                AlertDialog dialog = dialogBuilder.create();
-                dialog.show();
-                dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-            }
-        });
+            Switch trackSwitch = view.findViewById(R.id.sensor_tracked);
+            trackSwitch.setOnCheckedChangeListener(new SensorTrackedChangeListener(this.context, this));
+        }
 
         TextView sensorMacAddress = view.findViewById(R.id.sensor_mac_address);
         sensorMacAddress.setText(sensorData.getMacAddress());
@@ -118,13 +80,16 @@ public class ScanResultAdapter extends BaseAdapter
         Switch trackSwitch = view.findViewById(R.id.sensor_tracked);
         trackSwitch.setChecked(TrackedSensorsStorage.isTracked(this.context, sensorData));
         trackSwitch.setText(trackSwitch.isChecked() ? R.string.sensor_tracked : R.string.sensor_not_tracked);
-        trackSwitch.setOnCheckedChangeListener(new SensorTrackedChangeListener(this.context, sensorData));
 
         TextView mnemonic = view.findViewById(R.id.mnemonic);
         mnemonic.setText(this.context.getResources().getString(R.string.mnemonic, sensorData.getMnemonic()));
         if (sensorData.getMnemonic().equals("null"))
         {
             mnemonic.setVisibility(View.GONE);
+        }
+        else
+        {
+            mnemonic.setVisibility(View.VISIBLE);
         }
 
         TextView sensorID = view.findViewById(R.id.sensor_id);

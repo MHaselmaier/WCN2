@@ -26,6 +26,10 @@ public class Constants
     public static final int NOTIFICATION_ID = 1;
     public static final String NOTIFICATION_CHANNEL_ID = "notification_channel_id";
 
+    public static final int UI_UPDATE_INTERVAL = 2000;
+
+    public static final int BLESCANNER_REPORT_DELAY = 0;
+
     public enum WCNView
     {
         SENSOR_TRACKING, SEARCH_SENSOR, MANAGE_MEASUREMENT, ACTIONS

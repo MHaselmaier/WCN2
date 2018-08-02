@@ -16,6 +16,7 @@ import de.hs_kl.wcn2.R;
 import de.hs_kl.wcn2.ble_scanner.SensorData;
 import de.hs_kl.wcn2.ble_scanner.BLEScanner;
 import de.hs_kl.wcn2.ble_scanner.ScanResultListener;
+import de.hs_kl.wcn2.util.Constants;
 
 public class SearchSensorFragment extends Fragment implements ScanResultListener
 {
@@ -79,7 +80,7 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
                 if (!SearchSensorFragment.this.isHidden())
                 {
                     SearchSensorFragment.this.scanResultAdapter.notifyDataSetChanged();
-                    SearchSensorFragment.this.uiUpdater.postDelayed(this, 1000);
+                    SearchSensorFragment.this.uiUpdater.postDelayed(this, Constants.UI_UPDATE_INTERVAL);
                 }
             }
         });

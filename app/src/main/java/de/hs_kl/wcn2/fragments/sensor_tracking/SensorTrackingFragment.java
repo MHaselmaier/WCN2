@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Handler;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -278,6 +279,8 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         super.onResume();
 
         BLEScanner.registerScanResultListener(this);
+
+        startUIUpdater();
     }
 
     @Override
@@ -286,8 +289,6 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         super.onPause();
 
         BLEScanner.unregisterScanResultListener(this);
-
-        startUIUpdater();
     }
 
     private void startUIUpdater()
@@ -301,7 +302,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
                 {
                     updateTrackingTime();
                     showTrackedSensors();
-                    SensorTrackingFragment.this.uiUpdater.postDelayed(this, 1000);
+                    SensorTrackingFragment.this.uiUpdater.postDelayed(this, Constants.UI_UPDATE_INTERVAL);
                 }
             }
         });
@@ -315,7 +316,6 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
             startUIUpdater();
             this.trackedSensors = TrackedSensorsStorage.getTrackedSensors(getActivity());
             addActionToggleButtons((GridLayout)this.actionOverview.findViewById(R.id.actions));
-
         }
     }
 
