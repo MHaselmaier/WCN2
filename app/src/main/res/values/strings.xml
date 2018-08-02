@@ -11,6 +11,7 @@
     <string name="measurement">Measurements</string>
     <string name="action">Actions</string>
     <string name="sensor">Sensors</string>
+    <string name="about">About</string>
 
     <string name="scan_again">Search again</string>
     <string name="scan_for_sensors">Search for sensors</string>

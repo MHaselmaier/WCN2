@@ -152,6 +152,17 @@ public class OverviewActivity extends AppCompatActivity
                 drawer.closeDrawers();
             }
         });
+
+        View about = findViewById(R.id.about);
+        about.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                changeViewTo(Constants.WCNView.ABOUT);
+                drawer.closeDrawers();
+            }
+        });
     }
 
     public void changeViewTo(Constants.WCNView view)
@@ -192,6 +203,7 @@ public class OverviewActivity extends AppCompatActivity
         this.views[Constants.WCNView.SEARCH_SENSOR.ordinal()] = manager.findFragmentById(R.id.search_sensor_fragment);
         this.views[Constants.WCNView.MANAGE_MEASUREMENT.ordinal()] = manager.findFragmentById(R.id.manage_measurement_fragment);
         this.views[Constants.WCNView.ACTIONS.ordinal()] = manager.findFragmentById(R.id.actions_fragment);
+        this.views[Constants.WCNView.ABOUT.ordinal()] = manager.findFragmentById(R.id.about_fragment);
 
         FragmentTransaction ft = manager.beginTransaction();
         for (Fragment view: this.views)
