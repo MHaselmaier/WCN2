@@ -13,33 +13,35 @@ public class DefinedActionStorage
 {
     private static List<String> actions;
 
+    public static void init(Context context)
+    {
+        if (null != actions) return;
+
+        Object[] entries = context.getSharedPreferences(Constants.DEFINED_ACTIONS,
+                Context.MODE_PRIVATE).getAll().entrySet().toArray();
+        Arrays.sort(entries, new Comparator<Object>()
+        {
+            @Override
+            public int compare(Object o1, Object o2)
+            {
+                return ((Map.Entry<String, Integer>)o1).getValue() - ((Map.Entry<String, Integer>)o2).getValue();
+            }
+        });
+
+        DefinedActionStorage.actions = new ArrayList<>();
+        for (Object entry: entries)
+        {
+            DefinedActionStorage.actions.add(((Map.Entry<String, Integer>)entry).getKey());
+        }
+    }
+
     public static String[] getDefinedActions(Context context)
     {
-        if (null == DefinedActionStorage.actions)
-        {
-            Object[] entries = context.getSharedPreferences(Constants.DEFINED_ACTIONS,
-                    Context.MODE_PRIVATE).getAll().entrySet().toArray();
-            Arrays.sort(entries, new Comparator<Object>()
-            {
-                @Override
-                public int compare(Object o1, Object o2)
-                {
-                    return ((Map.Entry<String, Integer>)o1).getValue() - ((Map.Entry<String, Integer>)o2).getValue();
-                }
-            });
-
-            DefinedActionStorage.actions = new ArrayList<>();
-            for (Object entry: entries)
-            {
-                DefinedActionStorage.actions.add(((Map.Entry<String, Integer>)entry).getKey());
-            }
-        }
         return DefinedActionStorage.actions.toArray(new String[DefinedActionStorage.actions.size()]);
     }
 
     public static void addAction(Context context, String action)
     {
-        getDefinedActions(context);
         if (DefinedActionStorage.actions.contains(action))
         {
             return;
@@ -55,7 +57,6 @@ public class DefinedActionStorage
 
     public static void removeAction(Context context, String action)
     {
-        getDefinedActions(context);
         int index = DefinedActionStorage.actions.indexOf(action);
         DefinedActionStorage.actions.remove(action);
 
@@ -75,5 +76,37 @@ public class DefinedActionStorage
         {
             editor.putInt(DefinedActionStorage.actions.get(i), i);
         }
+    }
+
+    public static void moveActionUp(Context context, String action)
+    {
+        int actionIndex = DefinedActionStorage.actions.indexOf(action);
+        if (0 == actionIndex) return;
+
+        DefinedActionStorage.actions.set(actionIndex, DefinedActionStorage.actions.get(actionIndex - 1));
+        DefinedActionStorage.actions.set(actionIndex - 1, action);
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.DEFINED_ACTIONS,
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(action, actionIndex - 1);
+        editor.putInt(DefinedActionStorage.actions.get(actionIndex), actionIndex);
+        editor.apply();
+    }
+
+    public static void moveActionDown(Context context, String action)
+    {
+        int actionIndex = DefinedActionStorage.actions.indexOf(action);
+        if (DefinedActionStorage.actions.size() - 1 == actionIndex) return;
+
+        DefinedActionStorage.actions.set(actionIndex, DefinedActionStorage.actions.get(actionIndex + 1));
+        DefinedActionStorage.actions.set(actionIndex + 1, action);
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.DEFINED_ACTIONS,
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(action, actionIndex + 1);
+        editor.putInt(DefinedActionStorage.actions.get(actionIndex), actionIndex);
+        editor.apply();
     }
 }

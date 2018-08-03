@@ -96,6 +96,28 @@ public class ActionsFragment extends Fragment
                 TextView label = actionView.findViewById(R.id.label);
                 label.setText(action);
 
+                ImageButton up = actionView.findViewById(R.id.up);
+                up.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        DefinedActionStorage.moveActionUp(ActionsFragment.this.getActivity(), action);
+                        loadActionViews(actionList);
+                    }
+                });
+
+                ImageButton down = actionView.findViewById(R.id.down);
+                down.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        DefinedActionStorage.moveActionDown(ActionsFragment.this.getActivity(), action);
+                        loadActionViews(actionList);
+                    }
+                });
+
                 ImageButton remove = actionView.findViewById(R.id.remove);
                 remove.setOnClickListener(new View.OnClickListener()
                 {

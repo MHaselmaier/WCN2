@@ -15,36 +15,38 @@ public class TrackedSensorsStorage
 {
     private static Map<String, SensorData> trackedSensors;
 
+    public static void init(Context context)
+    {
+        if (null != TrackedSensorsStorage.trackedSensors) return;
+
+        List<Map.Entry<String, ?>> savedIDs = new ArrayList<Map.Entry<String, ?>>(context.getSharedPreferences(Constants.TRACKED_SENSORS_ID,
+                Context.MODE_PRIVATE).getAll().entrySet());
+        List<Map.Entry<String, ?>> savedMnemonics = new ArrayList<Map.Entry<String, ?>>(context.getSharedPreferences(Constants.TRACKED_SENSORS_MNEMONIC,
+                Context.MODE_PRIVATE).getAll().entrySet());
+
+        TrackedSensorsStorage.trackedSensors = new HashMap<>(savedIDs.size());
+        for (int i = 0; savedIDs.size() > i; ++i)
+        {
+            String macAddress = savedIDs.get(i).getKey();
+            byte sensorID = ((Integer)savedIDs.get(i).getValue()).byteValue();
+            String mnemonic = (String)savedMnemonics.get(i).getValue();
+            TrackedSensorsStorage.trackedSensors.put(macAddress, new SensorData(sensorID, mnemonic, macAddress));
+        }
+    }
+
     public static List<SensorData> getTrackedSensors(Context context)
     {
-        if (null == TrackedSensorsStorage.trackedSensors)
-        {
-            List<Map.Entry<String, ?>> savedIDs = new ArrayList<Map.Entry<String, ?>>(context.getSharedPreferences(Constants.TRACKED_SENSORS_ID,
-                    Context.MODE_PRIVATE).getAll().entrySet());
-            List<Map.Entry<String, ?>> savedMnemonics = new ArrayList<Map.Entry<String, ?>>(context.getSharedPreferences(Constants.TRACKED_SENSORS_MNEMONIC,
-                    Context.MODE_PRIVATE).getAll().entrySet());
-
-            TrackedSensorsStorage.trackedSensors = new HashMap<>(savedIDs.size());
-            for (int i = 0; savedIDs.size() > i; ++i) {
-                String macAddress = savedIDs.get(i).getKey();
-                byte sensorID = ((Integer)savedIDs.get(i).getValue()).byteValue();
-                String mnemonic = (String)savedMnemonics.get(i).getValue();
-                TrackedSensorsStorage.trackedSensors.put(macAddress, new SensorData(sensorID, mnemonic, macAddress));
-            }
-        }
         return new ArrayList<>(TrackedSensorsStorage.trackedSensors.values());
     }
 
     public static String getMnemonic(Context context, String macAddress)
     {
-        //getTrackedSensors(context);
         SensorData sensorData = TrackedSensorsStorage.trackedSensors.get(macAddress);
         return (null == sensorData ? "null" : sensorData.getMnemonic());
     }
 
     public static void trackSensor(Context context, SensorData sensorData)
     {
-        //getTrackedSensors(context);
         TrackedSensorsStorage.trackedSensors.put(sensorData.getMacAddress(), sensorData);
 
         SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.TRACKED_SENSORS_ID,
@@ -62,7 +64,6 @@ public class TrackedSensorsStorage
 
     public static void untrackSensor(Context context, SensorData sensorData)
     {
-        //getTrackedSensors(context);
         TrackedSensorsStorage.trackedSensors.remove(sensorData.getMacAddress());
 
         SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.TRACKED_SENSORS_ID,
@@ -80,7 +81,6 @@ public class TrackedSensorsStorage
 
     public static boolean isTracked(Context context, SensorData sensorData)
     {
-        //getTrackedSensors(context);
         return TrackedSensorsStorage.trackedSensors.containsKey(sensorData.getMacAddress());
     }
 }

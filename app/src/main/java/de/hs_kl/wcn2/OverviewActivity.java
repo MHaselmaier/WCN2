@@ -31,6 +31,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import de.hs_kl.wcn2.ble_scanner.BLEScanner;
 import de.hs_kl.wcn2.fragments.sensor_tracking.MeasurementService;
 import de.hs_kl.wcn2.util.Constants;
+import de.hs_kl.wcn2.util.DefinedActionStorage;
+import de.hs_kl.wcn2.util.TrackedSensorsStorage;
 
 public class OverviewActivity extends AppCompatActivity
 {
@@ -67,6 +69,10 @@ public class OverviewActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        TrackedSensorsStorage.init(this);
+        DefinedActionStorage.init(this);
+
         setContentView(R.layout.activity_overview);
         setTitle(R.string.app_name);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
