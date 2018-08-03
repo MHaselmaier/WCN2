@@ -229,6 +229,11 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
                     }
                 }
             });
+            if (action.equals(MeasurementService.action))
+            {
+                SensorTrackingFragment.this.action = button;
+                button.getBackground().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
+            }
             gridLayout.addView(view);
         }
         if (1 == actions.length)
