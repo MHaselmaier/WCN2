@@ -32,30 +32,31 @@
                     android:id="@+id/logo"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
+                    android:contentDescription="@string/university"
                     android:scaleType="fitXY"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@mipmap/ic_launcher_round" />
 
                 <TextView
-                    android:id="@+id/app_name"
+                    android:id="@+id/university"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/app_name"
-                    android:textSize="18sp"
+                    android:text="@string/university"
+                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/logo" />
 
                 <TextView
-                    android:id="@+id/app_name2"
+                    android:id="@+id/university_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Hochschule Kaiserslautern"
-                    android:textSize="18sp"
+                    android:text="@string/university_info"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/app_name" />
+                    app:layout_constraintTop_toBottomOf="@id/university" />
 
                 <View
                     android:id="@+id/divider1"
@@ -65,15 +66,15 @@
                     android:background="?android:attr/listDivider"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/app_name2" />
+                    app:layout_constraintTop_toBottomOf="@+id/university_info" />
 
                 <TextView
                     android:id="@+id/development"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="Entwicklung"
-                    android:textSize="18sp"
+                    android:text="@string/development"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -84,7 +85,7 @@
                     android:id="@+id/development_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Matthias Haselmaier, B. Sc.\nmatthias.haselmaier@hs-kl.de"
+                    android:text="@string/development_info"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -105,11 +106,22 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="Version 18.8.0b"
+                    android:text="@string/version"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/divider2" />
+
+                <TextView
+                    android:id="@+id/version_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/version_info"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/version"
                     app:layout_constraintTop_toBottomOf="@id/divider2" />
 
                 <View
@@ -123,11 +135,12 @@
                     app:layout_constraintTop_toBottomOf="@+id/version" />
 
                 <TextView
-                    android:id="@+id/university"
+                    android:id="@+id/wcn2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="Hochschule Kaiserslautern"
+                    android:text="@string/wcn2"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -135,47 +148,14 @@
                     app:layout_constraintTop_toBottomOf="@id/divider3" />
 
                 <TextView
-                    android:id="@+id/university_info"
+                    android:id="@+id/wcn2_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="www.hs-kl.de"
+                    android:text="@string/wcn2_info"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/university" />
-
-                <View
-                    android:id="@+id/divider4"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="5dp"
-                    android:background="?android:attr/listDivider"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/university_info" />
-
-                <TextView
-                    android:id="@+id/management"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="Leitung"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/divider4" />
-
-                <TextView
-                    android:id="@+id/management_info"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Prof. Dr. Antoni Picard\nantoni.picard@hs-kl.de"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/management" />
+                    app:layout_constraintTop_toBottomOf="@id/wcn2" />
 
             </android.support.constraint.ConstraintLayout>
         </ScrollView>

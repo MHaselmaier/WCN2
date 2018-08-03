@@ -75,4 +75,12 @@
 
     <string name="notification_title">Messung wird ausgeführt...</string>
     <string name="notification_description">Aktuell werden die Sensor-Data aufgezeichent und werden später in einer Messungs-Datei gespeichert.</string>
+
+    <string name="university">Hochschule Kaiserslautern</string>
+    <string name="university_info">www.hs-kl.de</string>
+    <string name="development">App Entwicklung:</string>
+    <string name="development_info">Matthias Haselmaier, B. Sc.\nmatthias.haselmaier@hs-kl.de</string>
+    <string name="version">Version:</string>
+    <string name="wcn2">Wireless Climate Network - WCN2 -\nSensor Entwicklung:</string>
+    <string name="wcn2_info">FB Informatik und Mikrosystemtechnick\nAG Picard\nD 66482 Zweibrücken\nantoni.picard@hs-kl.de</string>
 </resources>
