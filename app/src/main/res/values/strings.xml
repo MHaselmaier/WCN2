@@ -43,6 +43,7 @@
     <string name="tracked_sensors_edit">Edit</string>
     <string name="failed_to_write_file">Failed to write file</string>
     <string name="uses_default_action">No actions defined.</string>
+    <string name="no_tracked_sensors">Choose at least one sensor before starting a measurement!</string>
 
     <string name="temperature">%1$.1f °C</string>
     <string name="humidity">%1$.1f %%</string>

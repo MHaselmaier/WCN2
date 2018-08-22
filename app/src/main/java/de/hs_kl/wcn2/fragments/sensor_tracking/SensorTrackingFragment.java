@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,6 +104,12 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
             public void onClick(View v) {
                 if (!SensorTrackingFragment.this.tracking)
                 {
+                    if (0 == TrackedSensorsStorage.getTrackedSensors(getActivity()).size())
+                    {
+                        Toast.makeText(getActivity(), R.string.no_tracked_sensors, Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
                     String[] permission = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
                     if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(SensorTrackingFragment.this.getActivity(), permission[0]))
                     {
