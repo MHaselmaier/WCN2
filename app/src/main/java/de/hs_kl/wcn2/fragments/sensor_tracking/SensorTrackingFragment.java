@@ -1,16 +1,18 @@
 package de.hs_kl.wcn2.fragments.sensor_tracking;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.le.ScanFilter;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,6 +103,13 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
             public void onClick(View v) {
                 if (!SensorTrackingFragment.this.tracking)
                 {
+                    String[] permission = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                    if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(SensorTrackingFragment.this.getActivity(), permission[0]))
+                    {
+                        ActivityCompat.requestPermissions(SensorTrackingFragment.this.getActivity(), permission, Constants.REQUEST_PERMISSIONS);
+                        return;
+                    }
+
                     AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
 
                     View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.measurement_dialog, (ViewGroup)getView(), false);
