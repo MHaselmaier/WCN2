@@ -89,7 +89,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14sp"
-            tools:text="Not found" />
+            android:text="@string/sensor_not_seen" />
 
     </LinearLayout>
 

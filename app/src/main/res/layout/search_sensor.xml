@@ -12,8 +12,11 @@
         android:layout_margin="8dp">
 
         <LinearLayout
+            android:id="@+id/layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:divider="@android:color/darker_gray"
+            android:showDividers="beginning|middle|end"
             android:orientation="vertical">
 
             <TextView
@@ -22,11 +25,6 @@
                 android:layout_margin="5dp"
                 android:text="@string/found_sensors"
                 android:textSize="26sp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?android:attr/listDivider" />
 
             <ListView
                 android:id="@+id/sensors"

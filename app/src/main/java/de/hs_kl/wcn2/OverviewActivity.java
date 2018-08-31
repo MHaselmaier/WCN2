@@ -3,7 +3,6 @@ package de.hs_kl.wcn2;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
@@ -29,7 +28,12 @@ import java.util.Stack;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.hs_kl.wcn2.ble_scanner.BLEScanner;
+import de.hs_kl.wcn2.fragments.about.AboutFragment;
+import de.hs_kl.wcn2.fragments.actions.ActionsFragment;
+import de.hs_kl.wcn2.fragments.manage_measurements.ManageMeasurementsFragment;
+import de.hs_kl.wcn2.fragments.search_sensor.SearchSensorFragment;
 import de.hs_kl.wcn2.fragments.sensor_tracking.MeasurementService;
+import de.hs_kl.wcn2.fragments.sensor_tracking.SensorTrackingFragment;
 import de.hs_kl.wcn2.util.Constants;
 import de.hs_kl.wcn2.util.DefinedActionStorage;
 import de.hs_kl.wcn2.util.TrackedSensorsStorage;
@@ -202,18 +206,17 @@ public class OverviewActivity extends AppCompatActivity
 
     private void setupWCNViews()
     {
-        FragmentManager manager = getFragmentManager();
-
         this.views = new Fragment[Constants.WCNView.values().length];
-        this.views[Constants.WCNView.SENSOR_TRACKING.ordinal()] = manager.findFragmentById(R.id.sensor_tracking_fragment);
-        this.views[Constants.WCNView.SEARCH_SENSOR.ordinal()] = manager.findFragmentById(R.id.search_sensor_fragment);
-        this.views[Constants.WCNView.MANAGE_MEASUREMENT.ordinal()] = manager.findFragmentById(R.id.manage_measurement_fragment);
-        this.views[Constants.WCNView.ACTIONS.ordinal()] = manager.findFragmentById(R.id.actions_fragment);
-        this.views[Constants.WCNView.ABOUT.ordinal()] = manager.findFragmentById(R.id.about_fragment);
+        this.views[Constants.WCNView.SENSOR_TRACKING.ordinal()] = new SensorTrackingFragment();
+        this.views[Constants.WCNView.SEARCH_SENSOR.ordinal()] = new SearchSensorFragment();
+        this.views[Constants.WCNView.MANAGE_MEASUREMENT.ordinal()] = new ManageMeasurementsFragment();
+        this.views[Constants.WCNView.ACTIONS.ordinal()] = new ActionsFragment();
+        this.views[Constants.WCNView.ABOUT.ordinal()] = new AboutFragment();
 
-        FragmentTransaction ft = manager.beginTransaction();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
         for (Fragment view: this.views)
         {
+            ft.add(R.id.fragments, view);
             ft.hide(view);
         }
         this.currentView = this.views[Constants.WCNView.SENSOR_TRACKING.ordinal()];
