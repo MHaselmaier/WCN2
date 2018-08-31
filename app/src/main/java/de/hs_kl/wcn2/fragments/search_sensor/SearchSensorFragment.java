@@ -20,7 +20,7 @@ import de.hs_kl.wcn2.util.Constants;
 
 public class SearchSensorFragment extends Fragment implements ScanResultListener
 {
-    private ScanResultAdapter scanResultAdapter;
+    private FoundSensorAdapter foundSensorAdapter;
     private Handler uiUpdater = new Handler();
 
     @Override
@@ -32,7 +32,7 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
     @Override
     public void onScanResult(SensorData result)
     {
-        this.scanResultAdapter.add(result);
+        this.foundSensorAdapter.add(result);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
         setHasOptionsMenu(true);
         setRetainInstance(true);
 
-        this.scanResultAdapter = new ScanResultAdapter(getActivity(), LayoutInflater.from(getActivity()));
+        this.foundSensorAdapter = new FoundSensorAdapter(getActivity());
     }
 
     @Override
@@ -51,11 +51,9 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
     {
         View view = getActivity().getLayoutInflater().inflate(R.layout.search_sensor, container, false);
 
-
-        ListView sensors = view.findViewById(R.id.sensors);
-        sensors.setAdapter(this.scanResultAdapter);
-
-        sensors.setEmptyView(view.findViewById(R.id.empty_list_item));
+        ListView foundSensorListView = view.findViewById(R.id.sensors);
+        foundSensorListView.setEmptyView(view.findViewById(R.id.empty_list_item));
+        foundSensorListView.setAdapter(this.foundSensorAdapter);
 
         return view;
     }
@@ -79,7 +77,7 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
             {
                 if (!SearchSensorFragment.this.isHidden())
                 {
-                    SearchSensorFragment.this.scanResultAdapter.notifyDataSetChanged();
+                    SearchSensorFragment.this.foundSensorAdapter.notifyDataSetChanged();
                     SearchSensorFragment.this.uiUpdater.postDelayed(this, Constants.UI_UPDATE_INTERVAL);
                 }
             }

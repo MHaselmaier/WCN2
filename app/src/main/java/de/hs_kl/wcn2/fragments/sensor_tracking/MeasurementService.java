@@ -33,7 +33,7 @@ public class MeasurementService extends Service implements ScanResultListener
     public static final String ACTION_START = "de.hs_kl.wcn2.fragments.sensor_tracking.MeasurementService.START";
     public static final String ACTION_STOP = "de.hs_kl.wcn2.fragments.sensor_tracking.MeasurementService.STOP";
 
-    private static Dataset dataset = new Dataset();;
+    private static Dataset dataset = new Dataset();
     public static String action = "";
     public static long startTime = Long.MIN_VALUE;
 
@@ -83,7 +83,6 @@ public class MeasurementService extends Service implements ScanResultListener
             MeasurementService.startTime = System.currentTimeMillis();
 
             startForeground(Constants.NOTIFICATION_ID, createNotification(intent.getStringExtra(Constants.MEASUREMENT_HEADER)));
-
             break;
         case MeasurementService.ACTION_STOP:
             MeasurementService.dataset.writeToFile(this);
