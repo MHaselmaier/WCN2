@@ -1,12 +1,15 @@
 package de.hs_kl.wcn2.fragments.about;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import de.hs_kl.wcn2.R;
+import de.hs_kl.wcn2.usage.UsageActivity;
 
 public class AboutFragment extends Fragment
 {
@@ -24,15 +27,16 @@ public class AboutFragment extends Fragment
     {
         View view = getActivity().getLayoutInflater().inflate(R.layout.about, container, false);
 
-        return view;
-    }
-
-    @Override
-    public void onHiddenChanged(boolean hidden)
-    {
-        if (!hidden)
+        Button help = view.findViewById(R.id.help_button);
+        help.setOnClickListener(new View.OnClickListener()
         {
+            @Override
+            public void onClick(View v)
+            {
+                startActivity(new Intent(getActivity(), UsageActivity.class));
+            }
+        });
 
-        }
+        return view;
     }
 }

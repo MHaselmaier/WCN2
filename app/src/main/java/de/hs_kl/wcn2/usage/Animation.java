@@ -9,12 +9,19 @@ public class Animation
 {
     private Handler handler = new Handler();
     private Runnable initialize;
+    private int descriptionResourceID;
     private int currentStep = 0;
     private List<Step> steps = new ArrayList<>();
 
-    public Animation(Runnable initialize)
+    public Animation(Runnable initialize, int descriptionResourceID)
     {
         this.initialize = initialize;
+        this.descriptionResourceID = descriptionResourceID;
+    }
+
+    public int getDescriptionResourceID()
+    {
+        return this.descriptionResourceID;
     }
 
     public void addStep(Step step)

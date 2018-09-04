@@ -84,4 +84,13 @@
     <string name="version">Version:</string>
     <string name="wcn2">Wireless Climate Network - WCN2 -\nSensor Entwicklung:</string>
     <string name="wcn2_info">FB Informatik und Mikrosystemtechnik\nAG Picard\nD 66482 Zweibrücken\nantoni.picard@hs-kl.de</string>
+    <string name="help_info">Probleme bei der Verwendung:</string>
+    <string name="help">Hilfe anzeigen</string>
+
+    <string name="skip">Überspringen</string>
+    <string name="next">Weiter</string>
+    <string name="introduction_description">Hier werden Sie durch die ersten Schritte geleitet, bevor Sie eine Messung starten können.</string>
+    <string name="create_action_description">Definieren Sie Aktionen, die während den Messungen durchgeführt werden sollen.</string>
+    <string name="select_tracked_sensors_description">Wählen Sie die Sensoren, die während den Messungen verfolgt werden sollen.</string>
+    <string name="perform_measurement_description">Starten Sie die Messung und wählen Sie die aktuell ausgeführte Aktion aus.</string>
 </resources>
