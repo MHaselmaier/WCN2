@@ -336,7 +336,10 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         {
             startUIUpdater();
             this.trackedSensors = TrackedSensorsStorage.getTrackedSensors(getActivity());
-            addActionToggleButtons((GridLayout)this.actionOverview.findViewById(R.id.actions));
+            if (null != this.actionOverview)
+            {
+                addActionToggleButtons((GridLayout) this.actionOverview.findViewById(R.id.actions));
+            }
         }
     }
 
