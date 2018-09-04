@@ -369,13 +369,14 @@ public class UsageActivity extends AppCompatActivity
         ((ImageView)trackedSensor1.findViewById(R.id.battery_level)).setImageDrawable(getDrawable(R.drawable.ic_battery_full));
         ((ImageView)trackedSensor1.findViewById(R.id.signal_strength)).setImageDrawable(getDrawable(R.drawable.ic_signal_100));
 
-        View trackedSensor2 = getLayoutInflater().inflate(R.layout.tracked_sensor_overview, trackedSensors);
+        View trackedSensor2 = getLayoutInflater().inflate(R.layout.tracked_sensor_overview, trackedSensors, false);
         ((TextView)trackedSensor2.findViewById(R.id.sensor_id)).setText("WCN3");
         ((TextView)trackedSensor2.findViewById(R.id.last_seen)).setText(getString(R.string.sensor_last_seen) + getResources().getString(R.string.sensor_seen_just_now));
         ((TextView)trackedSensor2.findViewById(R.id.temperature)).setText("21,4 °C");
         ((TextView)trackedSensor2.findViewById(R.id.humidity)).setText("36,8 %");
         ((ImageView)trackedSensor2.findViewById(R.id.battery_level)).setImageDrawable(getDrawable(R.drawable.ic_battery_full));
         ((ImageView)trackedSensor2.findViewById(R.id.signal_strength)).setImageDrawable(getDrawable(R.drawable.ic_signal_100));
+        trackedSensors.addView(trackedSensor2);
 
         sensorTracking.findViewById(R.id.measurement_button).setClickable(false);
         Animation performMeasurement = new Animation(new Runnable()
