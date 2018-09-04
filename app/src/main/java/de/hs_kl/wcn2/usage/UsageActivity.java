@@ -9,6 +9,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
@@ -214,6 +215,8 @@ public class UsageActivity extends AppCompatActivity
         dialogBuilder.setPositiveButton(R.string.ok, null);
         dialogBuilder.setNegativeButton(R.string.cancel, null);
         final AlertDialog dialog = dialogBuilder.create();
+        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
         createAction.addStep(new Animation.Step(createAction, new Runnable()
         {
             @Override
@@ -410,6 +413,8 @@ public class UsageActivity extends AppCompatActivity
         dialogBuilder.setPositiveButton(R.string.ok, null);
         dialogBuilder.setNegativeButton(R.string.cancel, null);
         final AlertDialog dialog = dialogBuilder.create();
+        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
         performMeasurement.addStep(new Animation.Step(performMeasurement, new Runnable()
         {
             @Override
