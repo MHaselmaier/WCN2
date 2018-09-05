@@ -28,12 +28,12 @@ public class StartMeasurementDialog
             public void onClick(DialogInterface dialog, int which)
             {
                 dialog.dismiss();
-                String measurementHeaderInput = measurementHeader.getText().toString();
-                if (0 == measurementHeaderInput.trim().length())
+                String header = measurementHeader.getText().toString();
+                if (0 == header.trim().length())
                 {
-                    measurementHeaderInput = activity.getResources().getString(R.string.measurement_comment);
+                    header = activity.getResources().getString(R.string.measurement_comment);
                 }
-                fragment.startTracking(measurementHeaderInput);
+                fragment.startTracking(header);
             }
         });
 

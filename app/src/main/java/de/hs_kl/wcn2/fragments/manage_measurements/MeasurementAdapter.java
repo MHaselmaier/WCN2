@@ -2,6 +2,7 @@ package de.hs_kl.wcn2.fragments.manage_measurements;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import java.io.File;
@@ -21,6 +23,10 @@ import de.hs_kl.wcn2.util.Constants;
 
 public class MeasurementAdapter extends BaseAdapter
 {
+    private final static String MEASUREMENT_PATH =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) +
+            File.separator + Constants.DATA_DIRECTORY;
+
     private Context context;
     private LayoutInflater inflater;
     private List<File> measurements;
@@ -35,19 +41,11 @@ public class MeasurementAdapter extends BaseAdapter
 
     public void loadFiles()
     {
-        String measurementPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) +
-                File.separator + Constants.DATA_DIRECTORY;
-        File[] files = new File(measurementPath).listFiles();
-        if (null != files)
-        {
-            this.measurements = new ArrayList<>(Arrays.asList(files));
-        }
-        else
-        {
-            this.measurements = new ArrayList<>();
-        }
+        File[] files = new File(MeasurementAdapter.MEASUREMENT_PATH).listFiles();
+        if (null == files) files = new File[0];
 
-        notifyDataSetInvalidated();
+        this.measurements = new ArrayList<>(Arrays.asList(files));
+        notifyDataSetChanged();
     }
 
     @Override
@@ -75,7 +73,7 @@ public class MeasurementAdapter extends BaseAdapter
 
         if (null == view)
         {
-            view = this.inflater.inflate(R.layout.measurement_item, null);
+            view = this.inflater.inflate(R.layout.measurement_item, parent, false);
         }
 
         TextView label = view.findViewById(R.id.label);
@@ -84,14 +82,24 @@ public class MeasurementAdapter extends BaseAdapter
             @Override
             public void onClick(View v) {
                 Intent openIntent = new Intent(Intent.ACTION_VIEW);
-                openIntent.setDataAndType(FileProvider.getUriForFile(MeasurementAdapter.this.context, "de.hs_kl.fileprovider", measurement), "text/plain");
+                Uri uri = FileProvider.getUriForFile(MeasurementAdapter.this.context,
+                        Constants.FILE_PROVIDER_AUTHORITY, measurement);
+                openIntent.setDataAndType(uri, Constants.MEASUREMENT_DATA_TYPE);
                 openIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 MeasurementAdapter.this.context.startActivity(openIntent);
             }
         });
 
         ImageButton more = view.findViewById(R.id.more);
-        more.setOnClickListener(new MeasurementMenu(this.context, more, measurement, this));
+        final PopupMenu menu = new MeasurementMenu(this.context, more, measurement, this);
+        more.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                menu.show();
+            }
+        });
 
         return view;
     }
@@ -100,24 +108,22 @@ public class MeasurementAdapter extends BaseAdapter
     {
         int position = getPosition(measurement.getName());
 
-        if (0 <= position)
-        {
-            this.measurements.set(position, measurement);
-        }
-        else
+        if (-1 == position)
         {
             this.measurements.add(measurement);
+            return;
         }
+
+        this.measurements.set(position, measurement);
     }
 
     public void remove(File measurement)
     {
         int position = getPosition(measurement.getName());
 
-        if (0 <= position)
-        {
-            this.measurements.remove(position);
-        }
+        if (-1 == position) return;
+
+        this.measurements.remove(position);
     }
 
     private int getPosition(String name)

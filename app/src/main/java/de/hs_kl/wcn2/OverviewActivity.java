@@ -84,12 +84,13 @@ public class OverviewActivity extends AppCompatActivity
 
         requestPermissions();
 
-        BLEScanner.setContext(this);
-        registerReceiver(this.btAdapterChangeReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
+        registerReceiver(this.btAdapterChangeReceiver,
+                new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
         setupBluetoothAdapter();
         ensureBluetoothIsEnabled();
 
-        registerReceiver(this.locationModeChangeReceiver, new IntentFilter((LocationManager.MODE_CHANGED_ACTION)));
+        registerReceiver(this.locationModeChangeReceiver,
+                new IntentFilter((LocationManager.MODE_CHANGED_ACTION)));
         ensureLocationIsEnabled();
 
         setupDrawer();
@@ -229,7 +230,8 @@ public class OverviewActivity extends AppCompatActivity
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return;
 
         ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.REQUEST_PERMISSIONS);
+                Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                Constants.REQUEST_PERMISSIONS);
     }
 
     @Override

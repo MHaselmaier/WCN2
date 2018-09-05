@@ -108,10 +108,12 @@ public class UsageActivity extends AppCompatActivity
 
     private Animation makeIntroductionAnimation()
     {
-        final DrawerLayout drawer = (DrawerLayout)getLayoutInflater().inflate(R.layout.activity_overview, this.content, false);
+        final DrawerLayout drawer = (DrawerLayout)getLayoutInflater()
+                .inflate(R.layout.activity_overview, this.content, false);
         final ConstraintLayout container = drawer.findViewById(R.id.fragments);
 
-        final View sensorTracking = getLayoutInflater().inflate(R.layout.sensor_tracking, container, false);
+        final View sensorTracking = getLayoutInflater()
+                .inflate(R.layout.sensor_tracking, container, false);
         LinearLayout trackedSensorViews = sensorTracking.findViewById(R.id.tracked_sensors);
         View emptyView = getLayoutInflater().inflate(R.layout.empty_list_item, trackedSensorViews);
         TextView label = emptyView.findViewById(R.id.label);
@@ -141,10 +143,12 @@ public class UsageActivity extends AppCompatActivity
 
     private Animation makeCreateActionAnimation()
     {
-        final DrawerLayout drawer = (DrawerLayout)getLayoutInflater().inflate(R.layout.activity_overview, this.content, false);
+        final DrawerLayout drawer = (DrawerLayout)getLayoutInflater()
+                .inflate(R.layout.activity_overview, this.content, false);
         final ConstraintLayout container = drawer.findViewById(R.id.fragments);
 
-        final View sensorTracking = getLayoutInflater().inflate(R.layout.sensor_tracking, container, false);
+        final View sensorTracking = getLayoutInflater()
+                .inflate(R.layout.sensor_tracking, container, false);
         sensorTracking.findViewById(R.id.measurement_button).setClickable(false);
         LinearLayout trackedSensorViews = sensorTracking.findViewById(R.id.tracked_sensors);
         View emptyView = getLayoutInflater().inflate(R.layout.empty_list_item, trackedSensorViews);
@@ -184,7 +188,8 @@ public class UsageActivity extends AppCompatActivity
         }, 500));
 
         final View actions = getLayoutInflater().inflate(R.layout.actions, container, false);
-        emptyView = getLayoutInflater().inflate(R.layout.empty_list_item, (LinearLayout)actions.findViewById(R.id.actions));
+        emptyView = getLayoutInflater().inflate(R.layout.empty_list_item,
+                (LinearLayout)actions.findViewById(R.id.actions));
         label = emptyView.findViewById(R.id.label);
         label.setText(R.string.no_actions_defined);
         createAction.addStep(new Animation.Step(createAction, new Runnable()
@@ -216,7 +221,8 @@ public class UsageActivity extends AppCompatActivity
         dialogBuilder.setNegativeButton(R.string.cancel, null);
         final AlertDialog dialog = dialogBuilder.create();
         dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
+        dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE |
+                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
         createAction.addStep(new Animation.Step(createAction, new Runnable()
         {
             @Override
@@ -243,10 +249,12 @@ public class UsageActivity extends AppCompatActivity
 
     private Animation makeSelectTrackedSensorsAnimation()
     {
-        final DrawerLayout drawer = (DrawerLayout)getLayoutInflater().inflate(R.layout.activity_overview, this.content, false);
+        final DrawerLayout drawer = (DrawerLayout)getLayoutInflater()
+                .inflate(R.layout.activity_overview, this.content, false);
         final ConstraintLayout container = drawer.findViewById(R.id.fragments);
 
-        final View sensorTracking = getLayoutInflater().inflate(R.layout.sensor_tracking, container, false);
+        final View sensorTracking = getLayoutInflater()
+                .inflate(R.layout.sensor_tracking, container, false);
         sensorTracking.findViewById(R.id.measurement_button).setClickable(false);
         LinearLayout trackedSensorViews = sensorTracking.findViewById(R.id.tracked_sensors);
         View emptyView = getLayoutInflater().inflate(R.layout.empty_list_item, trackedSensorViews);
@@ -285,11 +293,13 @@ public class UsageActivity extends AppCompatActivity
             }
         }, 500));
 
-        final View searchSensor = getLayoutInflater().inflate(R.layout.search_sensor, container, false);
+        final View searchSensor = getLayoutInflater()
+                .inflate(R.layout.search_sensor, container, false);
         LinearLayout layout = searchSensor.findViewById(R.id.layout);
         layout.removeView(layout.findViewById(R.id.empty_list_item));
 
-        View sensorListItem = getLayoutInflater().inflate(R.layout.sensor_list_item, container, false);
+        View sensorListItem = getLayoutInflater()
+                .inflate(R.layout.sensor_list_item, container, false);
         ((TextView)sensorListItem.findViewById(R.id.sensor_id)).setText("WCN1");
         ((TextView)sensorListItem.findViewById(R.id.sensor_mac_address)).setText("1A:6E:64:F0:68:7A");
         final Switch firstSwitch = sensorListItem.findViewById(R.id.sensor_tracked);
@@ -359,10 +369,12 @@ public class UsageActivity extends AppCompatActivity
 
     private Animation makePerformMeasurementAnimation()
     {
-        final DrawerLayout drawer = (DrawerLayout)getLayoutInflater().inflate(R.layout.activity_overview, this.content, false);
+        final DrawerLayout drawer = (DrawerLayout)getLayoutInflater()
+                .inflate(R.layout.activity_overview, this.content, false);
         final ConstraintLayout container = drawer.findViewById(R.id.fragments);
 
-        final View sensorTracking = getLayoutInflater().inflate(R.layout.sensor_tracking, container, false);
+        final View sensorTracking = getLayoutInflater()
+                .inflate(R.layout.sensor_tracking, container, false);
         LinearLayout trackedSensors = sensorTracking.findViewById(R.id.tracked_sensors);
         View trackedSensor1 = getLayoutInflater().inflate(R.layout.tracked_sensor_overview, trackedSensors);
         ((TextView)trackedSensor1.findViewById(R.id.sensor_id)).setText("WCN1");

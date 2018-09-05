@@ -37,27 +37,30 @@ public class MeasurementService extends Service implements ScanResultListener
     public static String action = "";
     public static long startTime = Long.MIN_VALUE;
 
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver()
+    {
         @Override
         public void onReceive(Context context, Intent intent)
         {
-            if (!OverviewActivity.isVisible)
+            if (OverviewActivity.isVisible) return;
+
+            try
             {
-                try
+                int bluetoothState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE,
+                        BluetoothAdapter.ERROR);
+                int locationMode = Settings.Secure.getInt(getContentResolver(),
+                        Settings.Secure.LOCATION_MODE);
+                if (BluetoothAdapter.STATE_OFF == bluetoothState ||
+                        Settings.Secure.LOCATION_MODE_OFF == locationMode)
                 {
-                    int bluetoothState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
-                    int locationMode = Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE);
-                    if (BluetoothAdapter.STATE_OFF == bluetoothState || Settings.Secure.LOCATION_MODE_OFF == locationMode)
-                    {
-                        BLEScanner.setBluetoothLeScanner(null);
-                        intent = new Intent(MeasurementService.this, OverviewActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                                Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                    }
+                    BLEScanner.setBluetoothLeScanner(null);
+                    intent = new Intent(MeasurementService.this, OverviewActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                            Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
                 }
-                catch (Exception e) {}
             }
+            catch (Exception e) {}
         }
     };
 
@@ -76,58 +79,75 @@ public class MeasurementService extends Service implements ScanResultListener
         switch (intent.getAction())
         {
         case MeasurementService.ACTION_START:
-            BLEScanner.registerScanResultListener(this);
-            MeasurementService.dataset.clear();
-            MeasurementService.dataset.setMeasurementHeader(intent.getStringExtra(Constants.MEASUREMENT_HEADER));
-            MeasurementService.action = "";
-            MeasurementService.startTime = System.currentTimeMillis();
-
-            startForeground(Constants.NOTIFICATION_ID, createNotification(intent.getStringExtra(Constants.MEASUREMENT_HEADER)));
+            onActionStart(intent);
             break;
         case MeasurementService.ACTION_STOP:
-            MeasurementService.dataset.writeToFile(this);
-            BLEScanner.unregisterScanResultListener(this);
-            MeasurementService.action = "";
-            MeasurementService.startTime = Long.MIN_VALUE;
+            onActionStop();
             break;
         }
 
         return Service.START_STICKY;
     }
 
+    private void onActionStart(Intent intent)
+    {
+        BLEScanner.registerScanResultListener(this);
+        MeasurementService.dataset.clear();
+        String header = intent.getStringExtra(Constants.MEASUREMENT_HEADER);
+        MeasurementService.dataset.setMeasurementHeader(header);
+        MeasurementService.action = "";
+        MeasurementService.startTime = System.currentTimeMillis();
+
+        startForeground(Constants.NOTIFICATION_ID, createNotification(header));
+    }
+
     private Notification createNotification(String measurementHeader)
     {
-        Notification.Builder builder;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        {
-            NotificationManager nm = (NotificationManager)getSystemService(Activity.NOTIFICATION_SERVICE);
-            if(nm != null)
-            {
-                NotificationChannel nChannel = nm.getNotificationChannel(Constants.NOTIFICATION_CHANNEL_ID);
-                if (nChannel == null)
-                {
-                    nChannel = new NotificationChannel(Constants.NOTIFICATION_CHANNEL_ID, getString(R.string.notification_title),  NotificationManager.IMPORTANCE_HIGH);
-                    nChannel.setDescription(getString(R.string.notification_description));
-                    nm.createNotificationChannel(nChannel);
-                }
-            }
-            builder = new Notification.Builder(this, Constants.NOTIFICATION_CHANNEL_ID);
-        }
-        else
-        {
-            builder = new Notification.Builder(this);
-        }
+        Notification.Builder builder = getNotificationBuilder();
 
         Intent intent = new Intent(this, OverviewActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
         builder.setOngoing(true)
-               .setSmallIcon(R.drawable.ic_measurement)
-               .setContentTitle(getString(R.string.notification_title))
-               .setContentText(measurementHeader)
-               .setContentIntent(pendingIntent);
+                .setSmallIcon(R.drawable.ic_measurement)
+                .setContentTitle(getString(R.string.notification_title))
+                .setContentText(measurementHeader)
+                .setContentIntent(pendingIntent);
         return builder.build();
+    }
+
+    private Notification.Builder getNotificationBuilder()
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            createNotificationChannel();
+            return new Notification.Builder(this, Constants.NOTIFICATION_CHANNEL_ID);
+        }
+
+        return new Notification.Builder(this);
+    }
+
+    private void createNotificationChannel()
+    {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return;
+
+        String service = Activity.NOTIFICATION_SERVICE;
+        NotificationManager manager = (NotificationManager)getSystemService(service);
+        if (null != manager.getNotificationChannel(Constants.NOTIFICATION_CHANNEL_ID)) return;
+
+        NotificationChannel channel = new NotificationChannel(Constants.NOTIFICATION_CHANNEL_ID,
+                getString(R.string.notification_title), NotificationManager.IMPORTANCE_HIGH);
+        channel.setDescription(getString(R.string.notification_description));
+        manager.createNotificationChannel(channel);
+    }
+
+    private void onActionStop()
+    {
+        MeasurementService.dataset.writeToFile(this);
+        BLEScanner.unregisterScanResultListener(this);
+        MeasurementService.action = "";
+        MeasurementService.startTime = Long.MIN_VALUE;
     }
 
     @Override
@@ -151,7 +171,7 @@ public class MeasurementService extends Service implements ScanResultListener
     public List<ScanFilter> getScanFilter()
     {
         List<ScanFilter> scanFilters = new ArrayList<>();
-        for (SensorData sensorData: TrackedSensorsStorage.getTrackedSensors(this))
+        for (SensorData sensorData: TrackedSensorsStorage.getTrackedSensors())
         {
             ScanFilter.Builder builder = new ScanFilter.Builder();
             builder.setDeviceAddress(sensorData.getMacAddress());

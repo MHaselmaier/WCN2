@@ -22,15 +22,14 @@ public class ManageMeasurementsFragment extends Fragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
-                             Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = getActivity().getLayoutInflater().inflate(R.layout.manage_measurement, container, false);
+        View view = inflater.inflate(R.layout.manage_measurement, container, false);
+
+        this.adapter = new MeasurementAdapter(getActivity(), inflater);
 
         ListView measurements = view.findViewById(R.id.measurements);
-        this.adapter = new MeasurementAdapter(getActivity(), inflater);
         measurements.setAdapter(this.adapter);
-
         measurements.setEmptyView(view.findViewById(R.id.empty_list_item));
 
         return view;

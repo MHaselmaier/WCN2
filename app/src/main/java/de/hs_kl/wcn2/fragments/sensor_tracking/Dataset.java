@@ -58,7 +58,7 @@ public class Dataset
             PrintWriter outputStream = createOutputStream(filename);
 
             writeMeasurementHeader(outputStream, context);
-            writeSensorInfo(outputStream, context);
+            writeSensorInfo(outputStream);
             writeSensorData(outputStream);
 
             outputStream.close();
@@ -102,14 +102,14 @@ public class Dataset
         }
     }
 
-    private void writeSensorInfo(PrintWriter outputStream, Context context)
+    private void writeSensorInfo(PrintWriter outputStream)
     {
         outputStream.write("Sensor ID\tMAC Address\tMnemonic\n");
 
         for (Map.Entry<Byte, String> entry: this.sensorInfo.entrySet())
         {
             outputStream.format("%d\t%s\t%s\n", entry.getKey(), entry.getValue(),
-                    TrackedSensorsStorage.getMnemonic(context, entry.getValue()));
+                    TrackedSensorsStorage.getMnemonic(entry.getValue()));
         }
 
         outputStream.write("\n");

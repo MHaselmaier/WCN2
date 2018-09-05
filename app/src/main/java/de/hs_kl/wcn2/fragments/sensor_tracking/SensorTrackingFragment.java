@@ -1,7 +1,6 @@
 package de.hs_kl.wcn2.fragments.sensor_tracking;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Dialog;
 import android.bluetooth.le.ScanFilter;
 import android.content.Intent;
@@ -50,6 +49,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     private CardView sensorOverview;
     private LinearLayout trackedSensorViews;
     private ScrollView actionOverview;
+    private GridLayout actions;
 
     @Override
     public List<ScanFilter> getScanFilter()
@@ -84,14 +84,14 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         setHasOptionsMenu(true);
         setRetainInstance(true);
 
-        this.trackedSensors = TrackedSensorsStorage.getTrackedSensors(getActivity());
+        this.trackedSensors = TrackedSensorsStorage.getTrackedSensors();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState)
     {
-        View view = getActivity().getLayoutInflater().inflate(R.layout.sensor_tracking, container, false);
+        View view = inflater.inflate(R.layout.sensor_tracking, container, false);
 
         this.measurementTime = view.findViewById(R.id.measurement_time);
         final Dialog dialog = StartMeasurementDialog.buildStartMeasurementDialog(this);
@@ -110,13 +110,12 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
                 }
             }
         });
-
         this.trackedSensorViews = view.findViewById(R.id.tracked_sensors);
-
         this.sensorOverview = view.findViewById(R.id.sensor_overview);
         this.actionOverview = view.findViewById(R.id.action_overview);
         this.actionOverview.setVisibility(View.GONE);
-        addActionToggleButtons((GridLayout)this.actionOverview.findViewById(R.id.actions));
+        this.actions = this.actionOverview.findViewById(R.id.actions);
+        addActionToggleButtons();
 
         ImageButton edit = view.findViewById(R.id.edit_tracked_sensors);
         edit.setOnClickListener(new View.OnClickListener() {
@@ -136,7 +135,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
 
     private boolean ensureAtLeastOneSensorIsTracked()
     {
-        if (0 == TrackedSensorsStorage.getTrackedSensors(getActivity()).size())
+        if (0 == TrackedSensorsStorage.getTrackedSensors().size())
         {
             Toast.makeText(getActivity(), R.string.no_tracked_sensors, Toast.LENGTH_LONG).show();
             return false;
@@ -147,9 +146,11 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     private boolean ensurePermissionToWriteFilesIsGranted()
     {
         String[] permission = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(getActivity(), permission[0]))
+        if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(getActivity(),
+                permission[0]))
         {
-            ActivityCompat.requestPermissions(getActivity(), permission, Constants.REQUEST_PERMISSIONS);
+            ActivityCompat.requestPermissions(getActivity(), permission,
+                    Constants.REQUEST_PERMISSIONS);
             return false;
         }
         return true;
@@ -160,84 +161,92 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     {
         super.onViewCreated(view, savedInstanceBundle);
 
-        if (Long.MIN_VALUE != MeasurementService.startTime)
+        if (Long.MIN_VALUE == MeasurementService.startTime) return;
+
+        this.tracking = true;
+        this.trackingStartTime = MeasurementService.startTime;
+        updateTrackingTime();
+
+        this.sensorOverview.setVisibility(View.GONE);
+        this.actionOverview.setVisibility(View.VISIBLE);
+
+        GridLayout actions = this.actionOverview.findViewById(R.id.actions);
+        for (int i = 0; actions.getChildCount() > i; ++i)
         {
-            this.tracking = true;
-            this.trackingStartTime = MeasurementService.startTime;
+            Button button = actions.getChildAt(i).findViewById(R.id.button);
+            if (null == button) continue;
 
-            this.sensorOverview.setVisibility(View.GONE);
-            this.actionOverview.setVisibility(View.VISIBLE);
-            updateTrackingTime();
-
-            GridLayout actions = this.actionOverview.findViewById(R.id.actions);
-            int amountChildren = actions.getChildCount();
-            for (int i = 0; amountChildren > i; ++i)
+            if (MeasurementService.action.equals(button.getText().toString()))
             {
-                Button button = actions.getChildAt(i).findViewById(R.id.button);
-                if (null != button)
-                {
-                    if (MeasurementService.action.equals(button.getText().toString()))
-                    {
-                        this.action = button;
-                        SensorTrackingFragment.this.action.getBackground().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
-                        return;
-                    }
-                }
+                this.action = button;
+                this.action.getBackground().setColorFilter(getResources()
+                        .getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
+                return;
             }
         }
     }
 
-    private void addActionToggleButtons(GridLayout gridLayout)
+    private void addActionToggleButtons()
     {
-        gridLayout.removeAllViews();
+        this.actions.removeAllViews();
 
-        String[] actions = DefinedActionStorage.getDefinedActions(getActivity());
+        String[] actions = DefinedActionStorage.getDefinedActions();
         if (0 == actions.length)
         {
-            View emptyView = getActivity().getLayoutInflater().inflate(R.layout.empty_actions, gridLayout, false);
-            gridLayout.addView(emptyView);
+            getActivity().getLayoutInflater().inflate(R.layout.empty_actions, this.actions);
             return;
         }
 
         for (String action: actions)
         {
-            View view = getActivity().getLayoutInflater().inflate(R.layout.action_button, gridLayout, false);
-            Button button = view.findViewById(R.id.button);
-            button.setText(action);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (null != SensorTrackingFragment.this.action)
-                    {
-                        SensorTrackingFragment.this.action.getBackground().clearColorFilter();
-                    }
-                    if (view == SensorTrackingFragment.this.action)
-                    {
-                        SensorTrackingFragment.this.action = null;
-                        MeasurementService.action = "";
-                    }
-                    else
-                    {
-                        SensorTrackingFragment.this.action = (Button)view;
-                        SensorTrackingFragment.this.action.getBackground().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
-                        MeasurementService.action = SensorTrackingFragment.this.action.getText().toString();
-                    }
-                }
-            });
-            if (action.equals(MeasurementService.action))
-            {
-                SensorTrackingFragment.this.action = button;
-                button.getBackground().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
-            }
-            gridLayout.addView(view);
+            this.actions.addView(createActionToggleButton(action));
         }
         if (1 == actions.length)
         {
             // add extra invisible view so the single button is not spread over the whole screen
-            View view = getActivity().getLayoutInflater().inflate(R.layout.action_button, gridLayout, false);
+            View view = getActivity().getLayoutInflater()
+                    .inflate(R.layout.action_button, this.actions, false);
             view.setVisibility(View.INVISIBLE);
-            gridLayout.addView(view);
+            this.actions.addView(view);
         }
+    }
+
+    private View createActionToggleButton(String action)
+    {
+        View view = getActivity().getLayoutInflater()
+                .inflate(R.layout.action_button, this.actions, false);
+        Button button = view.findViewById(R.id.button);
+        button.setText(action);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (null != SensorTrackingFragment.this.action)
+                {
+                    SensorTrackingFragment.this.action.getBackground().clearColorFilter();
+                }
+
+                if (view == SensorTrackingFragment.this.action)
+                {
+                    SensorTrackingFragment.this.action = null;
+                    MeasurementService.action = "";
+                }
+                else
+                {
+                    SensorTrackingFragment.this.action = (Button)view;
+                    view.getBackground().setColorFilter(getResources()
+                            .getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
+                    String action = SensorTrackingFragment.this.action.getText().toString();
+                    MeasurementService.action = action;
+                }
+            }
+        });
+        if (action.equals(MeasurementService.action))
+        {
+            SensorTrackingFragment.this.action = button;
+            button.getBackground().setColorFilter(getResources()
+                    .getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
+        }
+        return view;
     }
 
     public void startTracking(String header)
@@ -261,12 +270,12 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         intent.setAction(MeasurementService.ACTION_STOP);
         getActivity().stopService(intent);
 
-        SensorTrackingFragment.this.tracking = false;
+        this.tracking = false;
         updateTrackingTime();
 
-        if (null != SensorTrackingFragment.this.action)
+        if (null != this.action)
         {
-            SensorTrackingFragment.this.action.getBackground().clearColorFilter();
+            this.action.getBackground().clearColorFilter();
         }
 
         this.sensorOverview.setVisibility(View.VISIBLE);
@@ -298,12 +307,11 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
             @Override
             public void run()
             {
-                if (SensorTrackingFragment.this.isVisible())
-                {
-                    updateTrackingTime();
-                    showTrackedSensors();
-                    SensorTrackingFragment.this.uiUpdater.postDelayed(this, Constants.UI_UPDATE_INTERVAL);
-                }
+                if (!SensorTrackingFragment.this.isVisible()) return;
+
+                updateTrackingTime();
+                showTrackedSensors();
+                SensorTrackingFragment.this.uiUpdater.postDelayed(this, Constants.UI_UPDATE_INTERVAL);
             }
         });
     }
@@ -311,14 +319,13 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     @Override
     public void onHiddenChanged(boolean hidden)
     {
-        if (!hidden)
+        if (hidden) return;
+
+        startUIUpdater();
+        this.trackedSensors = TrackedSensorsStorage.getTrackedSensors();
+        if (null != this.actionOverview)
         {
-            startUIUpdater();
-            this.trackedSensors = TrackedSensorsStorage.getTrackedSensors(getActivity());
-            if (null != this.actionOverview)
-            {
-                addActionToggleButtons((GridLayout) this.actionOverview.findViewById(R.id.actions));
-            }
+            addActionToggleButtons();
         }
     }
 
@@ -341,12 +348,11 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
 
     private void showTrackedSensors()
     {
-        Activity activity = getActivity();
-        if (null == activity) return;
-
         this.trackedSensorViews.removeAllViews();
-        for (SensorData sensorData: this.trackedSensors) {
-            View tracked_sensor_overview = activity.getLayoutInflater().inflate(R.layout.tracked_sensor_overview, this.trackedSensorViews, false);
+        for (SensorData sensorData: this.trackedSensors)
+        {
+            View tracked_sensor_overview = getActivity().getLayoutInflater()
+                    .inflate(R.layout.tracked_sensor_overview, this.trackedSensorViews, false);
 
             TextView sensorID = tracked_sensor_overview.findViewById(R.id.sensor_id);
             sensorID.setText(getResources().getString(R.string.sensor_id, sensorData.getSensorID()));
@@ -372,11 +378,10 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
 
         if (0 == this.trackedSensors.size())
         {
-            View emptyView = getActivity().getLayoutInflater().inflate(R.layout.empty_list_item, this.trackedSensorViews, false);
+            View emptyView = getActivity().getLayoutInflater()
+                    .inflate(R.layout.empty_list_item, this.trackedSensorViews);
             TextView label = emptyView.findViewById(R.id.label);
             label.setText(R.string.no_sensors_found);
-            this.trackedSensorViews.addView(emptyView);
         }
     }
 }
-

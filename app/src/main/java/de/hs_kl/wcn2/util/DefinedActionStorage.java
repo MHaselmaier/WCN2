@@ -24,7 +24,9 @@ public class DefinedActionStorage
             @Override
             public int compare(Object o1, Object o2)
             {
-                return ((Map.Entry<String, Integer>)o1).getValue() - ((Map.Entry<String, Integer>)o2).getValue();
+                int index1 = ((Map.Entry<String, Integer>)o1).getValue();
+                int index2 = ((Map.Entry<String, Integer>)o2).getValue();
+                return index1 - index2;
             }
         });
 
@@ -35,7 +37,7 @@ public class DefinedActionStorage
         }
     }
 
-    public static String[] getDefinedActions(Context context)
+    public static String[] getDefinedActions()
     {
         return DefinedActionStorage.actions.toArray(new String[DefinedActionStorage.actions.size()]);
     }

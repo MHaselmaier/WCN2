@@ -49,7 +49,7 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState)
     {
-        View view = getActivity().getLayoutInflater().inflate(R.layout.search_sensor, container, false);
+        View view = inflater.inflate(R.layout.search_sensor, container, false);
 
         ListView foundSensorListView = view.findViewById(R.id.sensors);
         foundSensorListView.setEmptyView(view.findViewById(R.id.empty_list_item));
@@ -75,11 +75,10 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
             @Override
             public void run()
             {
-                if (!SearchSensorFragment.this.isHidden())
-                {
-                    SearchSensorFragment.this.foundSensorAdapter.notifyDataSetChanged();
-                    SearchSensorFragment.this.uiUpdater.postDelayed(this, Constants.UI_UPDATE_INTERVAL);
-                }
+                if (SearchSensorFragment.this.isHidden()) return;
+
+                SearchSensorFragment.this.foundSensorAdapter.notifyDataSetChanged();
+                SearchSensorFragment.this.uiUpdater.postDelayed(this, Constants.UI_UPDATE_INTERVAL);
             }
         });
     }
@@ -87,10 +86,9 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
     @Override
     public void onHiddenChanged(boolean hidden)
     {
-        if (!hidden)
-        {
-            startUIUpdater();
-        }
+        if (hidden) return;
+
+        startUIUpdater();
     }
 
     @Override

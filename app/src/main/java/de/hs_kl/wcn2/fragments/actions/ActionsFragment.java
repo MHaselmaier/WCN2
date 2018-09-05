@@ -52,66 +52,71 @@ public class ActionsFragment extends Fragment
     {
         this.actionList.removeAllViews();
 
-        String[] actions = DefinedActionStorage.getDefinedActions(getActivity());
-        if (0 < actions.length)
+        String[] actions = DefinedActionStorage.getDefinedActions();
+        if (0 == actions.length)
         {
-            for (final String action : actions)
-            {
-                View actionView = getActivity().getLayoutInflater().inflate(R.layout.action, this.actionList, false);
-
-                TextView label = actionView.findViewById(R.id.label);
-                label.setText(action);
-
-                ImageButton up = actionView.findViewById(R.id.up);
-                up.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        DefinedActionStorage.moveActionUp(ActionsFragment.this.getActivity(), action);
-                        loadActionViews();
-                    }
-                });
-
-                ImageButton down = actionView.findViewById(R.id.down);
-                down.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        DefinedActionStorage.moveActionDown(ActionsFragment.this.getActivity(), action);
-                        loadActionViews();
-                    }
-                });
-
-                ImageButton remove = actionView.findViewById(R.id.remove);
-                remove.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        DefinedActionStorage.removeAction(getActivity(), action);
-                        loadActionViews();
-                    }
-                });
-
-                this.actionList.addView(actionView);
-            }
-        }
-        else
-        {
-            View emptyView = getActivity().getLayoutInflater().inflate(R.layout.empty_list_item, this.actionList);
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            View emptyView = inflater.inflate(R.layout.empty_list_item, this.actionList);
             TextView label = emptyView.findViewById(R.id.label);
             label.setText(R.string.no_actions_defined);
+            return;
         }
+
+        for (final String action : actions)
+        {
+            this.actionList.addView(createActionView(action));
+        }
+    }
+
+    private View createActionView(final String action)
+    {
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View actionView = inflater.inflate(R.layout.action, this.actionList, false);
+
+        TextView label = actionView.findViewById(R.id.label);
+        label.setText(action);
+
+        ImageButton up = actionView.findViewById(R.id.up);
+        up.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                DefinedActionStorage.moveActionUp(ActionsFragment.this.getActivity(), action);
+                loadActionViews();
+            }
+        });
+
+        ImageButton down = actionView.findViewById(R.id.down);
+        down.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                DefinedActionStorage.moveActionDown(ActionsFragment.this.getActivity(), action);
+                loadActionViews();
+            }
+        });
+
+        ImageButton remove = actionView.findViewById(R.id.remove);
+        remove.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                DefinedActionStorage.removeAction(getActivity(), action);
+                loadActionViews();
+            }
+        });
+
+        return actionView;
     }
 
     @Override
     public void onHiddenChanged(boolean hidden)
     {
-        if (!hidden)
-        {
-            loadActionViews();
-        }
+        if (hidden) return;
+
+        loadActionViews();
     }
 }

@@ -2,7 +2,7 @@ package de.hs_kl.wcn2.fragments.search_sensor;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.view.LayoutInflater;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -30,7 +30,7 @@ public class FoundSensorAdapter extends BaseAdapter
 
     private void initFoundSensors()
     {
-        for (SensorData sensorData: TrackedSensorsStorage.getTrackedSensors(this.context))
+        for (SensorData sensorData: TrackedSensorsStorage.getTrackedSensors())
         {
             this.foundSensors.add(sensorData);
             this.foundSensorsViews.add(createFoundSensorView(sensorData));
@@ -41,15 +41,14 @@ public class FoundSensorAdapter extends BaseAdapter
     {
         int position = findPositionByMacAddress(sensorData.getMacAddress());
 
-        if (0 <= position)
-        {
-            this.foundSensors.set(position, sensorData);
-        }
-        else
+        if (-1 == position)
         {
             this.foundSensors.add(sensorData);
             this.foundSensorsViews.add(createFoundSensorView(sensorData));
+            return;
         }
+
+        this.foundSensors.set(position, sensorData);
     }
 
     private int findPositionByMacAddress(String macAddress)
@@ -66,10 +65,10 @@ public class FoundSensorAdapter extends BaseAdapter
 
     private FoundSensorView createFoundSensorView(SensorData sensorData)
     {
-        View view = LayoutInflater.from(this.context).inflate(R.layout.sensor_list_item, null);
-        FoundSensorView foundSensorView = new FoundSensorView(view);
+        FoundSensorView foundSensorView = new FoundSensorView(this.context);
 
-        final Dialog mnemonicEditDialog = MnemonicEditDialog.buildMnemonicEditDialog(this.context, sensorData);
+        final Dialog mnemonicEditDialog = MnemonicEditDialog.buildMnemonicEditDialog(this.context,
+                sensorData);
         foundSensorView.mnemonicEdit.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -79,12 +78,17 @@ public class FoundSensorAdapter extends BaseAdapter
             }
         });
 
-        foundSensorView.trackSwitch.setChecked(TrackedSensorsStorage.isTracked(this.context, sensorData));
-        foundSensorView.trackSwitch.setText(foundSensorView.trackSwitch.isChecked() ? R.string.sensor_tracked : R.string.sensor_not_tracked);
-        foundSensorView.trackSwitch.setOnCheckedChangeListener(new SensorTrackedChangeListener(this.context, sensorData));
-
+        boolean isTracked = TrackedSensorsStorage.isTracked(sensorData);
+        foundSensorView.trackSwitch.setChecked(isTracked);
+        int labelResourceID = (isTracked ? R.string.sensor_tracked : R.string.sensor_not_tracked);
+        foundSensorView.trackSwitch.setText(labelResourceID);
+        SensorTrackedChangeListener listener = new SensorTrackedChangeListener(this.context,
+                sensorData);
+        foundSensorView.trackSwitch.setOnCheckedChangeListener(listener);
         foundSensorView.macAddress.setText(sensorData.getMacAddress());
-        foundSensorView.sensorID.setText(this.context.getResources().getString(R.string.sensor_id, sensorData.getSensorID()));
+        String sensorID = this.context.getResources().getString(R.string.sensor_id,
+                sensorData.getSensorID());
+        foundSensorView.sensorID.setText(sensorID);
 
         return foundSensorView;
     }
@@ -95,18 +99,18 @@ public class FoundSensorAdapter extends BaseAdapter
         SensorData sensorData = this.foundSensors.get(position);
         FoundSensorView foundSensorView = this.foundSensorsViews.get(position);
 
-        foundSensorView.lastSeen.setText(LastSeenSinceUtil.getTimeSinceString(this.context, sensorData.getTimestamp()));
-        foundSensorView.batteryLevel.setImageDrawable(sensorData.getBatteryLevelDrawable(this.context.getResources()));
-        foundSensorView.signalStrength.setImageDrawable(sensorData.getSignalStrengthDrawable(this.context.getResources()));
-        foundSensorView.mnemonic.setText(this.context.getResources().getString(R.string.mnemonic, sensorData.getMnemonic()));
-        if (sensorData.getMnemonic().equals("null"))
-        {
-            foundSensorView.mnemonic.setVisibility(View.GONE);
-        }
-        else
-        {
-            foundSensorView.mnemonic.setVisibility(View.VISIBLE);
-        }
+        String lastSeen = LastSeenSinceUtil.getTimeSinceString(this.context,
+                sensorData.getTimestamp());
+        foundSensorView.lastSeen.setText(lastSeen);
+        Drawable batteryLevel = sensorData.getBatteryLevelDrawable(this.context.getResources());
+        foundSensorView.batteryLevel.setImageDrawable(batteryLevel);
+        Drawable signalStrength = sensorData.getSignalStrengthDrawable(this.context.getResources());
+        foundSensorView.signalStrength.setImageDrawable(signalStrength);
+        String mnemonic = this.context.getResources().getString(R.string.mnemonic,
+                sensorData.getMnemonic());
+        foundSensorView.mnemonic.setText(mnemonic);
+        int visibility = (sensorData.getMnemonic().equals("null") ? View.GONE : View.VISIBLE);
+        foundSensorView.mnemonic.setVisibility(visibility);
 
         return foundSensorView.root;
     }

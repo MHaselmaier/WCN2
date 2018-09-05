@@ -24,7 +24,7 @@ public class MnemonicEditDialog
         dialogBuilder.setView(dialogView);
 
         final EditText mnemonicView = dialogView.findViewById(R.id.mnemonic);
-        String mnemonic = TrackedSensorsStorage.getMnemonic(context, sensorData.getMacAddress());
+        String mnemonic = TrackedSensorsStorage.getMnemonic(sensorData.getMacAddress());
         if (!mnemonic.equals("null"))
         {
             mnemonicView.append(mnemonic);

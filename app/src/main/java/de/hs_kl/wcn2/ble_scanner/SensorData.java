@@ -21,7 +21,7 @@ public class SensorData
     private float relativeHumidity;
     private float batteryVoltage;
 
-    public SensorData(ScanResult result, Context context)
+    public SensorData(ScanResult result)
     {
         this.macAddress = result.getDevice().getAddress();
         this.timestamp = (System.currentTimeMillis() - android.os.SystemClock.elapsedRealtime())
@@ -38,7 +38,7 @@ public class SensorData
             this.batteryVoltage = calculateBatteryVoltage(rawData[6]);
         }
 
-        this.mnemonic = TrackedSensorsStorage.getMnemonic(context, this.macAddress);
+        this.mnemonic = TrackedSensorsStorage.getMnemonic(this.macAddress);
     }
 
     public SensorData(byte sensorID, String mnemonic, String macAddress)
@@ -77,11 +77,6 @@ public class SensorData
     public long getTimestamp()
     {
         return this.timestamp;
-    }
-
-    public int getRSSI()
-    {
-        return this.rssi;
     }
 
     public Drawable getSignalStrengthDrawable(Resources resources)
@@ -126,11 +121,6 @@ public class SensorData
     public float getRelativeHumidity()
     {
         return this.relativeHumidity;
-    }
-
-    public float getBatteryVoltage()
-    {
-        return batteryVoltage;
     }
 
     public Drawable getBatteryLevelDrawable(Resources resources)

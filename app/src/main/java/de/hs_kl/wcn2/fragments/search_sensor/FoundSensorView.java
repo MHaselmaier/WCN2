@@ -1,5 +1,7 @@
 package de.hs_kl.wcn2.fragments.search_sensor;
 
+import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -20,8 +22,9 @@ class FoundSensorView
     public ImageView batteryLevel;
     public ImageView signalStrength;
 
-    public FoundSensorView(View view)
+    public FoundSensorView(Context context)
     {
+        View view = LayoutInflater.from(context).inflate(R.layout.sensor_list_item, null);
         this.root = view;
         this.macAddress = view.findViewById(R.id.sensor_mac_address);
         this.sensorID = view.findViewById(R.id.sensor_id);
