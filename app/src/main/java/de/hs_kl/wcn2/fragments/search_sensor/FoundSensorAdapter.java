@@ -1,5 +1,6 @@
 package de.hs_kl.wcn2.fragments.search_sensor;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,7 +69,15 @@ public class FoundSensorAdapter extends BaseAdapter
         View view = LayoutInflater.from(this.context).inflate(R.layout.sensor_list_item, null);
         FoundSensorView foundSensorView = new FoundSensorView(view);
 
-        foundSensorView.mnemonicEdit.setOnClickListener(new MnemonicEditOnClickListener(this.context, sensorData));
+        final Dialog mnemonicEditDialog = MnemonicEditDialog.buildMnemonicEditDialog(this.context, sensorData);
+        foundSensorView.mnemonicEdit.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mnemonicEditDialog.show();
+            }
+        });
 
         foundSensorView.trackSwitch.setChecked(TrackedSensorsStorage.isTracked(this.context, sensorData));
         foundSensorView.trackSwitch.setText(foundSensorView.trackSwitch.isChecked() ? R.string.sensor_tracked : R.string.sensor_not_tracked);

@@ -2,9 +2,8 @@ package de.hs_kl.wcn2.fragments.sensor_tracking;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.bluetooth.le.ScanFilter;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
@@ -16,9 +15,7 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -97,59 +94,15 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         View view = getActivity().getLayoutInflater().inflate(R.layout.sensor_tracking, container, false);
 
         this.measurementTime = view.findViewById(R.id.measurement_time);
+        final Dialog dialog = StartMeasurementDialog.buildStartMeasurementDialog(this);
         this.measurementButton = view.findViewById(R.id.measurement_button);
         this.measurementButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v) {
-                if (!SensorTrackingFragment.this.tracking)
+                if (!SensorTrackingFragment.this.tracking && arePrerequisitesForMeasurementsMet())
                 {
-                    if (0 == TrackedSensorsStorage.getTrackedSensors(getActivity()).size())
-                    {
-                        Toast.makeText(getActivity(), R.string.no_tracked_sensors, Toast.LENGTH_LONG).show();
-                        return;
-                    }
-
-                    String[] permission = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-                    if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(SensorTrackingFragment.this.getActivity(), permission[0]))
-                    {
-                        ActivityCompat.requestPermissions(SensorTrackingFragment.this.getActivity(), permission, Constants.REQUEST_PERMISSIONS);
-                        return;
-                    }
-
-                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-
-                    View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.measurement_dialog, (ViewGroup)getView(), false);
-                    dialogBuilder.setView(dialogView);
-
-                    final EditText measurementHeader = dialogView.findViewById(R.id.measurement_header);
-                    dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which)
-                        {
-                            dialog.dismiss();
-                            String measurementHeaderInput = measurementHeader.getText().toString();
-                            if (0 == measurementHeaderInput.trim().length())
-                            {
-                                measurementHeaderInput = getResources().getString(R.string.measurement_comment);
-                            }
-                            startTracking(measurementHeaderInput);
-                        }
-                    });
-
-                    dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which)
-                        {
-                            dialog.dismiss();
-                        }
-                    });
-
-                    AlertDialog dialog = dialogBuilder.create();
                     dialog.show();
-                    dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                 }
                 else
                 {
@@ -174,6 +127,32 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         });
 
         return view;
+    }
+
+    private boolean arePrerequisitesForMeasurementsMet()
+    {
+        return ensureAtLeastOneSensorIsTracked() && ensurePermissionToWriteFilesIsGranted();
+    }
+
+    private boolean ensureAtLeastOneSensorIsTracked()
+    {
+        if (0 == TrackedSensorsStorage.getTrackedSensors(getActivity()).size())
+        {
+            Toast.makeText(getActivity(), R.string.no_tracked_sensors, Toast.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean ensurePermissionToWriteFilesIsGranted()
+    {
+        String[] permission = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(getActivity(), permission[0]))
+        {
+            ActivityCompat.requestPermissions(getActivity(), permission, Constants.REQUEST_PERMISSIONS);
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -261,7 +240,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         }
     }
 
-    private void startTracking(String header)
+    public void startTracking(String header)
     {
         this.tracking = true;
         this.trackingStartTime = System.currentTimeMillis();

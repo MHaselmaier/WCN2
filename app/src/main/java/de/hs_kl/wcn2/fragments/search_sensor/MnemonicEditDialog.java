@@ -1,10 +1,12 @@
 package de.hs_kl.wcn2.fragments.search_sensor;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 
@@ -12,27 +14,17 @@ import de.hs_kl.wcn2.R;
 import de.hs_kl.wcn2.ble_scanner.SensorData;
 import de.hs_kl.wcn2.util.TrackedSensorsStorage;
 
-public class MnemonicEditOnClickListener implements View.OnClickListener
+public class MnemonicEditDialog
 {
-    private Context context;
-    private SensorData sensorData;
-
-    public MnemonicEditOnClickListener(Context context, SensorData sensorData)
+    public static Dialog buildMnemonicEditDialog(final Context context, final SensorData sensorData)
     {
-        this.context = context;
-        this.sensorData = sensorData;
-    }
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
 
-    @Override
-    public void onClick(View v)
-    {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this.context);
-
-        View dialogView = LayoutInflater.from(this.context).inflate(R.layout.mnemonic_dialog, null);
+        View dialogView = LayoutInflater.from(context).inflate(R.layout.mnemonic_dialog, null);
         dialogBuilder.setView(dialogView);
 
         final EditText mnemonicView = dialogView.findViewById(R.id.mnemonic);
-        String mnemonic = TrackedSensorsStorage.getMnemonic(this.context, this.sensorData.getMacAddress());
+        String mnemonic = TrackedSensorsStorage.getMnemonic(context, sensorData.getMacAddress());
         if (!mnemonic.equals("null"))
         {
             mnemonicView.append(mnemonic);
@@ -51,9 +43,8 @@ public class MnemonicEditOnClickListener implements View.OnClickListener
                     newMnemonic = "null";
                 }
 
-
                 sensorData.setMnemonic(newMnemonic);
-                TrackedSensorsStorage.trackSensor(MnemonicEditOnClickListener.this.context, sensorData);
+                TrackedSensorsStorage.trackSensor(context, sensorData);
             }
         });
 
@@ -66,8 +57,17 @@ public class MnemonicEditOnClickListener implements View.OnClickListener
             }
         });
 
-        AlertDialog dialog = dialogBuilder.create();
-        dialog.show();
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        AlertDialog mnemonicEditDialog = dialogBuilder.create();
+        final Window window = mnemonicEditDialog.getWindow();
+        mnemonicEditDialog.setOnShowListener(new DialogInterface.OnShowListener()
+        {
+            @Override
+            public void onShow(DialogInterface dialog)
+            {
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            }
+        });
+
+        return mnemonicEditDialog;
     }
 }

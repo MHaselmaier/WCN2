@@ -1,14 +1,11 @@
 package de.hs_kl.wcn2.fragments.actions;
 
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,6 +15,8 @@ import de.hs_kl.wcn2.util.DefinedActionStorage;
 
 public class ActionsFragment extends Fragment
 {
+    private LinearLayout actionList;
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -32,66 +31,33 @@ public class ActionsFragment extends Fragment
     {
         View view = getActivity().getLayoutInflater().inflate(R.layout.actions, container, false);
 
-        final LinearLayout actionList = view.findViewById(R.id.actions);
-        loadActionViews(actionList);
+        this.actionList = view.findViewById(R.id.actions);
+        loadActionViews();
 
+        final Dialog createActionDialog = CreateActionDialog.buildCreateActionDialog(this);
         ImageButton add = view.findViewById(R.id.add);
         add.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-
-                View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.action_dialog, (ViewGroup)getView(), false);
-                dialogBuilder.setView(dialogView);
-
-                final EditText newAction = dialogView.findViewById(R.id.action);
-
-                dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        dialog.dismiss();
-
-                        String action = newAction.getText().toString().trim();
-                        if (0 < action.length())
-                        {
-                            DefinedActionStorage.addAction(getActivity(), action);
-                            loadActionViews(actionList);
-                        }
-                    }
-                });
-
-                dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        dialog.dismiss();
-                    }
-                });
-
-                AlertDialog dialog = dialogBuilder.create();
-                dialog.show();
-                dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                createActionDialog.show();
             }
         });
 
         return view;
     }
 
-    private void loadActionViews(final LinearLayout actionList)
+    public void loadActionViews()
     {
-        actionList.removeAllViews();
+        this.actionList.removeAllViews();
 
         String[] actions = DefinedActionStorage.getDefinedActions(getActivity());
         if (0 < actions.length)
         {
             for (final String action : actions)
             {
-                final View actionView = getActivity().getLayoutInflater().inflate(R.layout.action, null);
+                View actionView = getActivity().getLayoutInflater().inflate(R.layout.action, this.actionList, false);
 
                 TextView label = actionView.findViewById(R.id.label);
                 label.setText(action);
@@ -103,7 +69,7 @@ public class ActionsFragment extends Fragment
                     public void onClick(View v)
                     {
                         DefinedActionStorage.moveActionUp(ActionsFragment.this.getActivity(), action);
-                        loadActionViews(actionList);
+                        loadActionViews();
                     }
                 });
 
@@ -114,7 +80,7 @@ public class ActionsFragment extends Fragment
                     public void onClick(View v)
                     {
                         DefinedActionStorage.moveActionDown(ActionsFragment.this.getActivity(), action);
-                        loadActionViews(actionList);
+                        loadActionViews();
                     }
                 });
 
@@ -125,19 +91,18 @@ public class ActionsFragment extends Fragment
                     public void onClick(View v)
                     {
                         DefinedActionStorage.removeAction(getActivity(), action);
-                        loadActionViews(actionList);
+                        loadActionViews();
                     }
                 });
 
-                actionList.addView(actionView);
+                this.actionList.addView(actionView);
             }
         }
         else
         {
-            View emptyView = getActivity().getLayoutInflater().inflate(R.layout.empty_list_item, actionList, false);
+            View emptyView = getActivity().getLayoutInflater().inflate(R.layout.empty_list_item, this.actionList);
             TextView label = emptyView.findViewById(R.id.label);
             label.setText(R.string.no_actions_defined);
-            actionList.addView(emptyView);
         }
     }
 
@@ -146,7 +111,7 @@ public class ActionsFragment extends Fragment
     {
         if (!hidden)
         {
-            loadActionViews((LinearLayout)getView().findViewById(R.id.actions));
+            loadActionViews();
         }
     }
 }
