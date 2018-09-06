@@ -37,6 +37,8 @@ public class MeasurementService extends Service implements ScanResultListener
     public static String action = "";
     public static long startTime = Long.MIN_VALUE;
 
+    private BLEScanner bleScanner;
+
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver()
     {
         @Override
@@ -53,7 +55,7 @@ public class MeasurementService extends Service implements ScanResultListener
                 if (BluetoothAdapter.STATE_OFF == bluetoothState ||
                         Settings.Secure.LOCATION_MODE_OFF == locationMode)
                 {
-                    BLEScanner.setBluetoothLeScanner(null);
+                    MeasurementService.this.bleScanner.setBluetoothLeScanner(null);
                     intent = new Intent(MeasurementService.this, OverviewActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
                             Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -71,6 +73,8 @@ public class MeasurementService extends Service implements ScanResultListener
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
         filter.addAction(LocationManager.MODE_CHANGED_ACTION);
         registerReceiver(this.broadcastReceiver, filter);
+
+        this.bleScanner = BLEScanner.getInstance(getBaseContext());
     }
 
     @Override
@@ -91,7 +95,7 @@ public class MeasurementService extends Service implements ScanResultListener
 
     private void onActionStart(Intent intent)
     {
-        BLEScanner.registerScanResultListener(this);
+        this.bleScanner.registerScanResultListener(this);
         MeasurementService.dataset.clear();
         String header = intent.getStringExtra(Constants.MEASUREMENT_HEADER);
         MeasurementService.dataset.setMeasurementHeader(header);
@@ -145,7 +149,7 @@ public class MeasurementService extends Service implements ScanResultListener
     private void onActionStop()
     {
         MeasurementService.dataset.writeToFile(this);
-        BLEScanner.unregisterScanResultListener(this);
+        this.bleScanner.unregisterScanResultListener(this);
         MeasurementService.action = "";
         MeasurementService.startTime = Long.MIN_VALUE;
     }
@@ -163,15 +167,16 @@ public class MeasurementService extends Service implements ScanResultListener
         MeasurementService.dataset.writeToFile(this);
         MeasurementService.action = "";
         MeasurementService.startTime = Long.MIN_VALUE;
-        BLEScanner.unregisterScanResultListener(this);
+        this.bleScanner.unregisterScanResultListener(this);
         stopSelf();
     }
 
     @Override
     public List<ScanFilter> getScanFilter()
     {
+        TrackedSensorsStorage trackedSensors = TrackedSensorsStorage.getInstance(getBaseContext());
         List<ScanFilter> scanFilters = new ArrayList<>();
-        for (SensorData sensorData: TrackedSensorsStorage.getTrackedSensors())
+        for (SensorData sensorData: trackedSensors.getTrackedSensors())
         {
             ScanFilter.Builder builder = new ScanFilter.Builder();
             builder.setDeviceAddress(sensorData.getMacAddress());

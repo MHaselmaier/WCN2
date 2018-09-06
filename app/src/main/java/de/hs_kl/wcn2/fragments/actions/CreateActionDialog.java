@@ -34,7 +34,7 @@ public class CreateActionDialog
                 String action = newAction.getText().toString().trim();
                 if (0 < action.length())
                 {
-                    DefinedActionStorage.addAction(activity, action);
+                    DefinedActionStorage.getInstance(activity).addAction(action);
                     fragment.loadActionViews();
                 }
             }

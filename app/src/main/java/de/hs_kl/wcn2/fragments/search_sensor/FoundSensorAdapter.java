@@ -18,19 +18,20 @@ import de.hs_kl.wcn2.util.TrackedSensorsStorage;
 public class FoundSensorAdapter extends BaseAdapter
 {
     private Context context;
+    private TrackedSensorsStorage trackedSensors;
     private List<SensorData> foundSensors = new ArrayList<>();
     private List<FoundSensorView> foundSensorsViews = new ArrayList<>();
 
     public FoundSensorAdapter(Context context)
     {
         this.context = context;
-
+        this.trackedSensors = TrackedSensorsStorage.getInstance(this.context);
         initFoundSensors();
     }
 
     private void initFoundSensors()
     {
-        for (SensorData sensorData: TrackedSensorsStorage.getTrackedSensors())
+        for (SensorData sensorData: this.trackedSensors.getTrackedSensors())
         {
             this.foundSensors.add(sensorData);
             this.foundSensorsViews.add(createFoundSensorView(sensorData));
@@ -78,7 +79,7 @@ public class FoundSensorAdapter extends BaseAdapter
             }
         });
 
-        boolean isTracked = TrackedSensorsStorage.isTracked(sensorData);
+        boolean isTracked = this.trackedSensors.isTracked(sensorData);
         foundSensorView.trackSwitch.setChecked(isTracked);
         int labelResourceID = (isTracked ? R.string.sensor_tracked : R.string.sensor_not_tracked);
         foundSensorView.trackSwitch.setText(labelResourceID);

@@ -22,6 +22,7 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
 {
     private FoundSensorAdapter foundSensorAdapter;
     private Handler uiUpdater = new Handler();
+    private BLEScanner bleScanner;
 
     @Override
     public List<ScanFilter> getScanFilter()
@@ -43,6 +44,7 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
         setRetainInstance(true);
 
         this.foundSensorAdapter = new FoundSensorAdapter(getActivity());
+        this.bleScanner = BLEScanner.getInstance(getActivity());
     }
 
     @Override
@@ -63,7 +65,7 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
     {
         super.onResume();
 
-        BLEScanner.registerScanResultListener(this);
+        this.bleScanner.registerScanResultListener(this);
 
         startUIUpdater();
     }
@@ -96,6 +98,6 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
     {
         super.onPause();
 
-        BLEScanner.unregisterScanResultListener(this);
+        this.bleScanner.unregisterScanResultListener(this);
     }
 }

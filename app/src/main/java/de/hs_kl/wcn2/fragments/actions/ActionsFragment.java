@@ -16,6 +16,7 @@ import de.hs_kl.wcn2.util.DefinedActionStorage;
 public class ActionsFragment extends Fragment
 {
     private LinearLayout actionList;
+    private DefinedActionStorage definedActions;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -23,6 +24,8 @@ public class ActionsFragment extends Fragment
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         setRetainInstance(true);
+
+        this.definedActions = DefinedActionStorage.getInstance(getActivity());
     }
 
     @Override
@@ -52,7 +55,7 @@ public class ActionsFragment extends Fragment
     {
         this.actionList.removeAllViews();
 
-        String[] actions = DefinedActionStorage.getDefinedActions();
+        String[] actions = this.definedActions.getDefinedActions();
         if (0 == actions.length)
         {
             LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -82,7 +85,7 @@ public class ActionsFragment extends Fragment
             @Override
             public void onClick(View v)
             {
-                DefinedActionStorage.moveActionUp(ActionsFragment.this.getActivity(), action);
+                ActionsFragment.this.definedActions.moveActionUp(action);
                 loadActionViews();
             }
         });
@@ -93,7 +96,7 @@ public class ActionsFragment extends Fragment
             @Override
             public void onClick(View v)
             {
-                DefinedActionStorage.moveActionDown(ActionsFragment.this.getActivity(), action);
+                ActionsFragment.this.definedActions.moveActionDown(action);
                 loadActionViews();
             }
         });
@@ -104,7 +107,7 @@ public class ActionsFragment extends Fragment
             @Override
             public void onClick(View v)
             {
-                DefinedActionStorage.removeAction(getActivity(), action);
+                ActionsFragment.this.definedActions.removeAction(action);
                 loadActionViews();
             }
         });

@@ -51,6 +51,10 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     private ScrollView actionOverview;
     private GridLayout actions;
 
+    private BLEScanner bleScanner;
+    private TrackedSensorsStorage trackedSensorsStorage;
+    private DefinedActionStorage definedActions;
+
     @Override
     public List<ScanFilter> getScanFilter()
     {
@@ -84,7 +88,11 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         setHasOptionsMenu(true);
         setRetainInstance(true);
 
-        this.trackedSensors = TrackedSensorsStorage.getTrackedSensors();
+        this.bleScanner = BLEScanner.getInstance(getActivity());
+        this.trackedSensorsStorage = TrackedSensorsStorage.getInstance(getActivity());
+        this.definedActions = DefinedActionStorage.getInstance(getActivity());
+
+        this.trackedSensors = this.trackedSensorsStorage.getTrackedSensors();
     }
 
     @Override
@@ -99,7 +107,8 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         this.measurementButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 if (!SensorTrackingFragment.this.tracking && arePrerequisitesForMeasurementsMet())
                 {
                     dialog.show();
@@ -118,9 +127,11 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         addActionToggleButtons();
 
         ImageButton edit = view.findViewById(R.id.edit_tracked_sensors);
-        edit.setOnClickListener(new View.OnClickListener() {
+        edit.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 ((OverviewActivity)getActivity()).changeViewTo(Constants.WCNView.SEARCH_SENSOR);
             }
         });
@@ -135,7 +146,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
 
     private boolean ensureAtLeastOneSensorIsTracked()
     {
-        if (0 == TrackedSensorsStorage.getTrackedSensors().size())
+        if (0 == this.trackedSensors.size())
         {
             Toast.makeText(getActivity(), R.string.no_tracked_sensors, Toast.LENGTH_LONG).show();
             return false;
@@ -190,7 +201,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     {
         this.actions.removeAllViews();
 
-        String[] actions = DefinedActionStorage.getDefinedActions();
+        String[] actions = this.definedActions.getDefinedActions();
         if (0 == actions.length)
         {
             getActivity().getLayoutInflater().inflate(R.layout.empty_actions, this.actions);
@@ -287,7 +298,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     {
         super.onResume();
 
-        BLEScanner.registerScanResultListener(this);
+        this.bleScanner.registerScanResultListener(this);
 
         startUIUpdater();
     }
@@ -297,7 +308,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     {
         super.onPause();
 
-        BLEScanner.unregisterScanResultListener(this);
+        this.bleScanner.unregisterScanResultListener(this);
     }
 
     private void startUIUpdater()
@@ -322,7 +333,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         if (hidden) return;
 
         startUIUpdater();
-        this.trackedSensors = TrackedSensorsStorage.getTrackedSensors();
+        this.trackedSensors = this.trackedSensorsStorage.getTrackedSensors();
         if (null != this.actionOverview)
         {
             addActionToggleButtons();

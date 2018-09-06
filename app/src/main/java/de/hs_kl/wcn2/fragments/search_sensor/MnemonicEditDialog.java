@@ -18,13 +18,15 @@ public class MnemonicEditDialog
 {
     public static Dialog buildMnemonicEditDialog(final Context context, final SensorData sensorData)
     {
+        final TrackedSensorsStorage trackedSensors = TrackedSensorsStorage.getInstance(context);
+
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
 
         View dialogView = LayoutInflater.from(context).inflate(R.layout.mnemonic_dialog, null);
         dialogBuilder.setView(dialogView);
 
         final EditText mnemonicView = dialogView.findViewById(R.id.mnemonic);
-        String mnemonic = TrackedSensorsStorage.getMnemonic(sensorData.getMacAddress());
+        String mnemonic = trackedSensors.getMnemonic(sensorData.getMacAddress());
         if (!mnemonic.equals("null"))
         {
             mnemonicView.append(mnemonic);
@@ -44,7 +46,7 @@ public class MnemonicEditDialog
                 }
 
                 sensorData.setMnemonic(newMnemonic);
-                TrackedSensorsStorage.trackSensor(context, sensorData);
+                trackedSensors.trackSensor(sensorData);
             }
         });
 

@@ -5,6 +5,7 @@ import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
+import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 
@@ -14,13 +15,22 @@ import java.util.List;
 import java.util.Set;
 
 import de.hs_kl.wcn2.util.Constants;
+import de.hs_kl.wcn2.util.TrackedSensorsStorage;
 
 public class BLEScanner
 {
-    private static BluetoothLeScanner bleScanner;
-    private static Set<ScanResultListener> scanResultListeners = new HashSet<>();
+    private static BLEScanner instance;
 
-    private static ScanCallback scanCallback = new ScanCallback()
+    private BluetoothLeScanner bleScanner;
+    private Set<ScanResultListener> scanResultListeners = new HashSet<>();
+    private TrackedSensorsStorage trackedSensors;
+
+    private BLEScanner(Context context)
+    {
+        this.trackedSensors = TrackedSensorsStorage.getInstance(context);
+    }
+
+    private ScanCallback scanCallback = new ScanCallback()
     {
         @Override
         public void onBatchScanResults(List<ScanResult> results)
@@ -43,18 +53,20 @@ public class BLEScanner
 
         private void dispatchScanResult(ScanResult result)
         {
-            for (ScanResultListener listener: BLEScanner.scanResultListeners)
+            for (ScanResultListener listener: BLEScanner.this.scanResultListeners)
             {
+                String mnemonic = BLEScanner.this.trackedSensors.getMnemonic(result.getDevice()
+                        .getAddress());
                 if (0 == listener.getScanFilter().size())
                 {
-                    listener.onScanResult(new SensorData(result));
+                    listener.onScanResult(new SensorData(result, mnemonic));
                     continue;
                 }
                 for (ScanFilter scanFilter: listener.getScanFilter())
                 {
                     if (scanFilter.matches(result))
                     {
-                        listener.onScanResult(new SensorData(result));
+                        listener.onScanResult(new SensorData(result, mnemonic));
                         break;
                     }
                 }
@@ -91,51 +103,51 @@ public class BLEScanner
         }
     };
 
-    public static void setBluetoothLeScanner(BluetoothLeScanner bleScanner)
+    public void setBluetoothLeScanner(BluetoothLeScanner bleScanner)
     {
-        BLEScanner.stopScan();
-        BLEScanner.bleScanner = bleScanner;
-        if (0 < BLEScanner.scanResultListeners.size())
+        stopScan();
+        this.bleScanner = bleScanner;
+        if (0 < this.scanResultListeners.size())
         {
-            BLEScanner.startScan();
+            startScan();
         }
     }
 
-    public static void registerScanResultListener(ScanResultListener scanResultlistener)
+    public void registerScanResultListener(ScanResultListener scanResultlistener)
     {
-        BLEScanner.scanResultListeners.add(scanResultlistener);
+        this.scanResultListeners.add(scanResultlistener);
 
-        if (1 == BLEScanner.scanResultListeners.size())
+        if (1 == this.scanResultListeners.size())
         {
-            BLEScanner.startScan();
+            startScan();
         }
     }
 
-    public static void unregisterScanResultListener(ScanResultListener scanResultListener)
+    public void unregisterScanResultListener(ScanResultListener scanResultListener)
     {
-        BLEScanner.scanResultListeners.remove(scanResultListener);
+        this.scanResultListeners.remove(scanResultListener);
 
-        if (0 == BLEScanner.scanResultListeners.size())
+        if (0 == this.scanResultListeners.size())
         {
-            BLEScanner.stopScan();
+            stopScan();
         }
     }
 
-    private static void startScan()
+    private void startScan()
     {
-        if (null != BLEScanner.bleScanner)
+        if (null != this.bleScanner)
         {
-            BLEScanner.bleScanner.startScan(getScanFilters(), getScanSettings(), BLEScanner.scanCallback);
+            this.bleScanner.startScan(getScanFilters(), getScanSettings(), this.scanCallback);
         }
     }
 
-    private static void stopScan()
+    private void stopScan()
     {
-        if (null != BLEScanner.bleScanner)
+        if (null != this.bleScanner)
         {
             try
             {
-                BLEScanner.bleScanner.stopScan(BLEScanner.scanCallback);
+                this.bleScanner.stopScan(this.scanCallback);
             }
             catch(IllegalStateException e) {}
         }
@@ -167,5 +179,15 @@ public class BLEScanner
             builder.setPhy(ScanSettings.PHY_LE_ALL_SUPPORTED);
         }
         return builder.build();
+    }
+
+    public static BLEScanner getInstance(Context context)
+    {
+        if (null == BLEScanner.instance)
+        {
+            BLEScanner.instance = new BLEScanner(context);
+        }
+
+        return BLEScanner.instance;
     }
 }

@@ -23,12 +23,12 @@ public class SensorTrackedChangeListener implements CompoundButton.OnCheckedChan
     {
         if (isChecked)
         {
-            TrackedSensorsStorage.trackSensor(this.context, this.sensorData);
+            TrackedSensorsStorage.getInstance(this.context).trackSensor(this.sensorData);
             buttonView.setText(R.string.sensor_tracked);
         }
         else
         {
-            TrackedSensorsStorage.untrackSensor(this.context, this.sensorData);
+            TrackedSensorsStorage.getInstance(this.context).untrackSensor(this.sensorData);
             buttonView.setText(R.string.sensor_not_tracked);
         }
     }

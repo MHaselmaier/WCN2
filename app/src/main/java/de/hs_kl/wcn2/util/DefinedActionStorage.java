@@ -11,14 +11,19 @@ import java.util.Map;
 
 public class DefinedActionStorage
 {
-    private static List<String> actions;
+    private static DefinedActionStorage instance;
 
-    public static void init(Context context)
+    private Context context;
+    private SharedPreferences actions;
+    private List<String> cachedData;
+
+    private DefinedActionStorage(Context context)
     {
-        if (null != actions) return;
+        this.context = context;
+        this.actions = this.context.getSharedPreferences(Constants.DEFINED_ACTIONS,
+                Context.MODE_PRIVATE);
 
-        Object[] entries = context.getSharedPreferences(Constants.DEFINED_ACTIONS,
-                Context.MODE_PRIVATE).getAll().entrySet().toArray();
+        Object[] entries = this.actions.getAll().entrySet().toArray();
         Arrays.sort(entries, new Comparator<Object>()
         {
             @Override
@@ -30,85 +35,85 @@ public class DefinedActionStorage
             }
         });
 
-        DefinedActionStorage.actions = new ArrayList<>();
+        this.cachedData = new ArrayList<>();
         for (Object entry: entries)
         {
-            DefinedActionStorage.actions.add(((Map.Entry<String, Integer>)entry).getKey());
+            this.cachedData.add(((Map.Entry<String, Integer>)entry).getKey());
         }
     }
 
-    public static String[] getDefinedActions()
+    public String[] getDefinedActions()
     {
-        return DefinedActionStorage.actions.toArray(new String[DefinedActionStorage.actions.size()]);
+        return this.cachedData.toArray(new String[0]);
     }
 
-    public static void addAction(Context context, String action)
+    public void addAction(String action)
     {
-        if (DefinedActionStorage.actions.contains(action))
-        {
-            return;
-        }
-        DefinedActionStorage.actions.add(action);
+        if (this.cachedData.contains(action)) return;
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.DEFINED_ACTIONS,
-                Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(action, DefinedActionStorage.actions.size() - 1);
+        this.cachedData.add(action);
+
+        SharedPreferences.Editor editor = this.actions.edit();
+        editor.putInt(action, this.cachedData.size() - 1);
         editor.apply();
     }
 
-    public static void removeAction(Context context, String action)
+    public void removeAction(String action)
     {
-        int index = DefinedActionStorage.actions.indexOf(action);
-        DefinedActionStorage.actions.remove(action);
+        int index = this.cachedData.indexOf(action);
+        this.cachedData.remove(action);
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.DEFINED_ACTIONS,
-                Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        SharedPreferences.Editor editor = this.actions.edit();
         editor.remove(action);
         moveActionsUpStartingFrom(index, editor);
         editor.apply();
     }
 
-    private static void moveActionsUpStartingFrom(int startIndex, SharedPreferences.Editor editor)
+    private void moveActionsUpStartingFrom(int startIndex, SharedPreferences.Editor editor)
     {
-        if (0 > startIndex || DefinedActionStorage.actions.size() <= startIndex) return;
+        if (0 > startIndex || this.cachedData.size() <= startIndex) return;
 
-        for (int i = startIndex; DefinedActionStorage.actions.size() > i; ++i)
+        for (int i = startIndex; this.cachedData.size() > i; ++i)
         {
-            editor.putInt(DefinedActionStorage.actions.get(i), i);
+            editor.putInt(this.cachedData.get(i), i);
         }
     }
 
-    public static void moveActionUp(Context context, String action)
+    public void moveActionUp(String action)
     {
-        int actionIndex = DefinedActionStorage.actions.indexOf(action);
+        int actionIndex = this.cachedData.indexOf(action);
         if (0 == actionIndex) return;
 
-        DefinedActionStorage.actions.set(actionIndex, DefinedActionStorage.actions.get(actionIndex - 1));
-        DefinedActionStorage.actions.set(actionIndex - 1, action);
+        this.cachedData.set(actionIndex, this.cachedData.get(actionIndex - 1));
+        this.cachedData.set(actionIndex - 1, action);
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.DEFINED_ACTIONS,
-                Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        SharedPreferences.Editor editor = this.actions.edit();
         editor.putInt(action, actionIndex - 1);
-        editor.putInt(DefinedActionStorage.actions.get(actionIndex), actionIndex);
+        editor.putInt(this.cachedData.get(actionIndex), actionIndex);
         editor.apply();
     }
 
-    public static void moveActionDown(Context context, String action)
+    public void moveActionDown(String action)
     {
-        int actionIndex = DefinedActionStorage.actions.indexOf(action);
-        if (DefinedActionStorage.actions.size() - 1 == actionIndex) return;
+        int actionIndex = this.cachedData.indexOf(action);
+        if (this.cachedData.size() - 1 == actionIndex) return;
 
-        DefinedActionStorage.actions.set(actionIndex, DefinedActionStorage.actions.get(actionIndex + 1));
-        DefinedActionStorage.actions.set(actionIndex + 1, action);
+        this.cachedData.set(actionIndex, this.cachedData.get(actionIndex + 1));
+        this.cachedData.set(actionIndex + 1, action);
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.DEFINED_ACTIONS,
-                Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        SharedPreferences.Editor editor = this.actions.edit();
         editor.putInt(action, actionIndex + 1);
-        editor.putInt(DefinedActionStorage.actions.get(actionIndex), actionIndex);
+        editor.putInt(this.cachedData.get(actionIndex), actionIndex);
         editor.apply();
+    }
+
+    public static DefinedActionStorage getInstance(Context context)
+    {
+        if (null == DefinedActionStorage.instance)
+        {
+            DefinedActionStorage.instance = new DefinedActionStorage(context);
+        }
+
+        return DefinedActionStorage.instance;
     }
 }
