@@ -23,6 +23,7 @@ public class Constants
     public static final String FILE_PROVIDER_AUTHORITY = "de.hs_kl.fileprovider";
     public static final String MEASUREMENT_DATA_TYPE = "text/plain";
 
+    public static final String MEASUREMENT_FILENAME = "measurement_filename";
     public static final String MEASUREMENT_HEADER = "measurement_header";
 
     public static final int NOTIFICATION_ID = 1;

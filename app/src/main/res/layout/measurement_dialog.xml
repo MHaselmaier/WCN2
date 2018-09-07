@@ -9,7 +9,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/measurement_header"
+        android:textAlignment="center"
         android:textSize="24sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/measurement_filename" />
+
+    <EditText
+        android:id="@+id/measurement_filename"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="ddMMyyyy_HHmmss"
+        android:inputType="text" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/measurement_description" />
 
     <EditText
         android:id="@+id/measurement_header"

@@ -52,7 +52,9 @@
 
     <string name="ok">OK</string>
     <string name="cancel">Abbrechen</string>
-    <string name="measurement_header">Messungs Beschreibung:</string>
+    <string name="measurement_header">Messung starten</string>
+    <string name="measurement_filename">Dateiname:</string>
+    <string name="measurement_description">Beschreibung:</string>
     <string name="measurement_comment">Hier können Sie eine Beschreibung der Messung angeben, welche als Kopfzeile in die Messungs-Datei eingefügt wird</string>
     <string name="mnemonic_header">Mnemonic:</string>
     <string name="mnemonic_comment">Kommentar !</string>

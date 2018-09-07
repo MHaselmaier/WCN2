@@ -260,7 +260,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         return view;
     }
 
-    public void startTracking(String header)
+    public void startTracking(String filename, String header)
     {
         this.tracking = true;
         this.trackingStartTime = System.currentTimeMillis();
@@ -268,6 +268,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
 
         Intent intent = new Intent(getActivity(), MeasurementService.class);
         intent.setAction(MeasurementService.ACTION_START);
+        intent.putExtra(Constants.MEASUREMENT_FILENAME, filename);
         intent.putExtra(Constants.MEASUREMENT_HEADER, header);
         getActivity().startService(intent);
 

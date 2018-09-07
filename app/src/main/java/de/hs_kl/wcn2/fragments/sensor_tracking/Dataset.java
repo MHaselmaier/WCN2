@@ -19,6 +19,7 @@ import de.hs_kl.wcn2.util.TrackedSensorsStorage;
 
 public class Dataset
 {
+    private String measurementFilename = null;
     private String measurementHeader = null;
     private SortedMap<Byte, String> sensorInfo = new TreeMap<>();
     private SortedMap<Integer, SortedMap<Byte, DatasetEntry>> entries = new TreeMap<>();
@@ -26,6 +27,11 @@ public class Dataset
     public void setMeasurementHeader(String measurementHeader)
     {
         this.measurementHeader = measurementHeader;
+    }
+
+    public void setMeasurementFilename(String measurementFilename)
+    {
+        this.measurementFilename = measurementFilename;
     }
 
     public void add(DatasetEntry entry)
@@ -48,14 +54,9 @@ public class Dataset
 
     public void writeToFile(Context context)
     {
-        writeToFile(context, null);
-    }
-
-    public void writeToFile(Context context, String filename)
-    {
         try
         {
-            PrintWriter outputStream = createOutputStream(filename);
+            PrintWriter outputStream = createOutputStream(this.measurementFilename);
 
             writeMeasurementHeader(outputStream, context);
             writeSensorInfo(outputStream, context);
@@ -75,11 +76,6 @@ public class Dataset
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
         {
             throw new Exception();
-        }
-
-        if (null == filename || filename.equals(""))
-        {
-            filename = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
         }
 
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),

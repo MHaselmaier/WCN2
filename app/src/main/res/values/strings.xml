@@ -52,7 +52,9 @@
 
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
-    <string name="measurement_header">Measurement Description:</string>
+    <string name="measurement_header">Start Measurement</string>
+    <string name="measurement_filename">Filename:</string>
+    <string name="measurement_description">Description:</string>
     <string name="measurement_comment">Here you can describe the measurement. It will be saved inside the resulting file as an header.</string>
     <string name="mnemonic_header">Mnemonic:</string>
     <string name="mnemonic_comment">Comment !</string>

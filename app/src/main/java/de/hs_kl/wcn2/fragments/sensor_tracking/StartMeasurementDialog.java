@@ -9,10 +9,17 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import de.hs_kl.wcn2.R;
 
 public class StartMeasurementDialog
 {
+    private static final DateFormat dateFormat = new SimpleDateFormat("ddMMyyyy_HHmmss", Locale.US);
+
     public static Dialog buildStartMeasurementDialog(final SensorTrackingFragment fragment)
     {
         final Activity activity = fragment.getActivity();
@@ -21,6 +28,7 @@ public class StartMeasurementDialog
         View dialogView = activity.getLayoutInflater().inflate(R.layout.measurement_dialog, null);
         dialogBuilder.setView(dialogView);
 
+        final EditText measurementFilename = dialogView.findViewById(R.id.measurement_filename);
         final EditText measurementHeader = dialogView.findViewById(R.id.measurement_header);
         dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
         {
@@ -28,12 +36,17 @@ public class StartMeasurementDialog
             public void onClick(DialogInterface dialog, int which)
             {
                 dialog.dismiss();
-                String header = measurementHeader.getText().toString();
-                if (0 == header.trim().length())
+                String header = measurementHeader.getText().toString().trim();
+                if (0 == header.length())
                 {
                     header = activity.getResources().getString(R.string.measurement_comment);
                 }
-                fragment.startTracking(header);
+                String filename = measurementFilename.getText().toString().trim();
+                if (0 == filename.length())
+                {
+                    filename = StartMeasurementDialog.dateFormat.format(new Date());
+                }
+                fragment.startTracking(filename, header);
             }
         });
 
@@ -53,6 +66,8 @@ public class StartMeasurementDialog
             @Override
             public void onShow(DialogInterface dialog)
             {
+                measurementFilename.setText(null);
+                measurementFilename.setHint(StartMeasurementDialog.dateFormat.format(new Date()));
                 measurementHeader.setText(null);
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
             }

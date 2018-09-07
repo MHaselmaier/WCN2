@@ -97,6 +97,8 @@ public class MeasurementService extends Service implements ScanResultListener
     {
         this.bleScanner.registerScanResultListener(this);
         MeasurementService.dataset.clear();
+        String filename = intent.getStringExtra(Constants.MEASUREMENT_FILENAME);
+        MeasurementService.dataset.setMeasurementFilename(filename);
         String header = intent.getStringExtra(Constants.MEASUREMENT_HEADER);
         MeasurementService.dataset.setMeasurementHeader(header);
         MeasurementService.action = "";
