@@ -56,7 +56,8 @@ public class MeasurementService extends Service implements ScanResultListener
               }
 
               long difference = System.currentTimeMillis() - sensorData.getTimestamp();
-              if (5000 < difference || Long.MAX_VALUE == sensorData.getTimestamp())
+              if (Constants.SENSOR_DATA_TIMEOUT < difference ||
+                      Long.MAX_VALUE == sensorData.getTimestamp())
               {
                   Notification notification = WCN2Notifications.buildSensorDataNotification(context,
                           sensorData.getSensorID(), sensorData.getMnemonic());

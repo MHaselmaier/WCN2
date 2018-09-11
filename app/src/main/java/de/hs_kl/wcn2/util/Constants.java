@@ -32,6 +32,8 @@ public class Constants
 
     public static final int UI_UPDATE_INTERVAL = 2000;
 
+    public static final int SENSOR_DATA_TIMEOUT = 10000;
+
     public static final int BLESCANNER_REPORT_DELAY = 0;
 
     public enum WCNView
