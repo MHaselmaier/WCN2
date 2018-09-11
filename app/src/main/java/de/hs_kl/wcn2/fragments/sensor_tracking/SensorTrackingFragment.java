@@ -314,6 +314,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
 
     private void startUIUpdater()
     {
+        this.uiUpdater.removeCallbacksAndMessages(null);
         this.uiUpdater.post(new Runnable()
         {
             @Override

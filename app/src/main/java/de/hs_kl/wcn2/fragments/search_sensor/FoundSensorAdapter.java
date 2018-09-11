@@ -107,11 +107,16 @@ public class FoundSensorAdapter extends BaseAdapter
         foundSensorView.batteryLevel.setImageDrawable(batteryLevel);
         Drawable signalStrength = sensorData.getSignalStrengthDrawable(this.context.getResources());
         foundSensorView.signalStrength.setImageDrawable(signalStrength);
-        String mnemonic = this.context.getResources().getString(R.string.mnemonic,
-                sensorData.getMnemonic());
-        foundSensorView.mnemonic.setText(mnemonic);
-        int visibility = (sensorData.getMnemonic().equals("null") ? View.GONE : View.VISIBLE);
-        foundSensorView.mnemonic.setVisibility(visibility);
+        String mnemonic = this.trackedSensors.getMnemonic(sensorData.getMacAddress());
+        if (mnemonic.equals("null"))
+        {
+            foundSensorView.mnemonic.setVisibility(View.GONE);
+        }
+        else
+        {
+            foundSensorView.mnemonic.setText(this.context.getString(R.string.mnemonic, mnemonic));
+            foundSensorView.mnemonic.setVisibility(View.VISIBLE);
+        }
 
         return foundSensorView.root;
     }

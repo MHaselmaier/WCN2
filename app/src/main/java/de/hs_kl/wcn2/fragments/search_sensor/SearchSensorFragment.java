@@ -72,6 +72,7 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
 
     private void startUIUpdater()
     {
+        this.uiUpdater.removeCallbacksAndMessages(null);
         this.uiUpdater.post(new Runnable()
         {
             @Override
