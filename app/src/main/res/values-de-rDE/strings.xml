@@ -76,8 +76,13 @@
     <string name="action_header">Neue Aktion:</string>
     <string name="action_comment">Aktion</string>
 
-    <string name="notification_title">Messung wird ausgeführt...</string>
-    <string name="notification_description">Aktuell werden die Sensor-Data aufgezeichent und werden später in einer Messungs-Datei gespeichert.</string>
+    <string name="measurement_channel_name">Messungen</string>
+    <string name="measurement_channel_description">Aktuell werden die Sensor Daten aufgezeichent und später in einer Messungs-Datei gespeichert.</string>
+    <string name="measurement_notification_title">Messung wird ausgeführt...</string>
+    <string name="sensor_channel_name">Keine Sensor Daten</string>
+    <string name="sensor_channel_description">Aktuell werden keine Daten von einem oder mehreren verfolgten Sensoren empfangen. Die Batterie könnte leer sein, oder die Sensoren liegen außer Reichweite.</string>
+    <string name="sensor_notification_content">Aktuell werden keine Daten von WCN%1$d empfangen!</string>
+    <string name="sensor_notification_content_mnemonic">Aktuell werden keine Daten von WCN%1$d [%2$s] empfangen!</string>
 
     <string name="university">Hochschule Kaiserslautern</string>
     <string name="university_info">www.hs-kl.de</string>

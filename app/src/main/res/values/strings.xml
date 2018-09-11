@@ -76,8 +76,13 @@
     <string name="action_header">New Action:</string>
     <string name="action_comment">Action</string>
 
-    <string name="notification_title">Measurement is ongoing...</string>
-    <string name="notification_description">Currently the sensor data is recorded and will be saved to a measurement file.</string>
+    <string name="measurement_channel_name">Measurements</string>
+    <string name="measurement_channel_description">Currently the sensor data is recorded and will be saved to a measurement file.</string>
+    <string name="measurement_notification_title">Measurement is ongoing...</string>
+    <string name="sensor_channel_name">No Sensor Data</string>
+    <string name="sensor_channel_description">No data is currently received from one or more tracked sensors. The battery may be empty or the sensor is out of range.</string>
+    <string name="sensor_notification_content">No Data currently received from WCN%1$d!</string>
+    <string name="sensor_notification_content_mnemonic">No Data currently received from WCN%1$d [%2$s]!</string>
 
     <string name="university">Kaiserslautern University of Applied Sciences</string>
     <string name="university_info">www.hs-kl.de</string>

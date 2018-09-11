@@ -1,10 +1,6 @@
 package de.hs_kl.wcn2.fragments.sensor_tracking;
 
-import android.app.Activity;
 import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.le.ScanFilter;
@@ -13,20 +9,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.LocationManager;
-import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
+import android.support.v4.app.NotificationManagerCompat;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hs_kl.wcn2.OverviewActivity;
-import de.hs_kl.wcn2.R;
 import de.hs_kl.wcn2.ble_scanner.BLEScanner;
 import de.hs_kl.wcn2.ble_scanner.ScanResultListener;
 import de.hs_kl.wcn2.ble_scanner.SensorData;
 import de.hs_kl.wcn2.util.Constants;
 import de.hs_kl.wcn2.util.TrackedSensorsStorage;
+import de.hs_kl.wcn2.util.WCN2Notifications;
 
 public class MeasurementService extends Service implements ScanResultListener
 {
@@ -38,6 +35,42 @@ public class MeasurementService extends Service implements ScanResultListener
     public static long startTime = Long.MIN_VALUE;
 
     private BLEScanner bleScanner;
+
+    private List<SensorData> trackedSensors = new ArrayList<>();
+    private Handler handler = new Handler();
+    private Runnable checkSensorDataContinuity = new Runnable()
+    {
+      @Override
+      public void run()
+      {
+          for (int i = MeasurementService.this.trackedSensors.size() - 1; 0 <= i; --i)
+          {
+              SensorData sensorData = MeasurementService.this.trackedSensors.get(i);
+              Context context = getBaseContext();
+              NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+              if (!TrackedSensorsStorage.getInstance(context).isTracked(sensorData))
+              {
+                  MeasurementService.this.trackedSensors.remove(sensorData);
+                  notificationManager.cancel(sensorData.getSensorID());
+                  continue;
+              }
+
+              long difference = System.currentTimeMillis() - sensorData.getTimestamp();
+              if (5000 < difference || Long.MAX_VALUE == sensorData.getTimestamp())
+              {
+                  Notification notification = WCN2Notifications.buildSensorDataNotification(context,
+                          sensorData.getSensorID(), sensorData.getMnemonic());
+                  notificationManager.notify(sensorData.getSensorID(), notification);
+              }
+              else
+              {
+                  notificationManager.cancel(sensorData.getSensorID());
+              }
+          }
+
+          MeasurementService.this.handler.postDelayed(this, 1000);
+      }
+    };
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver()
     {
@@ -104,48 +137,12 @@ public class MeasurementService extends Service implements ScanResultListener
         MeasurementService.action = "";
         MeasurementService.startTime = System.currentTimeMillis();
 
-        startForeground(Constants.NOTIFICATION_ID, createNotification(header));
-    }
+        Notification notification = WCN2Notifications.buildMeasurementNotification(this, header);
+        startForeground(Constants.MEASUREMENT_ID, notification);
 
-    private Notification createNotification(String measurementHeader)
-    {
-        Notification.Builder builder = getNotificationBuilder();
-
-        Intent intent = new Intent(this, OverviewActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-        builder.setOngoing(true)
-                .setSmallIcon(R.drawable.ic_measurement)
-                .setContentTitle(getString(R.string.notification_title))
-                .setContentText(measurementHeader)
-                .setContentIntent(pendingIntent);
-        return builder.build();
-    }
-
-    private Notification.Builder getNotificationBuilder()
-    {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        {
-            createNotificationChannel();
-            return new Notification.Builder(this, Constants.NOTIFICATION_CHANNEL_ID);
-        }
-
-        return new Notification.Builder(this);
-    }
-
-    private void createNotificationChannel()
-    {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return;
-
-        String service = Activity.NOTIFICATION_SERVICE;
-        NotificationManager manager = (NotificationManager)getSystemService(service);
-        if (null != manager.getNotificationChannel(Constants.NOTIFICATION_CHANNEL_ID)) return;
-
-        NotificationChannel channel = new NotificationChannel(Constants.NOTIFICATION_CHANNEL_ID,
-                getString(R.string.notification_title), NotificationManager.IMPORTANCE_HIGH);
-        channel.setDescription(getString(R.string.notification_description));
-        manager.createNotificationChannel(channel);
+        this.trackedSensors = TrackedSensorsStorage.getInstance(getBaseContext()).getTrackedSensors();
+        this.handler.removeCallbacks(this.checkSensorDataContinuity);
+        this.handler.postDelayed(this.checkSensorDataContinuity, 1000);
     }
 
     private void onActionStop()
@@ -154,6 +151,8 @@ public class MeasurementService extends Service implements ScanResultListener
         this.bleScanner.unregisterScanResultListener(this);
         MeasurementService.action = "";
         MeasurementService.startTime = Long.MIN_VALUE;
+
+        this.handler.removeCallbacks(this.checkSensorDataContinuity);
     }
 
     @Override
@@ -165,11 +164,9 @@ public class MeasurementService extends Service implements ScanResultListener
     @Override
     public void onDestroy()
     {
+        onActionStop();
+
         unregisterReceiver(this.broadcastReceiver);
-        MeasurementService.dataset.writeToFile(this);
-        MeasurementService.action = "";
-        MeasurementService.startTime = Long.MIN_VALUE;
-        this.bleScanner.unregisterScanResultListener(this);
         stopSelf();
     }
 
@@ -194,5 +191,20 @@ public class MeasurementService extends Service implements ScanResultListener
                 result.getTemperature(), result.getRelativeHumidity(), MeasurementService.action,
                 result.getTimestamp() - MeasurementService.startTime);
         MeasurementService.dataset.add(entry);
+
+        updateLastTrackedSensorData(result);
+    }
+
+    private void updateLastTrackedSensorData(SensorData result)
+    {
+        for (int i = 0; this.trackedSensors.size() > i; ++i)
+        {
+            if (this.trackedSensors.get(i).getMacAddress().equals(result.getMacAddress()))
+            {
+                this.trackedSensors.set(i, result);
+                return;
+            }
+        }
+        this.trackedSensors.add(result);
     }
 }

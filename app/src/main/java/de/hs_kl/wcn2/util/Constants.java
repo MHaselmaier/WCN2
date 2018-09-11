@@ -26,8 +26,9 @@ public class Constants
     public static final String MEASUREMENT_FILENAME = "measurement_filename";
     public static final String MEASUREMENT_HEADER = "measurement_header";
 
-    public static final int NOTIFICATION_ID = 1;
-    public static final String NOTIFICATION_CHANNEL_ID = "notification_channel_id";
+    public static final int MEASUREMENT_ID = Integer.MAX_VALUE;
+    public static final String MEASUREMENT_CHANNEL_ID = "measurement_channel_id";
+    public static final String SENSOR_CHANNEL_ID = "sensor_channel_id";
 
     public static final int UI_UPDATE_INTERVAL = 2000;
 
