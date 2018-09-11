@@ -43,11 +43,11 @@ public class MeasurementService extends Service implements ScanResultListener
       @Override
       public void run()
       {
+          Context context = getBaseContext();
+          NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
           for (int i = MeasurementService.this.trackedSensors.size() - 1; 0 <= i; --i)
           {
               SensorData sensorData = MeasurementService.this.trackedSensors.get(i);
-              Context context = getBaseContext();
-              NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
               if (!TrackedSensorsStorage.getInstance(context).isTracked(sensorData))
               {
                   MeasurementService.this.trackedSensors.remove(sensorData);
@@ -153,6 +153,18 @@ public class MeasurementService extends Service implements ScanResultListener
         MeasurementService.startTime = Long.MIN_VALUE;
 
         this.handler.removeCallbacks(this.checkSensorDataContinuity);
+
+        cancelNoSensorDataNotifications();
+    }
+
+    private void cancelNoSensorDataNotifications()
+    {
+        Context context = getBaseContext();
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        for (SensorData sensorData: this.trackedSensors)
+        {
+            notificationManager.cancel(sensorData.getSensorID());
+        }
     }
 
     @Override
