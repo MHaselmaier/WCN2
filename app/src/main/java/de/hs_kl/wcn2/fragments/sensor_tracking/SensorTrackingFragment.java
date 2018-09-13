@@ -333,6 +333,9 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     public void onHiddenChanged(boolean hidden)
     {
         if (hidden) return;
+        // On older devices this method seems to be called even before the onCreate method.
+        // In this case the members are not initialized on this method can return.
+        if (null == this.trackedSensorsStorage || null == this.actionOverview) return;
 
         startUIUpdater();
         this.trackedSensors = this.trackedSensorsStorage.getTrackedSensors();

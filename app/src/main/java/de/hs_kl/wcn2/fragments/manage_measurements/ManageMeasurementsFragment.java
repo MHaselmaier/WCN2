@@ -38,9 +38,11 @@ public class ManageMeasurementsFragment extends Fragment
     @Override
     public void onHiddenChanged(boolean hidden)
     {
-        if (!hidden)
-        {
-            this.adapter.loadFiles();
-        }
+        if (hidden) return;
+        // On older devices this method seems to be called even before the onCreate method.
+        // In this case the members are not initialized on this method can return.
+        if (null == this.adapter) return;
+
+        this.adapter.loadFiles();
     }
 }
