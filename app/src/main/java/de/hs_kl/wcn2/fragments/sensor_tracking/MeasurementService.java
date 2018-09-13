@@ -30,10 +30,10 @@ public class MeasurementService extends Service implements ScanResultListener
     public static final String ACTION_START = "de.hs_kl.wcn2.fragments.sensor_tracking.MeasurementService.START";
     public static final String ACTION_STOP = "de.hs_kl.wcn2.fragments.sensor_tracking.MeasurementService.STOP";
 
-    private static Dataset dataset = new Dataset();
     public static String action = "";
     public static long startTime = Long.MIN_VALUE;
 
+    private Measurement measurement;
     private BLEScanner bleScanner;
 
     private List<SensorData> trackedSensors = new ArrayList<>();
@@ -130,11 +130,9 @@ public class MeasurementService extends Service implements ScanResultListener
     private void onActionStart(Intent intent)
     {
         this.bleScanner.registerScanResultListener(this);
-        MeasurementService.dataset.clear();
         String filename = intent.getStringExtra(Constants.MEASUREMENT_FILENAME);
-        MeasurementService.dataset.setMeasurementFilename(filename);
         String header = intent.getStringExtra(Constants.MEASUREMENT_HEADER);
-        MeasurementService.dataset.setMeasurementHeader(header);
+        this.measurement = new Measurement(header, filename);
         MeasurementService.action = "";
         MeasurementService.startTime = System.currentTimeMillis();
 
@@ -148,7 +146,7 @@ public class MeasurementService extends Service implements ScanResultListener
 
     private void onActionStop()
     {
-        MeasurementService.dataset.writeToFile(this);
+        this.measurement.finish();
         this.bleScanner.unregisterScanResultListener(this);
         MeasurementService.action = "";
         MeasurementService.startTime = Long.MIN_VALUE;
@@ -200,10 +198,7 @@ public class MeasurementService extends Service implements ScanResultListener
     @Override
     public void onScanResult(SensorData result)
     {
-        DatasetEntry entry = new DatasetEntry(result.getSensorID(), result.getMacAddress(),
-                result.getTemperature(), result.getRelativeHumidity(), MeasurementService.action,
-                result.getTimestamp() - MeasurementService.startTime);
-        MeasurementService.dataset.add(entry);
+        this.measurement.addData(result, MeasurementService.action);
 
         updateLastTrackedSensorData(result);
     }
