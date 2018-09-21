@@ -26,11 +26,6 @@ public class MnemonicEditDialog
         dialogBuilder.setView(dialogView);
 
         final EditText mnemonicView = dialogView.findViewById(R.id.mnemonic);
-        String mnemonic = trackedSensors.getMnemonic(sensorData.getMacAddress());
-        if (!mnemonic.equals("null"))
-        {
-            mnemonicView.append(mnemonic);
-        }
 
         dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
         {
@@ -66,6 +61,13 @@ public class MnemonicEditDialog
             @Override
             public void onShow(DialogInterface dialog)
             {
+                mnemonicView.setText(null);
+                String mnemonic = trackedSensors.getMnemonic(sensorData.getMacAddress());
+                if (!mnemonic.equals("null"))
+                {
+                    mnemonicView.append(mnemonic);
+                }
+                mnemonicView.requestFocus();
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
             }
         });

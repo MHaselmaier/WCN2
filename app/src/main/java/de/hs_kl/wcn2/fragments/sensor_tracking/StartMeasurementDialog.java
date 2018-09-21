@@ -68,6 +68,7 @@ public class StartMeasurementDialog
             {
                 measurementFilename.setText(null);
                 measurementFilename.setHint(StartMeasurementDialog.dateFormat.format(new Date()));
+                measurementFilename.requestFocus();
                 measurementHeader.setText(null);
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
             }

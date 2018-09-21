@@ -420,6 +420,7 @@ public class UsageActivity extends AppCompatActivity
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         View dialogView = getLayoutInflater().inflate(R.layout.measurement_dialog, container, false);
+        dialogView.findViewById(R.id.measurement_filename).setEnabled(false);
         dialogView.findViewById(R.id.measurement_header).setEnabled(false);
         dialogBuilder.setView(dialogView);
         dialogBuilder.setPositiveButton(R.string.ok, null);

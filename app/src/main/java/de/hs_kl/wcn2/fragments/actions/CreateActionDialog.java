@@ -57,6 +57,7 @@ public class CreateActionDialog
             public void onShow(DialogInterface dialog)
             {
                 newAction.setText(null);
+                newAction.requestFocus();
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
             }
         });
