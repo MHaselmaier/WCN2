@@ -1,5 +1,9 @@
 package de.hs_kl.wcn2.util;
 
+import android.os.Environment;
+
+import java.io.File;
+
 public class Constants
 {
     public static final int REQUEST_ENABLE_BT = 1;
@@ -19,7 +23,7 @@ public class Constants
 
     public static final String DEFINED_ACTIONS = "defined_actions";
 
-    public static final String DATA_DIRECTORY = "BLE_DATA";
+    public static final String DATA_DIRECTORY_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + File.separator + "BLE_DATA";
     public static final String FILE_PROVIDER_AUTHORITY = "de.hs_kl.fileprovider";
     public static final String MEASUREMENT_DATA_TYPE = "text/plain";
 

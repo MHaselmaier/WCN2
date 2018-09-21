@@ -48,8 +48,7 @@ public class Measurement
                 throw new Exception();
             }
 
-            File file = new File(Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DOCUMENTS), Constants.DATA_DIRECTORY + File.separator +
+            File file = new File(Constants.DATA_DIRECTORY_PATH + File.separator +
                     this.filename + ".txt");
             file.getParentFile().mkdirs();
             file.createNewFile();
