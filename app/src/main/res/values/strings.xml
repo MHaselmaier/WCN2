@@ -79,10 +79,14 @@
     <string name="measurement_channel_name">Measurements</string>
     <string name="measurement_channel_description">Currently the sensor data is recorded and will be saved to a measurement file.</string>
     <string name="measurement_notification_title">Measurement is ongoing...</string>
-    <string name="sensor_channel_name">No Sensor Data</string>
-    <string name="sensor_channel_description">No data is currently received from one or more tracked sensors. The battery may be empty or the sensor is out of range.</string>
-    <string name="sensor_notification_content">No Data currently received from WCN%1$d!</string>
-    <string name="sensor_notification_content_mnemonic">No Data currently received from WCN%1$d [%2$s]!</string>
+    <string name="sensor_data_channel_name">No Sensor Data</string>
+    <string name="sensor_data_channel_description">No data is currently received from one or more tracked sensors. The battery may be empty or the sensor is out of range.</string>
+    <string name="sensor_data_content">No Data currently received from WCN%1$d!</string>
+    <string name="sensor_data_content_mnemonic">No Data currently received from WCN%1$d [%2$s]!</string>
+    <string name="sensor_battery_low_channel_name">Sensor Battery is low</string>
+    <string name="sensor_battery_low_channel_description">The battery of one or more tracked sensors is low. The sensor will be turned off soon and should be recharged.</string>
+    <string name="sensor_battery_low_content">The battery of WCN%1$d is low!</string>
+    <string name="sensor_battery_low_content_mnemonic">The battery of WCN%1$d [%2$s] is low!</string>
 
     <string name="university">Kaiserslautern University of Applied Sciences</string>
     <string name="university_info">www.hs-kl.de</string>

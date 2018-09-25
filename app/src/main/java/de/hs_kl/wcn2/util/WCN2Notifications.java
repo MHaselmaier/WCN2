@@ -37,24 +37,51 @@ public class WCN2Notifications
     public static Notification buildSensorDataNotification(Context context, byte sensorID,
                                                            String mnemonic)
     {
-        String name = context.getString(R.string.sensor_channel_name);
-        String description = context.getString(R.string.sensor_channel_description);
-        createNotificationChannel(context, Constants.SENSOR_CHANNEL_ID, name, description);
-        Notification.Builder builder = getNotificationBuilder(context, Constants.SENSOR_CHANNEL_ID);
+        String name = context.getString(R.string.sensor_data_channel_name);
+        String description = context.getString(R.string.sensor_data_channel_description);
+        createNotificationChannel(context, Constants.SENSOR_DATA_CHANNEL_ID, name, description);
+        Notification.Builder builder = getNotificationBuilder(context, Constants.SENSOR_DATA_CHANNEL_ID);
 
         Intent intent = new Intent(context, OverviewActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
-        String content = context.getString(R.string.sensor_notification_content_mnemonic, sensorID,
+        String content = context.getString(R.string.sensor_data_content_mnemonic, sensorID,
                 mnemonic);
         if (mnemonic.equals("null"))
         {
-            content = context.getString(R.string.sensor_notification_content, sensorID);
+            content = context.getString(R.string.sensor_data_content, sensorID);
         }
         builder.setOngoing(true)
                 .setSmallIcon(R.drawable.ic_sensor_warning)
-                .setContentTitle(context.getString(R.string.sensor_channel_name))
+                .setContentTitle(name)
+                .setContentText(content)
+                .setContentIntent(pendingIntent)
+                .setOnlyAlertOnce(true);
+
+        return builder.build();
+    }
+
+    public static Notification buildSensorBatteryLowNotification(Context context, byte sensorID,
+                                                                 String mnemonic)
+    {
+        String name = context.getString(R.string.sensor_battery_low_channel_name);
+        String description = context.getString(R.string.sensor_battery_low_channel_description);
+        createNotificationChannel(context, Constants.SENSOR_BATTERY_LOW_CHANNEL_ID, name, description);
+        Notification.Builder builder = getNotificationBuilder(context, Constants.SENSOR_BATTERY_LOW_CHANNEL_ID);
+
+        Intent intent = new Intent(context, OverviewActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+
+        String content = context.getString(R.string.sensor_battery_low_content_mnemonic, sensorID, mnemonic);
+        if (mnemonic.equals("null"))
+        {
+            content = context.getString(R.string.sensor_battery_low_content, sensorID);
+        }
+        builder.setOngoing(true)
+                .setSmallIcon(R.drawable.ic_sensor_warning)
+                .setContentTitle(name)
                 .setContentText(content)
                 .setContentIntent(pendingIntent)
                 .setOnlyAlertOnce(true);

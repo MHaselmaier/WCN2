@@ -79,10 +79,14 @@
     <string name="measurement_channel_name">Messungen</string>
     <string name="measurement_channel_description">Aktuell werden die Sensor Daten aufgezeichent und später in einer Messungs-Datei gespeichert.</string>
     <string name="measurement_notification_title">Messung wird ausgeführt...</string>
-    <string name="sensor_channel_name">Keine Sensor Daten</string>
-    <string name="sensor_channel_description">Aktuell werden keine Daten von einem oder mehreren verfolgten Sensoren empfangen. Die Batterie könnte leer sein, oder die Sensoren liegen außer Reichweite.</string>
-    <string name="sensor_notification_content">Aktuell werden keine Daten von WCN%1$d empfangen!</string>
-    <string name="sensor_notification_content_mnemonic">Aktuell werden keine Daten von WCN%1$d [%2$s] empfangen!</string>
+    <string name="sensor_data_channel_name">Keine Sensor Daten</string>
+    <string name="sensor_data_channel_description">Aktuell werden keine Daten von einem oder mehreren verfolgten Sensoren empfangen. Die Batterie könnte leer sein, oder die Sensoren liegen außer Reichweite.</string>
+    <string name="sensor_data_content">Aktuell werden keine Daten von WCN%1$d empfangen!</string>
+    <string name="sensor_data_content_mnemonic">Aktuell werden keine Daten von WCN%1$d [%2$s] empfangen!</string>
+    <string name="sensor_battery_low_channel_name">Sensor Batterie ist schwach</string>
+    <string name="sensor_battery_low_channel_description">Die Batterie von mindestens einem Sensor ist schwach. Der Sensor schaltet sich bald ab und sollte neu aufgeladen werden.</string>
+    <string name="sensor_battery_low_content">Die Batterie von WCN%1$d ist schwach!</string>
+    <string name="sensor_battery_low_content_mnemonic">Die Batterie von WCN%1$d [%2$s] ist schwach!</string>
 
     <string name="university">Hochschule Kaiserslautern</string>
     <string name="university_info">www.hs-kl.de</string>

@@ -32,7 +32,8 @@ public class Constants
 
     public static final int MEASUREMENT_ID = Integer.MAX_VALUE;
     public static final String MEASUREMENT_CHANNEL_ID = "measurement_channel_id";
-    public static final String SENSOR_CHANNEL_ID = "sensor_channel_id";
+    public static final String SENSOR_DATA_CHANNEL_ID = "sensor_data_channel_id";
+    public static final String SENSOR_BATTERY_LOW_CHANNEL_ID = "sensor_battery_low_channel_id";
 
     public static final int UI_UPDATE_INTERVAL = 2000;
 
