@@ -135,22 +135,20 @@ public class BLEScanner
 
     private void startScan()
     {
-        if (null != this.bleScanner)
-        {
-            this.bleScanner.startScan(getScanFilters(), getScanSettings(), this.scanCallback);
-        }
+        if (null == this.bleScanner) return;
+
+        this.bleScanner.startScan(getScanFilters(), getScanSettings(), this.scanCallback);
     }
 
     private void stopScan()
     {
-        if (null != this.bleScanner)
+        if (null == this.bleScanner) return;
+
+        try
         {
-            try
-            {
-                this.bleScanner.stopScan(this.scanCallback);
-            }
-            catch(IllegalStateException e) {}
+            this.bleScanner.stopScan(this.scanCallback);
         }
+        catch(IllegalStateException e) {}
     }
 
     private static List<ScanFilter> getScanFilters()

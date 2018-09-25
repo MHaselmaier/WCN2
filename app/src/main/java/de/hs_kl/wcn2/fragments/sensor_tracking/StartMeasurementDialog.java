@@ -3,7 +3,6 @@ package de.hs_kl.wcn2.fragments.sensor_tracking;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -30,48 +29,33 @@ public class StartMeasurementDialog
 
         final EditText measurementFilename = dialogView.findViewById(R.id.measurement_filename);
         final EditText measurementHeader = dialogView.findViewById(R.id.measurement_header);
-        dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
+        dialogBuilder.setPositiveButton(R.string.ok, (dialog, w) ->
         {
-            @Override
-            public void onClick(DialogInterface dialog, int which)
+            dialog.dismiss();
+            String header = measurementHeader.getText().toString().trim();
+            if (0 == header.length())
             {
-                dialog.dismiss();
-                String header = measurementHeader.getText().toString().trim();
-                if (0 == header.length())
-                {
-                    header = activity.getResources().getString(R.string.measurement_comment);
-                }
-                String filename = measurementFilename.getText().toString().trim();
-                if (0 == filename.length())
-                {
-                    filename = StartMeasurementDialog.dateFormat.format(new Date());
-                }
-                fragment.startTracking(filename, header);
+                header = activity.getResources().getString(R.string.measurement_comment);
             }
+            String filename = measurementFilename.getText().toString().trim();
+            if (0 == filename.length())
+            {
+                filename = StartMeasurementDialog.dateFormat.format(new Date());
+            }
+            fragment.startTracking(filename, header);
         });
 
-        dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
-        {
-            @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
-                dialog.dismiss();
-            }
-        });
+        dialogBuilder.setNegativeButton(R.string.cancel, (dialog, w) -> dialog.dismiss());
 
         AlertDialog startMeasurementDialog = dialogBuilder.create();
         final Window window = startMeasurementDialog.getWindow();
-        startMeasurementDialog.setOnShowListener(new DialogInterface.OnShowListener()
+        startMeasurementDialog.setOnShowListener((d) ->
         {
-            @Override
-            public void onShow(DialogInterface dialog)
-            {
-                measurementFilename.setText(null);
-                measurementFilename.setHint(StartMeasurementDialog.dateFormat.format(new Date()));
-                measurementFilename.requestFocus();
-                measurementHeader.setText(null);
-                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-            }
+            measurementFilename.setText(null);
+            measurementFilename.setHint(StartMeasurementDialog.dateFormat.format(new Date()));
+            measurementFilename.requestFocus();
+            measurementHeader.setText(null);
+            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         });
 
         return startMeasurementDialog;

@@ -38,51 +38,47 @@ public class MeasurementService extends Service implements ScanResultListener
 
     private List<SensorData> trackedSensors = new ArrayList<>();
     private Handler handler = new Handler();
-    private Runnable checkSensorDataContinuity = new Runnable()
+    private Runnable checkSensorDataContinuity = () ->
     {
-      @Override
-      public void run()
-      {
-          Context context = getBaseContext();
-          NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-          for (int i = MeasurementService.this.trackedSensors.size() - 1; 0 <= i; --i)
+        Context context = getBaseContext();
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        for (int i = this.trackedSensors.size() - 1; 0 <= i; --i)
+        {
+          SensorData sensorData = this.trackedSensors.get(i);
+          if (!TrackedSensorsStorage.getInstance(context).isTracked(sensorData))
           {
-              SensorData sensorData = MeasurementService.this.trackedSensors.get(i);
-              if (!TrackedSensorsStorage.getInstance(context).isTracked(sensorData))
-              {
-                  MeasurementService.this.trackedSensors.remove(sensorData);
-                  notificationManager.cancel(sensorData.getSensorID() << 1);
-                  notificationManager.cancel(sensorData.getSensorID() << 1 + 1);
-                  continue;
-              }
-
-              long difference = System.currentTimeMillis() - sensorData.getTimestamp();
-              if (Constants.SENSOR_DATA_TIMEOUT < difference ||
-                      Long.MAX_VALUE == sensorData.getTimestamp())
-              {
-                  Notification notification = WCN2Notifications.buildSensorDataNotification(context,
-                          sensorData.getSensorID(), sensorData.getMnemonic());
-                  notificationManager.notify(sensorData.getSensorID() << 1, notification);
-              }
-              else
-              {
-                  notificationManager.cancel(sensorData.getSensorID() << 1);
-              }
-
-              if (sensorData.isBatteryLow())
-              {
-                  Notification notification = WCN2Notifications.buildSensorBatteryLowNotification(context,
-                          sensorData.getSensorID(), sensorData.getMnemonic());
-                  notificationManager.notify(sensorData.getSensorID() << 1 + 1, notification);
-              }
-              else
-              {
-                  notificationManager.cancel(sensorData.getSensorID() << 1 + 1);
-              }
+              this.trackedSensors.remove(sensorData);
+              notificationManager.cancel(sensorData.getSensorID() << 1);
+              notificationManager.cancel(sensorData.getSensorID() << 1 + 1);
+              continue;
           }
 
-          MeasurementService.this.handler.postDelayed(this, 1000);
-      }
+          long difference = System.currentTimeMillis() - sensorData.getTimestamp();
+          if (Constants.SENSOR_DATA_TIMEOUT < difference ||
+                  Long.MAX_VALUE == sensorData.getTimestamp())
+          {
+              Notification notification = WCN2Notifications.buildSensorDataNotification(context,
+                      sensorData.getSensorID(), sensorData.getMnemonic());
+              notificationManager.notify(sensorData.getSensorID() << 1, notification);
+          }
+          else
+          {
+              notificationManager.cancel(sensorData.getSensorID() << 1);
+          }
+
+          if (sensorData.isBatteryLow())
+          {
+              Notification notification = WCN2Notifications.buildSensorBatteryLowNotification(context,
+                      sensorData.getSensorID(), sensorData.getMnemonic());
+              notificationManager.notify(sensorData.getSensorID() << 1 + 1, notification);
+          }
+          else
+          {
+              notificationManager.cancel(sensorData.getSensorID() << 1 + 1);
+          }
+        }
+
+        this.handler.postDelayed(MeasurementService.this.checkSensorDataContinuity, 1000);
     };
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver()

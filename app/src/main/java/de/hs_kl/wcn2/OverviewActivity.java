@@ -8,7 +8,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -120,56 +119,38 @@ public class OverviewActivity extends AppCompatActivity
         });
 
         View overview = findViewById(R.id.overview);
-        overview.setOnClickListener(new View.OnClickListener()
+        overview.setOnClickListener((v) ->
         {
-            @Override
-            public void onClick(View v)
-            {
-                changeViewTo(Constants.WCNView.SENSOR_TRACKING);
-                drawer.closeDrawers();
-            }
+            changeViewTo(Constants.WCNView.SENSOR_TRACKING);
+            drawer.closeDrawers();
         });
 
         View measurement = findViewById(R.id.measurement);
-        measurement.setOnClickListener(new View.OnClickListener()
+        measurement.setOnClickListener((v) ->
         {
-            @Override
-            public void onClick(View v)
-            {
-                changeViewTo(Constants.WCNView.MANAGE_MEASUREMENT);
-                drawer.closeDrawers();
-            }
+            changeViewTo(Constants.WCNView.MANAGE_MEASUREMENT);
+            drawer.closeDrawers();
         });
 
         View action = findViewById(R.id.action);
-        action.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeViewTo(Constants.WCNView.ACTIONS);
-                drawer.closeDrawers();
-            }
+        action.setOnClickListener((v) ->
+        {
+            changeViewTo(Constants.WCNView.ACTIONS);
+            drawer.closeDrawers();
         });
 
         View sensor = findViewById(R.id.sensor);
-        sensor.setOnClickListener(new View.OnClickListener()
+        sensor.setOnClickListener((v) ->
         {
-            @Override
-            public void onClick(View v)
-            {
-                changeViewTo(Constants.WCNView.SEARCH_SENSOR);
-                drawer.closeDrawers();
-            }
+            changeViewTo(Constants.WCNView.SEARCH_SENSOR);
+            drawer.closeDrawers();
         });
 
         View about = findViewById(R.id.about);
-        about.setOnClickListener(new View.OnClickListener()
+        about.setOnClickListener((v) ->
         {
-            @Override
-            public void onClick(View v)
-            {
-                changeViewTo(Constants.WCNView.ABOUT);
-                drawer.closeDrawers();
-            }
+            changeViewTo(Constants.WCNView.ABOUT);
+            drawer.closeDrawers();
         });
     }
 
@@ -325,39 +306,23 @@ public class OverviewActivity extends AppCompatActivity
         dialogBuilder.setMessage(R.string.enable_location);
 
         final AtomicBoolean accepted = new AtomicBoolean(false);
-        dialogBuilder.setPositiveButton(R.string.allow, new DialogInterface.OnClickListener()
+        dialogBuilder.setPositiveButton(R.string.allow, (d, w) ->
         {
-            @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
-                Intent enableLocationIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivityForResult(enableLocationIntent, Constants.REQUEST_ENABLE_LOCATION);
-                accepted.set(true);
-            }
+            Intent enableLocationIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivityForResult(enableLocationIntent, Constants.REQUEST_ENABLE_LOCATION);
+            accepted.set(true);
         });
 
-        dialogBuilder.setNegativeButton(R.string.deny, new DialogInterface.OnClickListener()
-        {
-            @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
-                dialog.dismiss();
-            }
-        });
+        dialogBuilder.setNegativeButton(R.string.deny, (dialog, w) -> dialog.dismiss());
 
-        dialogBuilder.setOnDismissListener(new DialogInterface.OnDismissListener()
+        dialogBuilder.setOnDismissListener((d) ->
         {
-            @Override
-            public void onDismiss(DialogInterface dialog)
-            {
-                if (!accepted.get())
-                {
-                    Toast.makeText(OverviewActivity.this, R.string.denied_permission_location, Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(OverviewActivity.this, MeasurementService.class);
-                    stopService(intent);
-                    finish();
-                }
-            }
+            if (accepted.get()) return;
+
+            Toast.makeText(this, R.string.denied_permission_location, Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this, MeasurementService.class);
+            stopService(intent);
+            finish();
         });
 
         dialogBuilder.show();

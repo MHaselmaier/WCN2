@@ -60,14 +60,10 @@ public class Animation
 
         public Step(final Animation animation, final Runnable runnable, int delay)
         {
-            this.runnable = new Runnable()
+            this.runnable = () ->
             {
-                @Override
-                public void run()
-                {
-                    runnable.run();
-                    animation.step();
-                }
+                runnable.run();
+                animation.step();
             };
             this.delay = delay;
         }

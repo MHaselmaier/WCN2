@@ -28,14 +28,7 @@ public class AboutFragment extends Fragment
         View view = getActivity().getLayoutInflater().inflate(R.layout.about, container, false);
 
         Button help = view.findViewById(R.id.help_button);
-        help.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                startActivity(new Intent(getActivity(), UsageActivity.class));
-            }
-        });
+        help.setOnClickListener((v) -> startActivity(new Intent(getActivity(), UsageActivity.class)));
 
         return view;
     }

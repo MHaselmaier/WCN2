@@ -39,14 +39,7 @@ public class ActionsFragment extends Fragment
 
         final Dialog createActionDialog = CreateActionDialog.buildCreateActionDialog(this);
         ImageButton add = view.findViewById(R.id.add);
-        add.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                createActionDialog.show();
-            }
-        });
+        add.setOnClickListener((v) -> createActionDialog.show());
 
         return view;
     }
@@ -65,7 +58,7 @@ public class ActionsFragment extends Fragment
             return;
         }
 
-        for (final String action : actions)
+        for (final String action: actions)
         {
             this.actionList.addView(createActionView(action));
         }
@@ -80,36 +73,24 @@ public class ActionsFragment extends Fragment
         label.setText(action);
 
         ImageButton up = actionView.findViewById(R.id.up);
-        up.setOnClickListener(new View.OnClickListener()
+        up.setOnClickListener((v) ->
         {
-            @Override
-            public void onClick(View v)
-            {
-                ActionsFragment.this.definedActions.moveActionUp(action);
-                loadActionViews();
-            }
+            this.definedActions.moveActionUp(action);
+            loadActionViews();
         });
 
         ImageButton down = actionView.findViewById(R.id.down);
-        down.setOnClickListener(new View.OnClickListener()
+        down.setOnClickListener((v) ->
         {
-            @Override
-            public void onClick(View v)
-            {
-                ActionsFragment.this.definedActions.moveActionDown(action);
-                loadActionViews();
-            }
+            this.definedActions.moveActionDown(action);
+            loadActionViews();
         });
 
         ImageButton remove = actionView.findViewById(R.id.remove);
-        remove.setOnClickListener(new View.OnClickListener()
+        remove.setOnClickListener((v) ->
         {
-            @Override
-            public void onClick(View v)
-            {
-                ActionsFragment.this.definedActions.removeAction(action);
-                loadActionViews();
-            }
+            this.definedActions.removeAction(action);
+            loadActionViews();
         });
 
         return actionView;

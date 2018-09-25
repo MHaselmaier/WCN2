@@ -104,19 +104,15 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         this.measurementTime = view.findViewById(R.id.measurement_time);
         final Dialog dialog = StartMeasurementDialog.buildStartMeasurementDialog(this);
         this.measurementButton = view.findViewById(R.id.measurement_button);
-        this.measurementButton.setOnClickListener(new View.OnClickListener()
+        this.measurementButton.setOnClickListener((v) ->
         {
-            @Override
-            public void onClick(View v)
+            if (!this.tracking && arePrerequisitesForMeasurementsMet())
             {
-                if (!SensorTrackingFragment.this.tracking && arePrerequisitesForMeasurementsMet())
-                {
-                    dialog.show();
-                }
-                else
-                {
-                    stopTracking();
-                }
+                dialog.show();
+            }
+            else
+            {
+                stopTracking();
             }
         });
         this.trackedSensorViews = view.findViewById(R.id.tracked_sensors);
@@ -127,14 +123,8 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         addActionToggleButtons();
 
         ImageButton edit = view.findViewById(R.id.edit_tracked_sensors);
-        edit.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                ((OverviewActivity)getActivity()).changeViewTo(Constants.WCNView.SEARCH_SENSOR);
-            }
-        });
+        edit.setOnClickListener((v) ->
+                ((OverviewActivity)getActivity()).changeViewTo(Constants.WCNView.SEARCH_SENSOR));
 
         return view;
     }
@@ -228,34 +218,31 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
                 .inflate(R.layout.action_button, this.actions, false);
         Button button = view.findViewById(R.id.button);
         button.setText(action);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (null != SensorTrackingFragment.this.action)
-                {
-                    SensorTrackingFragment.this.action.getBackground().clearColorFilter();
-                }
+        button.setOnClickListener((clickedView) ->
+        {
+            if (null != this.action)
+            {
+                this.action.getBackground().clearColorFilter();
+            }
 
-                if (view == SensorTrackingFragment.this.action)
-                {
-                    SensorTrackingFragment.this.action = null;
-                    MeasurementService.action = "";
-                }
-                else
-                {
-                    SensorTrackingFragment.this.action = (Button)view;
-                    view.getBackground().setColorFilter(getResources()
-                            .getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
-                    String action = SensorTrackingFragment.this.action.getText().toString();
-                    MeasurementService.action = action;
-                }
+            if (clickedView == this.action)
+            {
+                this.action = null;
+                MeasurementService.action = "";
+            }
+            else
+            {
+                this.action = (Button)clickedView;
+                clickedView.getBackground().setColorFilter(getResources()
+                        .getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
+                MeasurementService.action = this.action.getText().toString();
             }
         });
         if (action.equals(MeasurementService.action))
         {
-            SensorTrackingFragment.this.action = button;
-            button.getBackground().setColorFilter(getResources()
-                    .getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
+            this.action = button;
+            button.getBackground().setColorFilter(getResources().getColor(R.color.colorPrimary),
+                    PorterDuff.Mode.MULTIPLY);
         }
         return view;
     }

@@ -3,7 +3,6 @@ package de.hs_kl.wcn2.fragments.search_sensor;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -27,49 +26,34 @@ public class MnemonicEditDialog
 
         final EditText mnemonicView = dialogView.findViewById(R.id.mnemonic);
 
-        dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
+        dialogBuilder.setPositiveButton(R.string.ok, (dialog, w) ->
         {
-            @Override
-            public void onClick(DialogInterface dialog, int which)
+            dialog.dismiss();
+
+            String newMnemonic = mnemonicView.getText().toString().trim();
+            if (0 == newMnemonic.length())
             {
-                dialog.dismiss();
-
-                String newMnemonic = mnemonicView.getText().toString().trim();
-                if (0 == newMnemonic.length())
-                {
-                    newMnemonic = "null";
-                }
-
-                sensorData.setMnemonic(newMnemonic);
-                trackedSensors.trackSensor(sensorData);
+                newMnemonic = "null";
             }
+
+            sensorData.setMnemonic(newMnemonic);
+            trackedSensors.trackSensor(sensorData);
         });
 
-        dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
-        {
-            @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
-                dialog.dismiss();
-            }
-        });
+        dialogBuilder.setNegativeButton(R.string.cancel, (dialog, w) -> dialog.dismiss());
 
         AlertDialog mnemonicEditDialog = dialogBuilder.create();
         final Window window = mnemonicEditDialog.getWindow();
-        mnemonicEditDialog.setOnShowListener(new DialogInterface.OnShowListener()
+        mnemonicEditDialog.setOnShowListener((d) ->
         {
-            @Override
-            public void onShow(DialogInterface dialog)
+            mnemonicView.setText(null);
+            String mnemonic = trackedSensors.getMnemonic(sensorData.getMacAddress());
+            if (!mnemonic.equals("null"))
             {
-                mnemonicView.setText(null);
-                String mnemonic = trackedSensors.getMnemonic(sensorData.getMacAddress());
-                if (!mnemonic.equals("null"))
-                {
-                    mnemonicView.append(mnemonic);
-                }
-                mnemonicView.requestFocus();
-                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                mnemonicView.append(mnemonic);
             }
+            mnemonicView.requestFocus();
+            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         });
 
         return mnemonicEditDialog;

@@ -14,20 +14,16 @@ public class SensorTrackedChangeListener implements CompoundButton.OnCheckedChan
     private static ArrayBlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(10);
     static
     {
-        new Thread(new Runnable()
+        new Thread(() ->
         {
-            @Override
-            public void run()
+            try
             {
-                try
+                while (true)
                 {
-                    while (true)
-                    {
-                        SensorTrackedChangeListener.queue.take().run();
-                    }
+                    SensorTrackedChangeListener.queue.take().run();
                 }
-                catch (InterruptedException e) {}
             }
+            catch (InterruptedException e) {}
         }).start();
     }
 
@@ -45,28 +41,12 @@ public class SensorTrackedChangeListener implements CompoundButton.OnCheckedChan
     {
         if (isChecked)
         {
-            SensorTrackedChangeListener.queue.add(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    SensorTrackedChangeListener.this.trackedSensors.trackSensor(
-                            SensorTrackedChangeListener.this.sensorData);
-                }
-            });
+            SensorTrackedChangeListener.queue.add(() -> this.trackedSensors.trackSensor(this.sensorData));
             buttonView.setText(R.string.sensor_tracked);
         }
         else
         {
-            SensorTrackedChangeListener.queue.add(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    SensorTrackedChangeListener.this.trackedSensors.untrackSensor(
-                            SensorTrackedChangeListener.this.sensorData);
-                }
-            });
+            SensorTrackedChangeListener.queue.add(() -> this.trackedSensors.untrackSensor(this.sensorData));
             buttonView.setText(R.string.sensor_not_tracked);
         }
     }

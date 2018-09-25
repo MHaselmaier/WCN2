@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -24,16 +23,9 @@ public class DefinedActionStorage
                 Context.MODE_PRIVATE);
 
         Object[] entries = this.actions.getAll().entrySet().toArray();
-        Arrays.sort(entries, new Comparator<Object>()
-        {
-            @Override
-            public int compare(Object o1, Object o2)
-            {
-                int index1 = ((Map.Entry<String, Integer>)o1).getValue();
-                int index2 = ((Map.Entry<String, Integer>)o2).getValue();
-                return index1 - index2;
-            }
-        });
+        Arrays.sort(entries, (o1, o2) ->
+            ((Map.Entry<String, Integer>)o1).getValue() - ((Map.Entry<String, Integer>)o1).getValue()
+        );
 
         this.cachedData = new ArrayList<>();
         for (Object entry: entries)

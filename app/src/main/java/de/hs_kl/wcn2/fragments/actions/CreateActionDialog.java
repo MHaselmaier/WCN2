@@ -2,7 +2,6 @@ package de.hs_kl.wcn2.fragments.actions;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.Window;
@@ -23,43 +22,27 @@ public class CreateActionDialog
         dialogBuilder.setView(dialogView);
 
         final EditText newAction = dialogView.findViewById(R.id.action);
-
-        dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
+        dialogBuilder.setPositiveButton(R.string.ok, (dialog, w) ->
         {
-            @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
-                dialog.dismiss();
+            dialog.dismiss();
 
-                String action = newAction.getText().toString().trim();
-                if (0 < action.length())
-                {
-                    DefinedActionStorage.getInstance(activity).addAction(action);
-                    fragment.loadActionViews();
-                }
+            String action = newAction.getText().toString().trim();
+            if (0 < action.length())
+            {
+                DefinedActionStorage.getInstance(activity).addAction(action);
+                fragment.loadActionViews();
             }
         });
 
-        dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
-        {
-            @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
-                dialog.dismiss();
-            }
-        });
+        dialogBuilder.setNegativeButton(R.string.cancel, (dialog, w) -> dialog.dismiss());
 
         Dialog createActionDialog = dialogBuilder.create();
         final Window window = createActionDialog.getWindow();
-        createActionDialog.setOnShowListener(new DialogInterface.OnShowListener()
+        createActionDialog.setOnShowListener((d) ->
         {
-            @Override
-            public void onShow(DialogInterface dialog)
-            {
-                newAction.setText(null);
-                newAction.requestFocus();
-                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-            }
+            newAction.setText(null);
+            newAction.requestFocus();
+            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         });
 
         return createActionDialog;

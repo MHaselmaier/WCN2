@@ -74,7 +74,7 @@ public class Measurement
         long timestampInSec = sensorData.getTimestamp() / 1000;
         if (!this.data.containsKey(timestampInSec))
         {
-            this.data.put(timestampInSec, new TreeMap<Byte, SensorData>());
+            this.data.put(timestampInSec, new TreeMap<>());
         }
 
         this.data.get(timestampInSec).put(sensorData.getSensorID(), sensorData);

@@ -33,47 +33,32 @@ public class MeasurementView
 
         TextView measurementName = this.root.findViewById(R.id.label);
         measurementName.setText(measurement.getName());
-        measurementName.setOnClickListener(new View.OnClickListener()
+        measurementName.setOnClickListener((v) ->
         {
-            @Override
-            public void onClick(View v)
+            if (fragment.isSelectionModeEnabled())
             {
-                if (fragment.isSelectionModeEnabled())
-                {
-                    MeasurementView.this.checkBox.toggle();
-                }
-                else
-                {
-                    Intent openIntent = new Intent(Intent.ACTION_VIEW);
-                    Uri uri = FileProvider.getUriForFile(fragment.getActivity(),
-                            Constants.FILE_PROVIDER_AUTHORITY, measurement);
-                    openIntent.setDataAndType(uri, Constants.MEASUREMENT_DATA_TYPE);
-                    openIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    fragment.startActivity(openIntent);
-                }
+                this.checkBox.toggle();
+            }
+            else
+            {
+                Intent openIntent = new Intent(Intent.ACTION_VIEW);
+                Uri uri = FileProvider.getUriForFile(fragment.getActivity(),
+                        Constants.FILE_PROVIDER_AUTHORITY, measurement);
+                openIntent.setDataAndType(uri, Constants.MEASUREMENT_DATA_TYPE);
+                openIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                fragment.startActivity(openIntent);
             }
         });
-        measurementName.setOnLongClickListener(new View.OnLongClickListener()
+        measurementName.setOnLongClickListener((v) ->
         {
-            @Override
-            public boolean onLongClick(View v)
-            {
-                fragment.enableSelectionMode();
-                MeasurementView.this.checkBox.setChecked(true);
-                return true;
-            }
+            fragment.enableSelectionMode();
+            this.checkBox.setChecked(true);
+            return true;
         });
 
         this.more = this.root.findViewById(R.id.more);
         final PopupMenu menu = new MeasurementMenu(fragment, this.more, measurement);
-        this.more.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                menu.show();
-            }
-        });
+        this.more.setOnClickListener((v) -> menu.show());
         this.more.setVisibility(fragment.isSelectionModeEnabled() ? View.VISIBLE : View.INVISIBLE);
     }
 

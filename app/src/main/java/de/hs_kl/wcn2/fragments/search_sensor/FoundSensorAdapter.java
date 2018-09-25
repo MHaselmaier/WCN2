@@ -70,14 +70,7 @@ public class FoundSensorAdapter extends BaseAdapter
 
         final Dialog mnemonicEditDialog = MnemonicEditDialog.buildMnemonicEditDialog(this.context,
                 sensorData);
-        foundSensorView.mnemonicEdit.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                mnemonicEditDialog.show();
-            }
-        });
+        foundSensorView.mnemonicEdit.setOnClickListener((v) -> mnemonicEditDialog.show());
 
         boolean isTracked = this.trackedSensors.isTracked(sensorData);
         foundSensorView.trackSwitch.setChecked(isTracked);

@@ -78,7 +78,7 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
             @Override
             public void run()
             {
-                if (SearchSensorFragment.this.isHidden()) return;
+                if (isHidden()) return;
 
                 SearchSensorFragment.this.foundSensorAdapter.notifyDataSetChanged();
                 SearchSensorFragment.this.uiUpdater.postDelayed(this, Constants.UI_UPDATE_INTERVAL);

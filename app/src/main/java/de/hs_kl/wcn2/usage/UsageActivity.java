@@ -46,35 +46,24 @@ public class UsageActivity extends AppCompatActivity
         this.stepIndicator = findViewById(R.id.step_indicator);
 
         Button next = findViewById(R.id.next);
-        next.setOnClickListener(new View.OnClickListener()
+        next.setOnClickListener((v) ->
         {
-            @Override
-            public void onClick(View v)
+            UsageActivity.this.animations.get(UsageActivity.this.state).stop();
+
+            if (UsageActivity.this.animations.size() - 1 > UsageActivity.this.state)
             {
-                UsageActivity.this.animations.get(UsageActivity.this.state).stop();
-
-                if (UsageActivity.this.animations.size() - 1 > UsageActivity.this.state)
-                {
-                    UsageActivity.this.animations.get(++UsageActivity.this.state).start();
-                    updateDescription();
-                    updateStepIndicator();
-                }
-                else
-                {
-                    finish();
-                }
+                UsageActivity.this.animations.get(++UsageActivity.this.state).start();
+                updateDescription();
+                updateStepIndicator();
             }
-        });
-
-        Button skip = findViewById(R.id.skip);
-        skip.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
+            else
             {
                 finish();
             }
         });
+
+        Button skip = findViewById(R.id.skip);
+        skip.setOnClickListener((v) -> finish());
 
         this.animations.add(makeIntroductionAnimation());
         this.animations.add(makeCreateActionAnimation());
@@ -119,24 +108,16 @@ public class UsageActivity extends AppCompatActivity
         TextView label = emptyView.findViewById(R.id.label);
         label.setText(R.string.no_sensors_found);
         sensorTracking.findViewById(R.id.measurement_button).setClickable(false);
-        Animation introduction = new Animation(new Runnable()
+        Animation introduction = new Animation(() ->
         {
-            @Override
-            public void run()
-            {
-                UsageActivity.this.content.removeAllViews();
-                UsageActivity.this.content.addView(drawer);
-                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                container.removeAllViews();
-                container.addView(sensorTracking);
-            }
+            this.content.removeAllViews();
+            this.content.addView(drawer);
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            container.removeAllViews();
+            container.addView(sensorTracking);
         }, R.string.introduction_description);
 
-        introduction.addStep(new Animation.Step(introduction, new Runnable()
-        {
-            @Override
-            public void run() {}
-        }, 5000));
+        introduction.addStep(new Animation.Step(introduction, () -> {}, 5000));
 
         return introduction;
     }
@@ -154,64 +135,42 @@ public class UsageActivity extends AppCompatActivity
         View emptyView = getLayoutInflater().inflate(R.layout.empty_list_item, trackedSensorViews);
         TextView label = emptyView.findViewById(R.id.label);
         label.setText(R.string.no_sensors_found);
-        Animation createAction = new Animation(new Runnable()
+        Animation createAction = new Animation(() ->
         {
-            @Override
-            public void run()
-            {
-                UsageActivity.this.content.removeAllViews();
-                UsageActivity.this.content.addView(drawer);
-                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                container.removeAllViews();
-                container.addView(sensorTracking);
-            }
+            this.content.removeAllViews();
+            this.content.addView(drawer);
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            container.removeAllViews();
+            container.addView(sensorTracking);
         }, R.string.create_action_description);
 
         final View action = drawer.findViewById(R.id.action);
-        createAction.addStep(new Animation.Step(createAction, new Runnable()
+        createAction.addStep(new Animation.Step(createAction, () ->
         {
-            @Override
-            public void run()
-            {
-                action.setBackgroundColor(Color.argb(255, 255, 255, 255));
-                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
-            }
+            action.setBackgroundColor(Color.argb(255, 255, 255, 255));
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
         }, 1000));
 
-        createAction.addStep(new Animation.Step(createAction, new Runnable()
+        createAction.addStep(new Animation.Step(createAction, () ->
         {
-            @Override
-            public void run()
-            {
-                action.setBackgroundColor(Color.argb(50, 0, 0, 0));
-            }
+            action.setBackgroundColor(Color.argb(50, 0, 0, 0));
         }, 500));
 
         final View actions = getLayoutInflater().inflate(R.layout.actions, container, false);
-        emptyView = getLayoutInflater().inflate(R.layout.empty_list_item,
-                (LinearLayout)actions.findViewById(R.id.actions));
+        emptyView = getLayoutInflater().inflate(R.layout.empty_list_item, actions.findViewById(
+                R.id.actions));
         label = emptyView.findViewById(R.id.label);
         label.setText(R.string.no_actions_defined);
-        createAction.addStep(new Animation.Step(createAction, new Runnable()
+        createAction.addStep(new Animation.Step(createAction, () ->
         {
-            @Override
-            public void run()
-            {
-                container.removeAllViews();
-                container.addView(actions);
-                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            }
+            container.removeAllViews();
+            container.addView(actions);
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }, 250));
 
         final View newAction = actions.findViewById(R.id.add);
-        createAction.addStep(new Animation.Step(createAction, new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                newAction.setBackgroundColor(Color.argb(50, 0, 0, 0));
-            }
-        }, 500));
+        createAction.addStep(new Animation.Step(createAction, () ->
+                newAction.setBackgroundColor(Color.argb(50, 0, 0, 0)), 500));
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         View dialogView = getLayoutInflater().inflate(R.layout.action_dialog, container, false);
@@ -223,25 +182,17 @@ public class UsageActivity extends AppCompatActivity
         dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE |
                 WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
-        createAction.addStep(new Animation.Step(createAction, new Runnable()
+        createAction.addStep(new Animation.Step(createAction, () ->
         {
-            @Override
-            public void run()
-            {
-                newAction.setBackgroundColor(Color.argb(255, 255, 255, 255));
-                dialog.show();
-            }
+            newAction.setBackgroundColor(Color.argb(255, 255, 255, 255));
+            dialog.show();
         }, 250));
 
-        createAction.addStep(new Animation.Step(createAction, new Runnable()
+        createAction.addStep(new Animation.Step(createAction, () ->
         {
-            @Override
-            public void run()
-            {
-                dialog.hide();
-                container.removeAllViews();
-                container.addView(sensorTracking);
-            }
+            dialog.hide();
+            container.removeAllViews();
+            container.addView(sensorTracking);
         }, 1000));
 
         return createAction;
@@ -260,38 +211,24 @@ public class UsageActivity extends AppCompatActivity
         View emptyView = getLayoutInflater().inflate(R.layout.empty_list_item, trackedSensorViews);
         TextView label = emptyView.findViewById(R.id.label);
         label.setText(R.string.no_sensors_found);
-        Animation selectSensors = new Animation(new Runnable()
+        Animation selectSensors = new Animation(() ->
         {
-            @Override
-            public void run()
-            {
-                UsageActivity.this.content.removeAllViews();
-                UsageActivity.this.content.addView(drawer);
-                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                container.removeAllViews();
-                container.addView(sensorTracking);
-            }
+            this.content.removeAllViews();
+            this.content.addView(drawer);
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            container.removeAllViews();
+            container.addView(sensorTracking);
         }, R.string.select_tracked_sensors_description);
 
         final View sensor = drawer.findViewById(R.id.sensor);
-        selectSensors.addStep(new Animation.Step(selectSensors, new Runnable()
+        selectSensors.addStep(new Animation.Step(selectSensors, () ->
         {
-            @Override
-            public void run()
-            {
-                sensor.setBackgroundColor(Color.argb(255, 255, 255, 255));
-                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
-            }
+            sensor.setBackgroundColor(Color.argb(255, 255, 255, 255));
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
         }, 1000));
 
-        selectSensors.addStep(new Animation.Step(selectSensors, new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                sensor.setBackgroundColor(Color.argb(50, 0, 0, 0));
-            }
-        }, 500));
+        selectSensors.addStep(new Animation.Step(selectSensors, () ->
+                sensor.setBackgroundColor(Color.argb(50, 0, 0, 0)), 500));
 
         final View searchSensor = getLayoutInflater()
                 .inflate(R.layout.search_sensor, container, false);
@@ -319,49 +256,33 @@ public class UsageActivity extends AppCompatActivity
         secondSwitch.setClickable(false);
         layout.addView(sensorListItem, 3);
 
-        selectSensors.addStep(new Animation.Step(selectSensors, new Runnable()
+        selectSensors.addStep(new Animation.Step(selectSensors, () ->
         {
-            @Override
-            public void run()
-            {
-                container.removeAllViews();
-                container.addView(searchSensor);
-                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            }
+            container.removeAllViews();
+            container.addView(searchSensor);
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }, 250));
 
-        selectSensors.addStep(new Animation.Step(selectSensors, new Runnable()
+        selectSensors.addStep(new Animation.Step(selectSensors, () ->
         {
-            @Override
-            public void run()
-            {
-                firstSwitch.setChecked(true);
-                firstSwitch.setText(R.string.sensor_tracked);
-            }
+            firstSwitch.setChecked(true);
+            firstSwitch.setText(R.string.sensor_tracked);
         }, 500));
 
-        selectSensors.addStep(new Animation.Step(selectSensors, new Runnable()
+        selectSensors.addStep(new Animation.Step(selectSensors, () ->
         {
-            @Override
-            public void run()
-            {
-                secondSwitch.setChecked(true);
-                secondSwitch.setText(R.string.sensor_tracked);
-            }
+            secondSwitch.setChecked(true);
+            secondSwitch.setText(R.string.sensor_tracked);
         }, 500));
 
-        selectSensors.addStep(new Animation.Step(selectSensors, new Runnable()
+        selectSensors.addStep(new Animation.Step(selectSensors, () ->
         {
-            @Override
-            public void run()
-            {
-                firstSwitch.setChecked(false);
-                firstSwitch.setText(R.string.sensor_not_tracked);
-                secondSwitch.setChecked(false);
-                secondSwitch.setText(R.string.sensor_not_tracked);
-                container.removeAllViews();
-                container.addView(sensorTracking);
-            }
+            firstSwitch.setChecked(false);
+            firstSwitch.setText(R.string.sensor_not_tracked);
+            secondSwitch.setChecked(false);
+            secondSwitch.setText(R.string.sensor_not_tracked);
+            container.removeAllViews();
+            container.addView(sensorTracking);
         }, 1000));
 
         return selectSensors;
@@ -394,28 +315,20 @@ public class UsageActivity extends AppCompatActivity
         trackedSensors.addView(trackedSensor2);
 
         sensorTracking.findViewById(R.id.measurement_button).setClickable(false);
-        Animation performMeasurement = new Animation(new Runnable()
+        Animation performMeasurement = new Animation(() ->
         {
-            @Override
-            public void run()
-            {
-                UsageActivity.this.content.removeAllViews();
-                UsageActivity.this.content.addView(drawer);
-                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                container.removeAllViews();
-                container.addView(sensorTracking);
-            }
+            this.content.removeAllViews();
+            this.content.addView(drawer);
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            container.removeAllViews();
+            container.addView(sensorTracking);
         }, R.string.perform_measurement_description);
 
         final Button startMeasurement = sensorTracking.findViewById(R.id.measurement_button);
-        performMeasurement.addStep(new Animation.Step(performMeasurement, new Runnable()
+        performMeasurement.addStep(new Animation.Step(performMeasurement, () ->
         {
-            @Override
-            public void run()
-            {
-                startMeasurement.performClick();
-                startMeasurement.setPressed(true);
-            }
+            startMeasurement.performClick();
+            startMeasurement.setPressed(true);
         }, 500));
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -428,14 +341,7 @@ public class UsageActivity extends AppCompatActivity
         final AlertDialog dialog = dialogBuilder.create();
         dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
-        performMeasurement.addStep(new Animation.Step(performMeasurement, new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                dialog.show();
-            }
-        }, 250));
+        performMeasurement.addStep(new Animation.Step(performMeasurement, () -> dialog.show(), 250));
 
         final View sensorOverview = sensorTracking.findViewById(R.id.sensor_overview);
         final View actionOverview = sensorTracking.findViewById(R.id.action_overview);
@@ -449,56 +355,32 @@ public class UsageActivity extends AppCompatActivity
         view.setVisibility(View.INVISIBLE);
         gridLayout.addView(view);
         final TextView time = sensorTracking.findViewById(R.id.measurement_time);
-        performMeasurement.addStep(new Animation.Step(performMeasurement, new Runnable()
+        performMeasurement.addStep(new Animation.Step(performMeasurement, () ->
         {
-            @Override
-            public void run()
-            {
-                dialog.hide();
-                sensorOverview.setVisibility(View.GONE);
-                actionOverview.setVisibility(View.VISIBLE);
-                time.setText("00:00");
-            }
+            dialog.hide();
+            sensorOverview.setVisibility(View.GONE);
+            actionOverview.setVisibility(View.VISIBLE);
+            time.setText("00:00");
         }, 500));
 
-        performMeasurement.addStep(new Animation.Step(performMeasurement, new Runnable()
+        performMeasurement.addStep(new Animation.Step(performMeasurement, () ->
         {
-            @Override
-            public void run()
-            {
-                button.performClick();
-                button.getBackground().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
-            }
+            button.performClick();
+            button.getBackground().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
         }, 500));
 
-        performMeasurement.addStep(new Animation.Step(performMeasurement, new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                time.setText("00:01");
-            }
-        }, 500));
+        performMeasurement.addStep(new Animation.Step(performMeasurement, () -> time.setText("00:01")
+                , 500));
 
-        performMeasurement.addStep(new Animation.Step(performMeasurement, new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                time.setText("00:02");
-            }
-        }, 1000));
+        performMeasurement.addStep(new Animation.Step(performMeasurement, () -> time.setText("00:02")
+                , 1000));
 
-        performMeasurement.addStep(new Animation.Step(performMeasurement, new Runnable()
+        performMeasurement.addStep(new Animation.Step(performMeasurement, () ->
         {
-            @Override
-            public void run()
-            {
-                sensorOverview.setVisibility(View.VISIBLE);
-                actionOverview.setVisibility(View.GONE);
-                time.setText("--:--");
-                button.getBackground().clearColorFilter();
-            }
+            sensorOverview.setVisibility(View.VISIBLE);
+            actionOverview.setVisibility(View.GONE);
+            time.setText("--:--");
+            button.getBackground().clearColorFilter();
         }, 500));
 
         return performMeasurement;
