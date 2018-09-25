@@ -66,7 +66,8 @@ public class MeasurementService extends Service implements ScanResultListener
               notificationManager.cancel(sensorData.getSensorID() << 1);
           }
 
-          if (sensorData.isBatteryLow())
+          if (sensorData.isBatteryLow() && Constants.SENSOR_DATA_TIMEOUT >= difference &&
+                  Long.MAX_VALUE != sensorData.getTimestamp())
           {
               Notification notification = WCN2Notifications.buildSensorBatteryLowNotification(context,
                       sensorData.getSensorID(), sensorData.getMnemonic());
