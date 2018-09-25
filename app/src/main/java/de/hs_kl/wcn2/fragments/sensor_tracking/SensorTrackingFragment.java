@@ -10,15 +10,12 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,20 +31,16 @@ import de.hs_kl.wcn2.ble_scanner.SensorData;
 import de.hs_kl.wcn2.util.Constants;
 import de.hs_kl.wcn2.util.DefinedActionStorage;
 import de.hs_kl.wcn2.util.TrackedSensorsStorage;
-import de.hs_kl.wcn2.util.LastSeenSinceUtil;
 
 public class SensorTrackingFragment extends Fragment implements ScanResultListener
 {
     private boolean tracking = false;
     private long trackingStartTime;
 
-    private List<SensorData> trackedSensors;
     private Handler uiUpdater = new Handler();
     private Button action;
     private Button measurementButton;
     private TextView measurementTime;
-    private CardView sensorOverview;
-    private LinearLayout trackedSensorViews;
     private ScrollView actionOverview;
     private GridLayout actions;
 
@@ -55,11 +48,13 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     private TrackedSensorsStorage trackedSensorsStorage;
     private DefinedActionStorage definedActions;
 
+    private TrackedSensorsOverview trackedSensorsOverview;
+
     @Override
     public List<ScanFilter> getScanFilter()
     {
         List<ScanFilter> scanFilters = new ArrayList<>();
-        for (SensorData sensorData: this.trackedSensors)
+        for (SensorData sensorData: this.trackedSensorsStorage.getTrackedSensors())
         {
             ScanFilter.Builder builder = new ScanFilter.Builder();
             builder.setDeviceAddress(sensorData.getMacAddress());
@@ -71,14 +66,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     @Override
     public void onScanResult(SensorData result)
     {
-        for (int i = 0; this.trackedSensors.size() > i; ++i)
-        {
-            if (this.trackedSensors.get(i).getMacAddress().equals(result.getMacAddress()))
-            {
-                this.trackedSensors.set(i, result);
-                return;
-            }
-        }
+        this.trackedSensorsOverview.addSensor(result);
     }
 
     @Override
@@ -91,8 +79,6 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         this.bleScanner = BLEScanner.getInstance(getActivity());
         this.trackedSensorsStorage = TrackedSensorsStorage.getInstance(getActivity());
         this.definedActions = DefinedActionStorage.getInstance(getActivity());
-
-        this.trackedSensors = this.trackedSensorsStorage.getTrackedSensors();
     }
 
     @Override
@@ -115,8 +101,6 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
                 stopTracking();
             }
         });
-        this.trackedSensorViews = view.findViewById(R.id.tracked_sensors);
-        this.sensorOverview = view.findViewById(R.id.sensor_overview);
         this.actionOverview = view.findViewById(R.id.action_overview);
         this.actionOverview.setVisibility(View.GONE);
         this.actions = this.actionOverview.findViewById(R.id.actions);
@@ -125,6 +109,9 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         ImageButton edit = view.findViewById(R.id.edit_tracked_sensors);
         edit.setOnClickListener((v) ->
                 ((OverviewActivity)getActivity()).changeViewTo(Constants.WCNView.SEARCH_SENSOR));
+
+        this.trackedSensorsOverview = new TrackedSensorsOverview(getActivity(), view.findViewById(R.id.sensor_overview));
+        this.trackedSensorsOverview.show();
 
         return view;
     }
@@ -136,7 +123,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
 
     private boolean ensureAtLeastOneSensorIsTracked()
     {
-        if (0 == this.trackedSensors.size())
+        if (0 == this.trackedSensorsStorage.getTrackedSensors().size())
         {
             Toast.makeText(getActivity(), R.string.no_tracked_sensors, Toast.LENGTH_LONG).show();
             return false;
@@ -168,7 +155,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         this.trackingStartTime = MeasurementService.startTime;
         updateTrackingTime();
 
-        this.sensorOverview.setVisibility(View.GONE);
+        this.trackedSensorsOverview.hide();
         this.actionOverview.setVisibility(View.VISIBLE);
 
         GridLayout actions = this.actionOverview.findViewById(R.id.actions);
@@ -259,7 +246,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         intent.putExtra(Constants.MEASUREMENT_HEADER, header);
         getActivity().startService(intent);
 
-        this.sensorOverview.setVisibility(View.GONE);
+        this.trackedSensorsOverview.hide();
         this.actionOverview.setVisibility(View.VISIBLE);
     }
 
@@ -277,7 +264,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
             this.action.getBackground().clearColorFilter();
         }
 
-        this.sensorOverview.setVisibility(View.VISIBLE);
+        this.trackedSensorsOverview.show();
         this.actionOverview.setVisibility(View.GONE);
     }
 
@@ -310,7 +297,10 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
                 if (!SensorTrackingFragment.this.isVisible()) return;
 
                 updateTrackingTime();
-                showTrackedSensors();
+                if (!SensorTrackingFragment.this.tracking)
+                {
+                    SensorTrackingFragment.this.trackedSensorsOverview.updateViews();
+                }
                 SensorTrackingFragment.this.uiUpdater.postDelayed(this, Constants.UI_UPDATE_INTERVAL);
             }
         });
@@ -325,7 +315,6 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         if (null == this.trackedSensorsStorage || null == this.actionOverview) return;
 
         startUIUpdater();
-        this.trackedSensors = this.trackedSensorsStorage.getTrackedSensors();
         if (null != this.actionOverview)
         {
             addActionToggleButtons();
@@ -346,45 +335,6 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         {
             this.measurementTime.setText(R.string.no_time);
             this.measurementButton.setText(R.string.measurement_button_start);
-        }
-    }
-
-    private void showTrackedSensors()
-    {
-        this.trackedSensorViews.removeAllViews();
-        for (SensorData sensorData: this.trackedSensors)
-        {
-            View tracked_sensor_overview = getActivity().getLayoutInflater()
-                    .inflate(R.layout.tracked_sensor_overview, this.trackedSensorViews, false);
-
-            TextView sensorID = tracked_sensor_overview.findViewById(R.id.sensor_id);
-            sensorID.setText(getResources().getString(R.string.sensor_id, sensorData.getSensorID()));
-            TextView mnemonic = tracked_sensor_overview.findViewById(R.id.mnemonic);
-            mnemonic.setText(getResources().getString(R.string.mnemonic, sensorData.getMnemonic()));
-            if (sensorData.getMnemonic().equals("null"))
-            {
-                mnemonic.setVisibility(View.GONE);
-            }
-            TextView lastSeen = tracked_sensor_overview.findViewById(R.id.last_seen);
-            lastSeen.setText(LastSeenSinceUtil.getTimeSinceString(getActivity(), sensorData.getTimestamp()));
-            TextView temperature = tracked_sensor_overview.findViewById(R.id.temperature);
-            temperature.setText(getResources().getString(R.string.temperature, sensorData.getTemperature()));
-            TextView humidity = tracked_sensor_overview.findViewById(R.id.humidity);
-            humidity.setText(getResources().getString(R.string.humidity, sensorData.getRelativeHumidity()));
-            ImageView batteryLevel = tracked_sensor_overview.findViewById(R.id.battery_level);
-            batteryLevel.setImageDrawable(sensorData.getBatteryLevelDrawable(getResources()));
-            ImageView signalStrength = tracked_sensor_overview.findViewById(R.id.signal_strength);
-            signalStrength.setImageDrawable(sensorData.getSignalStrengthDrawable(getResources()));
-
-            this.trackedSensorViews.addView(tracked_sensor_overview);
-        }
-
-        if (0 == this.trackedSensors.size())
-        {
-            View emptyView = getActivity().getLayoutInflater()
-                    .inflate(R.layout.empty_list_item, this.trackedSensorViews);
-            TextView label = emptyView.findViewById(R.id.label);
-            label.setText(R.string.no_sensors_found);
         }
     }
 }
