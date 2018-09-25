@@ -33,7 +33,9 @@
                 android:id="@+id/measurements"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:divider="@android:color/darker_gray"
+                android:orientation="vertical"
+                android:showDividers="middle">
 
                 <include
                     layout="@layout/empty_list_item"
