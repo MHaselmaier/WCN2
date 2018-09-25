@@ -51,7 +51,8 @@ public class MeasurementService extends Service implements ScanResultListener
               if (!TrackedSensorsStorage.getInstance(context).isTracked(sensorData))
               {
                   MeasurementService.this.trackedSensors.remove(sensorData);
-                  notificationManager.cancel(sensorData.getSensorID());
+                  notificationManager.cancel(sensorData.getSensorID() << 1);
+                  notificationManager.cancel(sensorData.getSensorID() << 1 + 1);
                   continue;
               }
 
@@ -61,11 +62,22 @@ public class MeasurementService extends Service implements ScanResultListener
               {
                   Notification notification = WCN2Notifications.buildSensorDataNotification(context,
                           sensorData.getSensorID(), sensorData.getMnemonic());
-                  notificationManager.notify(sensorData.getSensorID(), notification);
+                  notificationManager.notify(sensorData.getSensorID() << 1, notification);
               }
               else
               {
-                  notificationManager.cancel(sensorData.getSensorID());
+                  notificationManager.cancel(sensorData.getSensorID() << 1);
+              }
+
+              if (sensorData.isBatteryLow())
+              {
+                  Notification notification = WCN2Notifications.buildSensorBatteryLowNotification(context,
+                          sensorData.getSensorID(), sensorData.getMnemonic());
+                  notificationManager.notify(sensorData.getSensorID() << 1 + 1, notification);
+              }
+              else
+              {
+                  notificationManager.cancel(sensorData.getSensorID() << 1 + 1);
               }
           }
 
@@ -153,16 +165,17 @@ public class MeasurementService extends Service implements ScanResultListener
 
         this.handler.removeCallbacks(this.checkSensorDataContinuity);
 
-        cancelNoSensorDataNotifications();
+        cancelAllSensorNotifications();
     }
 
-    private void cancelNoSensorDataNotifications()
+    private void cancelAllSensorNotifications()
     {
         Context context = getBaseContext();
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         for (SensorData sensorData: this.trackedSensors)
         {
-            notificationManager.cancel(sensorData.getSensorID());
+            notificationManager.cancel(sensorData.getSensorID() << 1);
+            notificationManager.cancel(sensorData.getSensorID() << 1 + 1);
         }
     }
 

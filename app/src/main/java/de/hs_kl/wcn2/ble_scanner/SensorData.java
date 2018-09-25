@@ -123,6 +123,14 @@ public class SensorData
         return this.relativeHumidity;
     }
 
+    public boolean isBatteryLow()
+    {
+        float voltage = Math.max(Math.min(this.batteryVoltage, Constants.MAX_VOLTAGE), Constants.MIN_VOLTAGE);
+        float percentage = (voltage - Constants.MIN_VOLTAGE) / (Constants.MAX_VOLTAGE - Constants.MIN_VOLTAGE);
+
+        return (.2 > percentage);
+    }
+
     public Drawable getBatteryLevelDrawable(Resources resources)
     {
         float voltage = Math.max(Math.min(this.batteryVoltage, Constants.MAX_VOLTAGE), Constants.MIN_VOLTAGE);
