@@ -7,7 +7,8 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +18,16 @@ import de.hs_kl.wcn2.ble_scanner.SensorData;
 import de.hs_kl.wcn2.ble_scanner.BLEScanner;
 import de.hs_kl.wcn2.ble_scanner.ScanResultListener;
 import de.hs_kl.wcn2.util.Constants;
+import de.hs_kl.wcn2.util.TrackedSensorsStorage;
 
 public class SearchSensorFragment extends Fragment implements ScanResultListener
 {
-    private FoundSensorAdapter foundSensorAdapter;
     private Handler uiUpdater = new Handler();
     private BLEScanner bleScanner;
+    private LinearLayout foundSensorsContainer;
+    private View emptyListItem;
+    private List<SensorData> foundSensors = new ArrayList<>();
+    private List<FoundSensorView> foundSensorsViews = new ArrayList<>();
 
     @Override
     public List<ScanFilter> getScanFilter()
@@ -33,7 +38,24 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
     @Override
     public void onScanResult(SensorData result)
     {
-        this.foundSensorAdapter.add(result);
+        for (int i = 0; this.foundSensors.size() > i; ++i)
+        {
+            if (this.foundSensors.get(i).getMacAddress().equals(result.getMacAddress()))
+            {
+                this.foundSensors.set(i, result);
+                return;
+            }
+        }
+
+        addSensor(result);
+    }
+
+    private void addSensor(SensorData sensorData)
+    {
+        this.foundSensors.add(sensorData);
+        FoundSensorView view = new FoundSensorView(getActivity(), sensorData);
+        this.foundSensorsViews.add(view);
+        this.foundSensorsContainer.addView(view.getRoot());
     }
 
     @Override
@@ -43,7 +65,6 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
         setHasOptionsMenu(true);
         setRetainInstance(true);
 
-        this.foundSensorAdapter = new FoundSensorAdapter(getActivity());
         this.bleScanner = BLEScanner.getInstance(getActivity());
     }
 
@@ -53,9 +74,15 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
     {
         View view = inflater.inflate(R.layout.search_sensor, container, false);
 
-        ListView foundSensorListView = view.findViewById(R.id.sensors);
-        foundSensorListView.setEmptyView(view.findViewById(R.id.empty_list_item));
-        foundSensorListView.setAdapter(this.foundSensorAdapter);
+        this.foundSensorsContainer = view.findViewById(R.id.sensors);
+        this.emptyListItem = view.findViewById(R.id.empty_list_item);
+        TextView label = this.emptyListItem.findViewById(R.id.label);
+        label.setText(R.string.no_sensors_found);
+
+        for (SensorData sensorData: TrackedSensorsStorage.getInstance(getActivity()).getTrackedSensors())
+        {
+            addSensor(sensorData);
+        }
 
         return view;
     }
@@ -80,16 +107,27 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
             {
                 if (isHidden()) return;
 
-                SearchSensorFragment.this.foundSensorAdapter.notifyDataSetChanged();
+                updateFoundSensorsViews();
                 SearchSensorFragment.this.uiUpdater.postDelayed(this, Constants.UI_UPDATE_INTERVAL);
             }
         });
+    }
+
+    private void updateFoundSensorsViews()
+    {
+        for (int i = 0; this.foundSensors.size() > i; ++i)
+        {
+            this.foundSensorsViews.get(i).updateView(this.foundSensors.get(i));
+        }
+
+        this.emptyListItem.setVisibility(this.foundSensors.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
     @Override
     public void onHiddenChanged(boolean hidden)
     {
         if (hidden) return;
+
 
         startUIUpdater();
     }

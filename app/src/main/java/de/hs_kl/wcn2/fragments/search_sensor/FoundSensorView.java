@@ -9,30 +9,75 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import de.hs_kl.wcn2.R;
+import de.hs_kl.wcn2.ble_scanner.SensorData;
+import de.hs_kl.wcn2.util.LastSeenSinceUtil;
+import de.hs_kl.wcn2.util.TrackedSensorsStorage;
 
 class FoundSensorView
 {
-    public View root;
-    public TextView macAddress;
-    public TextView sensorID;
-    public TextView lastSeen;
-    public TextView mnemonic;
-    public ImageButton mnemonicEdit;
-    public Switch trackSwitch;
-    public ImageView batteryLevel;
-    public ImageView signalStrength;
+    private Context context;
+    private TrackedSensorsStorage trackedSensors;
+    private View root;
+    private TextView lastSeen;
+    private TextView mnemonic;
+    private ImageView batteryLevel;
+    private ImageView signalStrength;
 
-    public FoundSensorView(Context context)
+    public FoundSensorView(Context context, SensorData sensorData)
     {
-        View view = LayoutInflater.from(context).inflate(R.layout.sensor_list_item, null);
-        this.root = view;
-        this.macAddress = view.findViewById(R.id.sensor_mac_address);
-        this.sensorID = view.findViewById(R.id.sensor_id);
-        this.lastSeen = view.findViewById(R.id.last_seen);
-        this.mnemonic = view.findViewById(R.id.mnemonic);
-        this.mnemonicEdit = view.findViewById(R.id.mnemonic_edit);
-        this.trackSwitch = view.findViewById(R.id.sensor_tracked);
-        this.batteryLevel = view.findViewById(R.id.battery_level);
-        this.signalStrength = view.findViewById(R.id.signal_strength);
+        this.context = context;
+        this.trackedSensors = TrackedSensorsStorage.getInstance(this.context);
+        this.root = LayoutInflater.from(this.context).inflate(R.layout.sensor_list_item, null);
+
+        ImageButton mnemonicEdit = this.root.findViewById(R.id.mnemonic_edit);
+        mnemonicEdit.setOnClickListener((v) ->
+                MnemonicEditDialog.buildMnemonicEditDialog(this.context, sensorData).show());
+
+        boolean isTracked = this.trackedSensors.isTracked(sensorData);
+        int labelResourceID = (isTracked ? R.string.sensor_tracked : R.string.sensor_not_tracked);
+        Switch trackSwitch = this.root.findViewById(R.id.sensor_tracked);
+        trackSwitch.setChecked(isTracked);
+        trackSwitch.setText(labelResourceID);
+        trackSwitch.setOnCheckedChangeListener(new SensorTrackedChangeListener(this.context,
+                sensorData));
+
+        TextView macAddress = this.root.findViewById(R.id.sensor_mac_address);
+        macAddress.setText(sensorData.getMacAddress());
+
+        TextView sensorID = this.root.findViewById(R.id.sensor_id);
+        sensorID.setText(this.context.getResources().getString(R.string.sensor_id,
+                sensorData.getSensorID()));
+
+        this.lastSeen = this.root.findViewById(R.id.last_seen);
+        this.mnemonic = this.root.findViewById(R.id.mnemonic);
+        this.batteryLevel = this.root.findViewById(R.id.battery_level);
+        this.signalStrength = this.root.findViewById(R.id.signal_strength);
+
+        updateView(sensorData);
+    }
+
+    public View getRoot()
+    {
+        return this.root;
+    }
+
+    public void updateView(SensorData sensorData)
+    {
+        this.lastSeen.setText(LastSeenSinceUtil.getTimeSinceString(this.context,
+                sensorData.getTimestamp()));
+        this.batteryLevel.setImageDrawable(sensorData
+                .getBatteryLevelDrawable(this.context.getResources()));
+        this.signalStrength.setImageDrawable(sensorData
+                .getSignalStrengthDrawable(this.context.getResources()));
+        String mnemonic = this.trackedSensors.getMnemonic(sensorData.getMacAddress());
+        if (mnemonic.equals("null"))
+        {
+            this.mnemonic.setVisibility(View.GONE);
+        }
+        else
+        {
+            this.mnemonic.setText(this.context.getString(R.string.mnemonic, mnemonic));
+            this.mnemonic.setVisibility(View.VISIBLE);
+        }
     }
 }
