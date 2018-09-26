@@ -24,7 +24,7 @@ public class DefinedActionStorage
 
         Object[] entries = this.actions.getAll().entrySet().toArray();
         Arrays.sort(entries, (o1, o2) ->
-            ((Map.Entry<String, Integer>)o1).getValue() - ((Map.Entry<String, Integer>)o1).getValue()
+            ((Map.Entry<String, Integer>)o1).getValue() - ((Map.Entry<String, Integer>)o2).getValue()
         );
 
         this.cachedData = new ArrayList<>();
