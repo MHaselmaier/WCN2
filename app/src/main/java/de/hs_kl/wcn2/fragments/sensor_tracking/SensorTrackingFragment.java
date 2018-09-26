@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.bluetooth.le.ScanFilter;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Handler;
@@ -14,9 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.GridLayout;
 import android.widget.ImageButton;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +26,6 @@ import de.hs_kl.wcn2.R;
 import de.hs_kl.wcn2.ble_scanner.ScanResultListener;
 import de.hs_kl.wcn2.ble_scanner.SensorData;
 import de.hs_kl.wcn2.util.Constants;
-import de.hs_kl.wcn2.util.DefinedActionStorage;
 import de.hs_kl.wcn2.util.TrackedSensorsStorage;
 
 public class SensorTrackingFragment extends Fragment implements ScanResultListener
@@ -38,17 +34,15 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     private long trackingStartTime;
 
     private Handler uiUpdater = new Handler();
-    private Button action;
+
     private Button measurementButton;
     private TextView measurementTime;
-    private ScrollView actionOverview;
-    private GridLayout actions;
 
     private BLEScanner bleScanner;
     private TrackedSensorsStorage trackedSensorsStorage;
-    private DefinedActionStorage definedActions;
 
     private TrackedSensorsOverview trackedSensorsOverview;
+    private ActionButtonsOverview actionButtonsOverview;
 
     @Override
     public List<ScanFilter> getScanFilter()
@@ -78,7 +72,6 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
 
         this.bleScanner = BLEScanner.getInstance(getActivity());
         this.trackedSensorsStorage = TrackedSensorsStorage.getInstance(getActivity());
-        this.definedActions = DefinedActionStorage.getInstance(getActivity());
     }
 
     @Override
@@ -101,17 +94,17 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
                 stopTracking();
             }
         });
-        this.actionOverview = view.findViewById(R.id.action_overview);
-        this.actionOverview.setVisibility(View.GONE);
-        this.actions = this.actionOverview.findViewById(R.id.actions);
-        addActionToggleButtons();
 
         ImageButton edit = view.findViewById(R.id.edit_tracked_sensors);
         edit.setOnClickListener((v) ->
                 ((OverviewActivity)getActivity()).changeViewTo(Constants.WCNView.SEARCH_SENSOR));
 
-        this.trackedSensorsOverview = new TrackedSensorsOverview(getActivity(), view.findViewById(R.id.sensor_overview));
+        this.trackedSensorsOverview = new TrackedSensorsOverview(getActivity(),
+                view.findViewById(R.id.sensor_overview));
         this.trackedSensorsOverview.show();
+        this.actionButtonsOverview = new ActionButtonsOverview(getActivity(),
+                view.findViewById(R.id.action_overview));
+        this.actionButtonsOverview.hide();
 
         return view;
     }
@@ -156,82 +149,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         updateTrackingTime();
 
         this.trackedSensorsOverview.hide();
-        this.actionOverview.setVisibility(View.VISIBLE);
-
-        GridLayout actions = this.actionOverview.findViewById(R.id.actions);
-        for (int i = 0; actions.getChildCount() > i; ++i)
-        {
-            Button button = actions.getChildAt(i).findViewById(R.id.button);
-            if (null == button) continue;
-
-            if (MeasurementService.action.equals(button.getText().toString()))
-            {
-                this.action = button;
-                this.action.getBackground().setColorFilter(getResources()
-                        .getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
-                return;
-            }
-        }
-    }
-
-    private void addActionToggleButtons()
-    {
-        this.actions.removeAllViews();
-
-        String[] actions = this.definedActions.getDefinedActions();
-        if (0 == actions.length)
-        {
-            getActivity().getLayoutInflater().inflate(R.layout.empty_actions, this.actions);
-            return;
-        }
-
-        for (String action: actions)
-        {
-            this.actions.addView(createActionToggleButton(action));
-        }
-        if (1 == actions.length)
-        {
-            // add extra invisible view so the single button is not spread over the whole screen
-            View view = getActivity().getLayoutInflater()
-                    .inflate(R.layout.action_button, this.actions, false);
-            view.setVisibility(View.INVISIBLE);
-            this.actions.addView(view);
-        }
-    }
-
-    private View createActionToggleButton(String action)
-    {
-        View view = getActivity().getLayoutInflater()
-                .inflate(R.layout.action_button, this.actions, false);
-        Button button = view.findViewById(R.id.button);
-        button.setText(action);
-        button.setOnClickListener((clickedView) ->
-        {
-            if (null != this.action)
-            {
-                this.action.getBackground().clearColorFilter();
-            }
-
-            if (clickedView == this.action)
-            {
-                this.action = null;
-                MeasurementService.action = "";
-            }
-            else
-            {
-                this.action = (Button)clickedView;
-                clickedView.getBackground().setColorFilter(getResources()
-                        .getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
-                MeasurementService.action = this.action.getText().toString();
-            }
-        });
-        if (action.equals(MeasurementService.action))
-        {
-            this.action = button;
-            button.getBackground().setColorFilter(getResources().getColor(R.color.colorPrimary),
-                    PorterDuff.Mode.MULTIPLY);
-        }
-        return view;
+        this.actionButtonsOverview.show();
     }
 
     public void startTracking(String filename, String header)
@@ -247,7 +165,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         getActivity().startService(intent);
 
         this.trackedSensorsOverview.hide();
-        this.actionOverview.setVisibility(View.VISIBLE);
+        this.actionButtonsOverview.show();
     }
 
     private void stopTracking()
@@ -259,13 +177,8 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         this.tracking = false;
         updateTrackingTime();
 
-        if (null != this.action)
-        {
-            this.action.getBackground().clearColorFilter();
-        }
-
         this.trackedSensorsOverview.show();
-        this.actionOverview.setVisibility(View.GONE);
+        this.actionButtonsOverview.hide();
     }
 
     @Override
@@ -312,13 +225,10 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         if (hidden) return;
         // On older devices this method seems to be called even before the onCreate method.
         // In this case the members are not initialized on this method can return.
-        if (null == this.trackedSensorsStorage || null == this.actionOverview) return;
+        if (null == this.trackedSensorsStorage || null == this.actionButtonsOverview) return;
 
         startUIUpdater();
-        if (null != this.actionOverview)
-        {
-            addActionToggleButtons();
-        }
+        this.actionButtonsOverview.updateViews();
     }
 
     private void updateTrackingTime()
