@@ -30,7 +30,7 @@ public class TrackedSensorsOverview
         this.container = this.root.findViewById(R.id.tracked_sensors);
         this.emptyListItem = this.container.findViewById(R.id.empty_list_item);
         TextView label = this.emptyListItem.findViewById(R.id.label);
-        label.setText(R.string.no_sensors_found);
+        label.setText(R.string.no_sensors_tracked);
     }
 
     public void addSensor(SensorData sensorData)

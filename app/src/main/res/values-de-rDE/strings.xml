@@ -18,6 +18,7 @@
     <string name="scan_stated">Suche gestartet...</string>
     <string name="scan_failed">Suche gescheitert!</string>
     <string name="no_sensors_found">Es wurden keine Sensoren gefunden.</string>
+    <string name="no_sensors_tracked">Es werden keine Sensoren verfolgt.</string>
 
     <string name="found_sensors">Gefundene Sensoren:</string>
     <string name="mnemonic">[%1s]</string>
