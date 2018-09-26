@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.location.LocationManager;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.v4.app.NotificationManagerCompat;
 
@@ -35,6 +36,7 @@ public class MeasurementService extends Service implements ScanResultListener
 
     private Measurement measurement;
     private BLEScanner bleScanner;
+    private PowerManager.WakeLock wakeLock;
 
     private List<SensorData> trackedSensors = new ArrayList<>();
     private Handler handler = new Handler();
@@ -118,6 +120,10 @@ public class MeasurementService extends Service implements ScanResultListener
         registerReceiver(this.broadcastReceiver, filter);
 
         this.bleScanner = BLEScanner.getInstance(getBaseContext());
+
+        PowerManager powerManager = (PowerManager)getSystemService(Context.POWER_SERVICE);
+        this.wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+                MeasurementService.class.getSimpleName());
     }
 
     @Override
@@ -148,6 +154,11 @@ public class MeasurementService extends Service implements ScanResultListener
         Notification notification = WCN2Notifications.buildMeasurementNotification(this, header);
         startForeground(Constants.MEASUREMENT_ID, notification);
 
+        if (!this.wakeLock.isHeld())
+        {
+            this.wakeLock.acquire();
+        }
+
         this.trackedSensors = TrackedSensorsStorage.getInstance(getBaseContext()).getTrackedSensors();
         this.handler.removeCallbacks(this.checkSensorDataContinuity);
         this.handler.postDelayed(this.checkSensorDataContinuity, 1000);
@@ -159,6 +170,8 @@ public class MeasurementService extends Service implements ScanResultListener
         this.bleScanner.unregisterScanResultListener(this);
         MeasurementService.action = "";
         MeasurementService.startTime = Long.MIN_VALUE;
+
+        this.wakeLock.release();
 
         this.handler.removeCallbacks(this.checkSensorDataContinuity);
 
