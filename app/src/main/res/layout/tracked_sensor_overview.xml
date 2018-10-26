@@ -6,12 +6,13 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="horizontal"
         android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:paddingTop="5dp">
+        android:paddingTop="5dp"
+        android:paddingRight="5dp">
 
         <ImageView
             android:id="@+id/sensor_warning"
@@ -20,59 +21,47 @@
             android:contentDescription="@string/sensor_warning"
             android:scaleType="fitCenter"
             android:tint="@android:color/holo_orange_light"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_sensor_warning" />
 
         <TextView
             android:id="@+id/sensor_id"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/sensor_warning"
-            app:layout_constraintTop_toTopOf="parent"
             tools:text="WCN1" />
 
         <TextView
             android:id="@+id/mnemonic"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginStart="5dp"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/sensor_id"
-            app:layout_constraintTop_toTopOf="parent"
             tools:text="[Linker Arm]" />
 
         <TextView
             android:id="@+id/last_seen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:text="@string/sensor_not_seen"
+            android:textAlignment="textEnd"
             android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </android.support.constraint.ConstraintLayout>
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="5dp">
 
         <TextView
             android:id="@+id/temperature"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:textAlignment="center"
             android:textSize="16sp"
@@ -81,7 +70,7 @@
         <TextView
             android:id="@+id/humidity"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:textAlignment="center"
             android:textSize="16sp"
@@ -89,13 +78,13 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1">
 
             <ImageView
                 android:id="@+id/battery_level"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:contentDescription="@string/batterylevel"
                 android:tint="@color/colorPrimaryDark"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -107,7 +96,7 @@
             <ImageView
                 android:id="@+id/signal_strength"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:contentDescription="@string/signalstrength"
                 android:tint="@color/colorPrimaryDark"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -118,11 +107,5 @@
         </android.support.constraint.ConstraintLayout>
 
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="5dp"
-        android:background="?android:attr/listDivider" />
 
 </LinearLayout>

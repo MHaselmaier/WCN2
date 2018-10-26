@@ -55,9 +55,7 @@ public class MeasurementService extends Service implements ScanResultListener
               continue;
           }
 
-          long difference = System.currentTimeMillis() - sensorData.getTimestamp();
-          if (Constants.SENSOR_DATA_TIMEOUT < difference ||
-                  Long.MAX_VALUE == sensorData.getTimestamp())
+          if (sensorData.isTimedOut())
           {
               Notification notification = WCN2Notifications.buildSensorDataNotification(context,
                       sensorData.getSensorID(), sensorData.getMnemonic());
@@ -68,8 +66,7 @@ public class MeasurementService extends Service implements ScanResultListener
               notificationManager.cancel(sensorData.getSensorID() << 1);
           }
 
-          if (sensorData.isBatteryLow() && Constants.SENSOR_DATA_TIMEOUT >= difference &&
-                  Long.MAX_VALUE != sensorData.getTimestamp())
+          if (sensorData.isBatteryLow())
           {
               Notification notification = WCN2Notifications.buildSensorBatteryLowNotification(context,
                       sensorData.getSensorID(), sensorData.getMnemonic());

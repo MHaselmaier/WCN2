@@ -1,13 +1,11 @@
 package de.hs_kl.wcn2.ble_scanner;
 
 import android.bluetooth.le.ScanResult;
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 
 import de.hs_kl.wcn2.R;
 import de.hs_kl.wcn2.util.Constants;
-import de.hs_kl.wcn2.util.TrackedSensorsStorage;
 
 public class SensorData
 {
@@ -125,6 +123,8 @@ public class SensorData
 
     public boolean isBatteryLow()
     {
+        if (isTimedOut()) return false;
+
         float voltage = Math.max(Math.min(this.batteryVoltage, Constants.MAX_VOLTAGE), Constants.MIN_VOLTAGE);
         float percentage = (voltage - Constants.MIN_VOLTAGE) / (Constants.MAX_VOLTAGE - Constants.MIN_VOLTAGE);
 
@@ -174,6 +174,13 @@ public class SensorData
     public void setMnemonic(String mnemonic)
     {
         this.mnemonic = mnemonic;
+    }
+
+    public boolean isTimedOut()
+    {
+        if (Long.MAX_VALUE == this.timestamp) return true;
+
+        return (Constants.SENSOR_DATA_TIMEOUT < System.currentTimeMillis() - this.timestamp);
     }
 
     public String toString()

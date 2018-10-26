@@ -14,19 +14,21 @@ public class TrackedSensorView
 {
     private Context context;
     private View root;
+    private ImageView warning;
     private TextView sensorID;
     private TextView mnemonic;
     private TextView lastSeen;
     private TextView temperature;
     private TextView humidity;
     private ImageView batteryLevel;
-    private  ImageView signalStrength;
+    private ImageView signalStrength;
 
     public TrackedSensorView(Context context, SensorData sensorData)
     {
         this.context = context;
         this.root = LayoutInflater.from(this.context).inflate(R.layout.tracked_sensor_overview, null);
 
+        this.warning = this.root.findViewById(R.id.sensor_warning);
         this.sensorID = this.root.findViewById(R.id.sensor_id);
         this.mnemonic = this.root.findViewById(R.id.mnemonic);
         this.lastSeen = this.root.findViewById(R.id.last_seen);
@@ -40,6 +42,15 @@ public class TrackedSensorView
 
     public void updateView(SensorData sensorData)
     {
+        if (sensorData.isTimedOut() || sensorData.isBatteryLow())
+        {
+            this.warning.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            this.warning.setVisibility(View.GONE);
+        }
+
         this.sensorID.setText(this.context.getResources().getString(R.string.sensor_id,
                 sensorData.getSensorID()));
 
