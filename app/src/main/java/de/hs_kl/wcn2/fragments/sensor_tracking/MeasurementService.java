@@ -144,7 +144,7 @@ public class MeasurementService extends Service implements ScanResultListener
         this.bleScanner.registerScanResultListener(this);
         String filename = intent.getStringExtra(Constants.MEASUREMENT_FILENAME);
         String header = intent.getStringExtra(Constants.MEASUREMENT_HEADER);
-        this.measurement = new Measurement(header, filename);
+        this.measurement = new Measurement(getBaseContext(), header, filename);
         MeasurementService.action = "";
         MeasurementService.startTime = System.currentTimeMillis();
 

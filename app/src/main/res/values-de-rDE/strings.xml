@@ -61,6 +61,7 @@
     <string name="mnemonic_comment">Kommentar !</string>
     <string name="no_measurements_saved">Keine Messungen gespeichert.</string>
 
+    <string name="failed_to_create_file">Messdatei konnte nicht erstellt werde!</string>
     <string name="saved_measurements">Gespeicherte Messungen:</string>
     <string name="more">Mehr</string>
     <string name="open">Öffnen</string>

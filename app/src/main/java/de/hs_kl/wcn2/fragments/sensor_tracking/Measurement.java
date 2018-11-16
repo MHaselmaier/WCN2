@@ -1,20 +1,25 @@
 package de.hs_kl.wcn2.fragments.sensor_tracking;
 
+import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import de.hs_kl.wcn2.R;
 import de.hs_kl.wcn2.ble_scanner.SensorData;
 import de.hs_kl.wcn2.util.Constants;
+import de.hs_kl.wcn2.util.TrackedSensorsStorage;
 
 public class Measurement
 {
     private static final int WRITING_BUFFER = 3;
 
+    private Context context;
     private String header;
     private String filename;
     private PrintWriter writer;
@@ -25,14 +30,27 @@ public class Measurement
     private final long startTimestamp;
     private long lastWrittenTimestamp;
 
-    public Measurement(String header, String filename)
+    public Measurement(Context context, String header, String filename)
     {
+        this.context = context;
+
         this.header = header;
         this.filename = filename;
+
+        initializeSensorMap();
         openWriter();
+        writeHeader();
 
         this.startTimestamp = System.currentTimeMillis() / 1000;
         this.lastWrittenTimestamp = this.startTimestamp - 1;
+    }
+
+    private void initializeSensorMap()
+    {
+        for (SensorData sensor: TrackedSensorsStorage.getInstance(this.context).getTrackedSensors())
+        {
+            this.sensors.put(sensor.getSensorID(), sensor);
+        }
     }
 
     private void openWriter()
@@ -58,6 +76,7 @@ public class Measurement
         catch(Exception e)
         {
             Log.e(Measurement.class.getSimpleName(), "Failed to create measurement output stream!");
+            Toast.makeText(this.context, R.string.failed_to_create_file, Toast.LENGTH_LONG).show();
         }
     }
 
