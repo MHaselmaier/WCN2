@@ -104,9 +104,9 @@ public class UsageActivity extends AppCompatActivity
         final View sensorTracking = getLayoutInflater()
                 .inflate(R.layout.sensor_tracking, container, false);
         LinearLayout trackedSensorViews = sensorTracking.findViewById(R.id.tracked_sensors);
-        View emptyView = getLayoutInflater().inflate(R.layout.empty_list_item, trackedSensorViews);
-        TextView label = emptyView.findViewById(R.id.label);
-        label.setText(R.string.no_sensors_found);
+        View emptyView = trackedSensorViews.findViewById(R.id.empty_list_item);
+        emptyView.setVisibility(View.VISIBLE);
+        ((TextView)emptyView.findViewById(R.id.label)).setText(R.string.no_sensors_found);
         sensorTracking.findViewById(R.id.measurement_button).setClickable(false);
         Animation introduction = new Animation(() ->
         {
@@ -132,9 +132,9 @@ public class UsageActivity extends AppCompatActivity
                 .inflate(R.layout.sensor_tracking, container, false);
         sensorTracking.findViewById(R.id.measurement_button).setClickable(false);
         LinearLayout trackedSensorViews = sensorTracking.findViewById(R.id.tracked_sensors);
-        View emptyView = getLayoutInflater().inflate(R.layout.empty_list_item, trackedSensorViews);
-        TextView label = emptyView.findViewById(R.id.label);
-        label.setText(R.string.no_sensors_found);
+        View emptyView = trackedSensorViews.findViewById(R.id.empty_list_item);
+        emptyView.setVisibility(View.VISIBLE);
+        ((TextView)emptyView.findViewById(R.id.label)).setText(R.string.no_sensors_found);
         Animation createAction = new Animation(() ->
         {
             this.content.removeAllViews();
@@ -159,8 +159,7 @@ public class UsageActivity extends AppCompatActivity
         final View actions = getLayoutInflater().inflate(R.layout.actions, container, false);
         emptyView = getLayoutInflater().inflate(R.layout.empty_list_item, actions.findViewById(
                 R.id.actions));
-        label = emptyView.findViewById(R.id.label);
-        label.setText(R.string.no_actions_defined);
+        ((TextView)emptyView.findViewById(R.id.label)).setText(R.string.no_actions_defined);
         createAction.addStep(new Animation.Step(createAction, () ->
         {
             container.removeAllViews();
@@ -208,9 +207,9 @@ public class UsageActivity extends AppCompatActivity
                 .inflate(R.layout.sensor_tracking, container, false);
         sensorTracking.findViewById(R.id.measurement_button).setClickable(false);
         LinearLayout trackedSensorViews = sensorTracking.findViewById(R.id.tracked_sensors);
-        View emptyView = getLayoutInflater().inflate(R.layout.empty_list_item, trackedSensorViews);
-        TextView label = emptyView.findViewById(R.id.label);
-        label.setText(R.string.no_sensors_found);
+        View emptyView = trackedSensorViews.findViewById(R.id.empty_list_item);
+        emptyView.setVisibility(View.VISIBLE);
+        ((TextView)emptyView.findViewById(R.id.label)).setText(R.string.no_sensors_found);
         Animation selectSensors = new Animation(() ->
         {
             this.content.removeAllViews();
@@ -298,6 +297,7 @@ public class UsageActivity extends AppCompatActivity
                 .inflate(R.layout.sensor_tracking, container, false);
         LinearLayout trackedSensors = sensorTracking.findViewById(R.id.tracked_sensors);
         View trackedSensor1 = getLayoutInflater().inflate(R.layout.tracked_sensor_overview, trackedSensors);
+        trackedSensor1.findViewById(R.id.sensor_warning).setVisibility(View.GONE);
         ((TextView)trackedSensor1.findViewById(R.id.sensor_id)).setText("WCN1");
         ((TextView)trackedSensor1.findViewById(R.id.last_seen)).setText(getString(R.string.sensor_last_seen) + getResources().getString(R.string.sensor_seen_just_now));
         ((TextView)trackedSensor1.findViewById(R.id.temperature)).setText("21,5 °C");
@@ -306,6 +306,7 @@ public class UsageActivity extends AppCompatActivity
         ((ImageView)trackedSensor1.findViewById(R.id.signal_strength)).setImageDrawable(getDrawable(R.drawable.ic_signal_100));
 
         View trackedSensor2 = getLayoutInflater().inflate(R.layout.tracked_sensor_overview, trackedSensors, false);
+        trackedSensor2.findViewById(R.id.sensor_warning).setVisibility(View.GONE);
         ((TextView)trackedSensor2.findViewById(R.id.sensor_id)).setText("WCN3");
         ((TextView)trackedSensor2.findViewById(R.id.last_seen)).setText(getString(R.string.sensor_last_seen) + getResources().getString(R.string.sensor_seen_just_now));
         ((TextView)trackedSensor2.findViewById(R.id.temperature)).setText("21,4 °C");
