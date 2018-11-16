@@ -56,6 +56,7 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
         FoundSensorView view = new FoundSensorView(getActivity(), sensorData);
         this.foundSensorsViews.add(view);
         this.foundSensorsContainer.addView(view.getRoot());
+        updateFoundSensorsViews();
     }
 
     @Override
