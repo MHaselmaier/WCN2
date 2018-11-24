@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,8 +51,19 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         List<ScanFilter> scanFilters = new ArrayList<>();
         for (SensorData sensorData: this.trackedSensorsStorage.getTrackedSensors())
         {
+            Log.d("ok", "fuck" + sensorData.getMacAddress());
             ScanFilter.Builder builder = new ScanFilter.Builder();
             builder.setDeviceAddress(sensorData.getMacAddress());
+            scanFilters.add(builder.build());
+        }
+
+        if (0 == scanFilters.size())
+        {
+            // If no sensors are tracked, no filters will be set.
+            // This results in showing all found sensors.
+            // Therefor add a dummy filter, so no sensor will be accepted:
+            ScanFilter.Builder builder = new ScanFilter.Builder();
+            builder.setDeviceAddress("00:00:00:00:00:00");
             scanFilters.add(builder.build());
         }
         return scanFilters;
