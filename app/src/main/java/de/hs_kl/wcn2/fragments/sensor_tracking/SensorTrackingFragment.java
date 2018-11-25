@@ -51,7 +51,6 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         List<ScanFilter> scanFilters = new ArrayList<>();
         for (SensorData sensorData: this.trackedSensorsStorage.getTrackedSensors())
         {
-            Log.d("ok", "fuck" + sensorData.getMacAddress());
             ScanFilter.Builder builder = new ScanFilter.Builder();
             builder.setDeviceAddress(sensorData.getMacAddress());
             scanFilters.add(builder.build());
