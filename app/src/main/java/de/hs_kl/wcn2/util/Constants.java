@@ -35,7 +35,7 @@ public class Constants
     public static final String SENSOR_DATA_CHANNEL_ID = "sensor_data_channel_id";
     public static final String SENSOR_BATTERY_LOW_CHANNEL_ID = "sensor_battery_low_channel_id";
 
-    public static final int UI_UPDATE_INTERVAL = 2000;
+    public static final int UI_UPDATE_INTERVAL = 1000;
 
     public static final int SENSOR_DATA_TIMEOUT = 10000;
 
