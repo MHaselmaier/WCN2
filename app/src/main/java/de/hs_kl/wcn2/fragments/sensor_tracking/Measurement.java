@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -71,7 +72,7 @@ public class Measurement
             file.getParentFile().mkdirs();
             file.createNewFile();
 
-            this.writer = new PrintWriter(file);
+            this.writer = new PrintWriter(file, StandardCharsets.UTF_16.name());
         }
         catch(Exception e)
         {

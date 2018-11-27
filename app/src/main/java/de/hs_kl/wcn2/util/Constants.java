@@ -23,7 +23,7 @@ public class Constants
 
     public static final String DEFINED_ACTIONS = "defined_actions";
 
-    public static final String DATA_DIRECTORY_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + File.separator + "BLE_DATA";
+    public static final String DATA_DIRECTORY_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + File.separator + "WCN2";
     public static final String FILE_PROVIDER_AUTHORITY = "de.hs_kl.fileprovider";
     public static final String MEASUREMENT_DATA_TYPE = "text/plain";
 
