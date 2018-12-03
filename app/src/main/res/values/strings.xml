@@ -15,7 +15,7 @@
 
     <string name="scan_again">Search again</string>
     <string name="scan_for_sensors">Search for sensors</string>
-    <string name="scan_stated">Searching...</string>
+    <string name="scan_stated">Searching&#8230;</string>
     <string name="scan_failed">Searching failed!</string>
     <string name="no_sensors_found">No sensors found.</string>
     <string name="no_sensors_tracked">No sensors tracked.</string>
@@ -55,8 +55,13 @@
     <string name="cancel">Cancel</string>
     <string name="measurement_header">Start Measurement</string>
     <string name="measurement_filename">Filename:</string>
+    <string name="measurement_date_format" translatable="false">ddMMyyyy_HHmmss</string>
     <string name="measurement_description">Description:</string>
     <string name="measurement_comment">Here you can describe the measurement. It will be saved inside the resulting file as an header.</string>
+    <string name="create_reduced_file">Create reduced file:</string>
+    <string name="average_every">Average every</string>
+    <string name="default_rate" translatable="false">30</string>
+    <string name="seconds">seconds</string>
     <string name="mnemonic_header">Mnemonic:</string>
     <string name="mnemonic_comment">Comment !</string>
     <string name="no_measurements_saved">No Measurements saved.</string>
@@ -80,7 +85,7 @@
 
     <string name="measurement_channel_name">Measurements</string>
     <string name="measurement_channel_description">Currently the sensor data is recorded and will be saved to a measurement file.</string>
-    <string name="measurement_notification_title">Measurement is ongoing...</string>
+    <string name="measurement_notification_title">Measurement is ongoing&#8230;</string>
     <string name="sensor_data_channel_name">No Sensor Data</string>
     <string name="sensor_data_channel_description">No data is currently received from one or more tracked sensors. The battery may be empty or the sensor is out of range.</string>
     <string name="sensor_data_content">No Data currently received from WCN%1$d!</string>
@@ -107,5 +112,5 @@
     <string name="select_tracked_sensors_description">Select the sensors which should be tracked during the measurements.</string>
     <string name="perform_measurement_description">Start the measurement and select the currently performed action.</string>
 
-    <string name="version_info">18.11b</string>
+    <string name="version_info" translatable="false">18.11b</string>
 </resources>

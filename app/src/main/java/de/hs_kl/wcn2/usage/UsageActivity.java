@@ -234,10 +234,15 @@ public class UsageActivity extends AppCompatActivity
         LinearLayout layout = searchSensor.findViewById(R.id.layout);
         layout.removeView(layout.findViewById(R.id.empty_list_item));
 
+        Drawable battery = getDrawable(R.drawable.ic_battery_full);
+        Drawable signal = getDrawable(R.drawable.ic_signal_100);
+
         View sensorListItem = getLayoutInflater()
                 .inflate(R.layout.sensor_list_item, container, false);
         ((TextView)sensorListItem.findViewById(R.id.sensor_id)).setText("WCN1");
         ((TextView)sensorListItem.findViewById(R.id.sensor_mac_address)).setText("1A:6E:64:F0:68:7A");
+        ((ImageView)sensorListItem.findViewById(R.id.battery_level)).setImageDrawable(battery);
+        ((ImageView)sensorListItem.findViewById(R.id.signal_strength)).setImageDrawable(signal);
         final Switch firstSwitch = sensorListItem.findViewById(R.id.sensor_tracked);
         firstSwitch.setClickable(false);
         layout.addView(sensorListItem, 1);
@@ -245,12 +250,16 @@ public class UsageActivity extends AppCompatActivity
         sensorListItem = getLayoutInflater().inflate(R.layout.sensor_list_item, container, false);
         ((TextView)sensorListItem.findViewById(R.id.sensor_id)).setText("WCN2");
         ((TextView)sensorListItem.findViewById(R.id.sensor_mac_address)).setText("D9:0A:58:E0:99:E5");
+        ((ImageView)sensorListItem.findViewById(R.id.battery_level)).setImageDrawable(battery);
+        ((ImageView)sensorListItem.findViewById(R.id.signal_strength)).setImageDrawable(signal);
         sensorListItem.findViewById(R.id.sensor_tracked).setClickable(false);
         layout.addView(sensorListItem, 2);
 
         sensorListItem = getLayoutInflater().inflate(R.layout.sensor_list_item, container, false);
         ((TextView)sensorListItem.findViewById(R.id.sensor_id)).setText("WCN3");
         ((TextView)sensorListItem.findViewById(R.id.sensor_mac_address)).setText("C7:45:1B:C8:8F:90");
+        ((ImageView)sensorListItem.findViewById(R.id.battery_level)).setImageDrawable(battery);
+        ((ImageView)sensorListItem.findViewById(R.id.signal_strength)).setImageDrawable(signal);
         final Switch secondSwitch = sensorListItem.findViewById(R.id.sensor_tracked);
         secondSwitch.setClickable(false);
         layout.addView(sensorListItem, 3);
@@ -336,6 +345,7 @@ public class UsageActivity extends AppCompatActivity
         View dialogView = getLayoutInflater().inflate(R.layout.measurement_dialog, container, false);
         dialogView.findViewById(R.id.measurement_filename).setEnabled(false);
         dialogView.findViewById(R.id.measurement_header).setEnabled(false);
+        dialogView.findViewById(R.id.average).setEnabled(false);
         dialogBuilder.setView(dialogView);
         dialogBuilder.setPositiveButton(R.string.ok, null);
         dialogBuilder.setNegativeButton(R.string.cancel, null);

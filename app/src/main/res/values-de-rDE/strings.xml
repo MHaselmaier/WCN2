@@ -15,7 +15,7 @@
 
     <string name="scan_again">Erneut suchen</string>
     <string name="scan_for_sensors">Nach Sensoren suchen</string>
-    <string name="scan_stated">Suche gestartet...</string>
+    <string name="scan_stated">Suche gestartet&#8230;</string>
     <string name="scan_failed">Suche gescheitert!</string>
     <string name="no_sensors_found">Es wurden keine Sensoren gefunden.</string>
     <string name="no_sensors_tracked">Es werden keine Sensoren verfolgt.</string>
@@ -57,6 +57,9 @@
     <string name="measurement_filename">Dateiname:</string>
     <string name="measurement_description">Beschreibung:</string>
     <string name="measurement_comment">Hier können Sie eine Beschreibung der Messung angeben, welche als Kopfzeile in die Messungs-Datei eingefügt wird</string>
+    <string name="create_reduced_file">Reduzierte Datei erstellen:</string>
+    <string name="average_every">Mittelung alle</string>
+    <string name="seconds">Sekunden</string>
     <string name="mnemonic_header">Mnemonic:</string>
     <string name="mnemonic_comment">Kommentar !</string>
     <string name="no_measurements_saved">Keine Messungen gespeichert.</string>
@@ -80,7 +83,7 @@
 
     <string name="measurement_channel_name">Messungen</string>
     <string name="measurement_channel_description">Aktuell werden die Sensor Daten aufgezeichent und später in einer Messungs-Datei gespeichert.</string>
-    <string name="measurement_notification_title">Messung wird ausgeführt...</string>
+    <string name="measurement_notification_title">Messung wird ausgeführt&#8230;</string>
     <string name="sensor_data_channel_name">Keine Sensor Daten</string>
     <string name="sensor_data_channel_description">Aktuell werden keine Daten von einem oder mehreren verfolgten Sensoren empfangen. Die Batterie könnte leer sein, oder die Sensoren liegen außer Reichweite.</string>
     <string name="sensor_data_content">Aktuell werden keine Daten von WCN%1$d empfangen!</string>

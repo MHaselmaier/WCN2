@@ -163,7 +163,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         this.actionButtonsOverview.show();
     }
 
-    public void startTracking(String filename, String header)
+    public void startTracking(String filename, String header, int averageRate)
     {
         this.tracking = true;
         this.trackingStartTime = System.currentTimeMillis();
@@ -173,6 +173,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         intent.setAction(MeasurementService.ACTION_START);
         intent.putExtra(Constants.MEASUREMENT_FILENAME, filename);
         intent.putExtra(Constants.MEASUREMENT_HEADER, header);
+        intent.putExtra(Constants.MEASUREMENT_RATE, averageRate);
         getActivity().startService(intent);
 
         this.trackedSensorsOverview.hide();

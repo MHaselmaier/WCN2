@@ -23,6 +23,7 @@ public class Measurement
     private Context context;
     private String header;
     private String filename;
+    private int averageRate;
     private PrintWriter writer;
 
     private SortedMap<Byte, SensorData> sensors = new TreeMap<>();
@@ -31,16 +32,17 @@ public class Measurement
     private final long startTimestamp;
     private long lastWrittenTimestamp;
 
-    public Measurement(Context context, String header, String filename)
+    public Measurement(Context context, String header, String filename, int averageRate)
     {
         this.context = context;
 
         this.header = header;
         this.filename = filename;
+        this.averageRate = averageRate;
 
         initializeSensorMap();
-        openWriter();
-        writeHeader();
+        this.writer = openWriter(this.writer, this.filename, this.context);
+        writeHeader(this.writer);
 
         this.startTimestamp = System.currentTimeMillis() / 1000;
         this.lastWrittenTimestamp = this.startTimestamp - 1;
@@ -51,33 +53,6 @@ public class Measurement
         for (SensorData sensor: TrackedSensorsStorage.getInstance(this.context).getTrackedSensors())
         {
             this.sensors.put(sensor.getSensorID(), sensor);
-        }
-    }
-
-    private void openWriter()
-    {
-        if (null != this.writer)
-        {
-            this.writer.close();
-        }
-
-        try
-        {
-            if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                throw new Exception();
-            }
-
-            File file = new File(Constants.DATA_DIRECTORY_PATH + File.separator +
-                    this.filename + ".txt");
-            file.getParentFile().mkdirs();
-            file.createNewFile();
-
-            this.writer = new PrintWriter(file, StandardCharsets.UTF_16.name());
-        }
-        catch(Exception e)
-        {
-            Log.e(Measurement.class.getSimpleName(), "Failed to create measurement output stream!");
-            Toast.makeText(this.context, R.string.failed_to_create_file, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -114,7 +89,7 @@ public class Measurement
             this.writer.format("%.2f", relativeTimeInMinutes);
 
             SortedMap<Byte, SensorData> currentTimestampData = this.data.get(timestamp);
-            for (byte sensorID: this.sensors.keySet())
+            for (byte sensorID : this.sensors.keySet())
             {
                 if (!currentTimestampData.containsKey(sensorID))
                 {
@@ -136,38 +111,121 @@ public class Measurement
     private void handleNewSensor(SensorData sensorData)
     {
         this.sensors.put(sensorData.getSensorID(), sensorData);
-        openWriter();
+        this.writer = openWriter(this.writer, this.filename, this.context);
+        writeHeader(this.writer);
 
         this.lastWrittenTimestamp = this.startTimestamp - 1;
-        writeHeader();
+        writeDataUntilTimestamp(sensorData.getTimestamp() / 1000 - Measurement.WRITING_BUFFER);
     }
 
-    private void writeHeader()
+    private void writeHeader(PrintWriter writer)
     {
-        this.writer.write(this.header + "\n\n");
+        writer.write(this.header + "\n\n");
 
-        this.writer.write("Sensor ID\tMAC Address\tMnemonic\n");
+        writer.write("Sensor ID\tMAC Address\tMnemonic\n");
         for (SensorData sensorData: this.sensors.values())
         {
-            this.writer.format("%d\t%s\t%s\n", sensorData.getSensorID(), sensorData.getMacAddress(),
+            writer.format("%d\t%s\t%s\n", sensorData.getSensorID(), sensorData.getMacAddress(),
                     sensorData.getMnemonic());
         }
 
-        this.writer.write("\n");
+        writer.write("\n");
 
-        this.writer.write("Time [min]\t");
+        writer.write("Time [min]\t");
         for (byte sensorID: this.sensors.keySet())
         {
-            this.writer.format("Temperature [°C] %d\tRelative Humidity [%%] %d\t", sensorID,
+            writer.format("Temperature [°C] %d\tRelative Humidity [%%] %d\t", sensorID,
                     sensorID);
         }
-        this.writer.write("Action\n");
-        this.writer.flush();
+        writer.write("Action\n");
+        writer.flush();
     }
 
     public synchronized void finish()
     {
         writeDataUntilTimestamp(System.currentTimeMillis() / 1000);
         this.writer.close();
+
+        if (1 < this.averageRate)
+        {
+            createReducedFile();
+        }
+    }
+
+    private void createReducedFile()
+    {
+        PrintWriter writer = openWriter(null, this.filename + "_reduced", this.context);
+        writeHeader(writer);
+
+        long endTimestamp = System.currentTimeMillis() / 1000;
+        long currentTimestamp = this.startTimestamp;
+        while (endTimestamp >= currentTimestamp)
+        {
+            float relativeTimeInMinutes = (currentTimestamp + this.averageRate - this.startTimestamp) / 60f;
+            writer.format("%.2f", relativeTimeInMinutes);
+
+            String action = "";
+            for (byte sensorID: this.sensors.keySet())
+            {
+                int count = 0;
+                float temperature = Float.NaN;
+                float humidity = Float.NaN;
+                for (long t = currentTimestamp; currentTimestamp + this.averageRate > t; ++t)
+                {
+                    if (!this.data.containsKey(t)) continue;
+                    action = this.actions.get(t);
+                    if (!this.data.get(t).containsKey(sensorID)) continue;
+
+                    SensorData sensorData = this.data.get(t).get(sensorID);
+                    ++count;
+                    if (1 == count)
+                    {
+                        temperature = sensorData.getTemperature();
+                        humidity = sensorData.getRelativeHumidity();
+                    }
+                    else
+                    {
+                        temperature = ((count - 1) * temperature + sensorData.getTemperature()) / count;
+                        humidity = ((count - 1) * humidity + sensorData.getRelativeHumidity()) / count;
+                    }
+                }
+                writer.format("\t%.1f\t%.1f", temperature, humidity);
+            }
+
+            currentTimestamp += this.averageRate;
+            writer.format("\t%s\n", action);
+        }
+
+        writer.close();
+    }
+
+    private static PrintWriter openWriter(PrintWriter writer, String filename, Context context)
+    {
+        if (null != writer)
+        {
+            writer.close();
+        }
+
+        try
+        {
+            if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
+            {
+                throw new Exception();
+            }
+
+            File file = new File(Constants.DATA_DIRECTORY_PATH + File.separator +
+                    filename + ".txt");
+            file.getParentFile().mkdirs();
+            file.createNewFile();
+
+            writer = new PrintWriter(file, StandardCharsets.UTF_16.name());
+        }
+        catch(Exception e)
+        {
+            Log.e(Measurement.class.getSimpleName(), "Failed to create measurement output stream!");
+            Toast.makeText(context, R.string.failed_to_create_file, Toast.LENGTH_LONG).show();
+        }
+
+        return writer;
     }
 }

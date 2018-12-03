@@ -29,6 +29,7 @@ public class Constants
 
     public static final String MEASUREMENT_FILENAME = "measurement_filename";
     public static final String MEASUREMENT_HEADER = "measurement_header";
+    public static final String MEASUREMENT_RATE = "measurement_rate";
 
     public static final int MEASUREMENT_ID = Integer.MAX_VALUE;
     public static final String MEASUREMENT_CHANNEL_ID = "measurement_channel_id";

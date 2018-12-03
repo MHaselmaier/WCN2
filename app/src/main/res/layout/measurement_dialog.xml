@@ -15,20 +15,22 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/measurement_filename" />
+        android:text="@string/measurement_filename"
+        android:textSize="18sp" />
 
     <EditText
         android:id="@+id/measurement_filename"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="ddMMyyyy_HHmmss"
+        android:hint="@string/measurement_date_format"
         android:inputType="text" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/measurement_description" />
+        android:text="@string/measurement_description"
+        android:textSize="18sp" />
 
     <EditText
         android:id="@+id/measurement_header"
@@ -37,4 +39,56 @@
         android:ems="10"
         android:hint="@string/measurement_comment"
         android:inputType="textMultiLine" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/create_reduced_file"
+            android:textSize="18sp" />
+
+        <CheckBox
+            android:id="@+id/average"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/select_average_rate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/average_every"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/average_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="2"
+            android:inputType="number"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:text="@stirng/default_rate"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/seconds"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
 </LinearLayout>
