@@ -12,7 +12,7 @@ import java.util.Arrays;
 import de.hs_kl.wcn2.R;
 import de.hs_kl.wcn2.util.DefinedActionStorage;
 
-public class ActionButtonsOverview
+class ActionButtonsOverview
 {
     private Context context;
     private View root;
@@ -23,7 +23,7 @@ public class ActionButtonsOverview
 
     private Button selectedActionButton;
 
-    public ActionButtonsOverview(Context context, View root)
+    ActionButtonsOverview(Context context, View root)
     {
         this.context = context;
         this.root = root;
@@ -31,13 +31,13 @@ public class ActionButtonsOverview
         this.definedActionStorage = DefinedActionStorage.getInstance(this.context);
     }
 
-    public void show()
+    void show()
     {
         this.root.setVisibility(View.VISIBLE);
         updateViews();
     }
 
-    public void updateViews()
+    void updateViews()
     {
         String[] newDefinedActions = this.definedActionStorage.getDefinedActions();
         if (!Arrays.equals(this.definedActions, newDefinedActions))
@@ -113,7 +113,7 @@ public class ActionButtonsOverview
         }
     }
 
-    public void hide()
+    void hide()
     {
         deselectActionButton();
         this.root.setVisibility(View.GONE);

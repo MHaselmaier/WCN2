@@ -5,7 +5,7 @@ import android.os.Handler;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Animation
+class Animation
 {
     private Handler handler = new Handler();
     private Runnable initialize;
@@ -13,23 +13,23 @@ public class Animation
     private int currentStep = 0;
     private List<Step> steps = new ArrayList<>();
 
-    public Animation(Runnable initialize, int descriptionResourceID)
+    Animation(Runnable initialize, int descriptionResourceID)
     {
         this.initialize = initialize;
         this.descriptionResourceID = descriptionResourceID;
     }
 
-    public int getDescriptionResourceID()
+    int getDescriptionResourceID()
     {
         return this.descriptionResourceID;
     }
 
-    public void addStep(Step step)
+    void addStep(Step step)
     {
         this.steps.add(step);
     }
 
-    public void start()
+    void start()
     {
         stop();
         this.handler.post(this.initialize);
@@ -47,18 +47,18 @@ public class Animation
         }
     }
 
-    public void stop()
+    void stop()
     {
         this.handler.removeCallbacksAndMessages(null);
         this.currentStep = 0;
     }
 
-    public static class Step
+    static class Step
     {
         private Runnable runnable;
         private int delay;
 
-        public Step(final Animation animation, final Runnable runnable, int delay)
+        Step(final Animation animation, final Runnable runnable, int delay)
         {
             this.runnable = () ->
             {

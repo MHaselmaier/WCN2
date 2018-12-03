@@ -96,21 +96,24 @@ public class WCN2Notifications
 
         String service = Activity.NOTIFICATION_SERVICE;
         NotificationManager manager = (NotificationManager)context.getSystemService(service);
-        if (null != manager.getNotificationChannel(channelID)) return;
+        if (null != manager)
+        {
+            if (null != manager.getNotificationChannel(channelID)) return;
 
-        NotificationChannel channel = new NotificationChannel(channelID, name,
-                NotificationManager.IMPORTANCE_HIGH);
-        channel.setDescription(description);
-        manager.createNotificationChannel(channel);
+            NotificationChannel channel = new NotificationChannel(channelID, name,
+                    NotificationManager.IMPORTANCE_HIGH);
+            channel.setDescription(description);
+            manager.createNotificationChannel(channel);
+        }
     }
 
     private static Notification.Builder getNotificationBuilder(Context context, String channelID)
     {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
         {
-            return new Notification.Builder(context, channelID);
+            return new Notification.Builder(context);
         }
 
-        return new Notification.Builder(context);
+        return new Notification.Builder(context, channelID);
     }
 }

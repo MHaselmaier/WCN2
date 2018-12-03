@@ -14,22 +14,20 @@ public class TrackedSensorsStorage
 {
     private static TrackedSensorsStorage instance;
 
-    private Context context;
     private SharedPreferences sensorIDs;
     private SharedPreferences mnemonics;
     private Map<String, SensorData> cachedData;
 
     private TrackedSensorsStorage(Context context)
     {
-        this.context = context;
-        this.sensorIDs = this.context.getSharedPreferences(Constants.TRACKED_SENSORS_ID,
+        this.sensorIDs = context.getSharedPreferences(Constants.TRACKED_SENSORS_ID,
                 Context.MODE_PRIVATE);
-        this.mnemonics = this.context.getSharedPreferences(Constants.TRACKED_SENSORS_MNEMONIC,
+        this.mnemonics = context.getSharedPreferences(Constants.TRACKED_SENSORS_MNEMONIC,
                 Context.MODE_PRIVATE);
 
-        List<Map.Entry<String, ?>> savedIDs = new ArrayList<Map.Entry<String, ?>>(
+        List<Map.Entry<String, ?>> savedIDs = new ArrayList<>(
                 this.sensorIDs.getAll().entrySet());
-        List<Map.Entry<String, ?>> savedMnemonics = new ArrayList<Map.Entry<String, ?>>(
+        List<Map.Entry<String, ?>> savedMnemonics = new ArrayList<>(
                 this.mnemonics.getAll().entrySet());
 
         this.cachedData = new HashMap<>(savedIDs.size());

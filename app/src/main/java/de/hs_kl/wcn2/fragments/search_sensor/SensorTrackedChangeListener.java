@@ -9,7 +9,7 @@ import de.hs_kl.wcn2.R;
 import de.hs_kl.wcn2.ble_scanner.SensorData;
 import de.hs_kl.wcn2.util.TrackedSensorsStorage;
 
-public class SensorTrackedChangeListener implements CompoundButton.OnCheckedChangeListener
+class SensorTrackedChangeListener implements CompoundButton.OnCheckedChangeListener
 {
     private static ArrayBlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(10);
     static
@@ -30,7 +30,7 @@ public class SensorTrackedChangeListener implements CompoundButton.OnCheckedChan
     private SensorData sensorData;
     private TrackedSensorsStorage trackedSensors;
 
-    public SensorTrackedChangeListener(Context context, SensorData sensorData)
+    SensorTrackedChangeListener(Context context, SensorData sensorData)
     {
         this.sensorData = sensorData;
         this.trackedSensors = TrackedSensorsStorage.getInstance(context);

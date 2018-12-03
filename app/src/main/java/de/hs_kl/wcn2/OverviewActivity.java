@@ -15,8 +15,10 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -74,8 +76,12 @@ public class OverviewActivity extends AppCompatActivity
 
         setContentView(R.layout.activity_overview);
         setTitle(R.string.app_name);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home);
+        ActionBar actionBar = getSupportActionBar();
+        if (null != actionBar)
+        {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_home);
+        }
 
         requestPermissions();
 
@@ -100,18 +106,26 @@ public class OverviewActivity extends AppCompatActivity
         drawer.addDrawerListener(new DrawerLayout.DrawerListener()
         {
             @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {}
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {}
 
             @Override
-            public void onDrawerOpened(View drawerView)
+            public void onDrawerOpened(@NonNull View drawerView)
             {
-                getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
+                ActionBar actionBar = getSupportActionBar();
+                if (null != actionBar)
+                {
+                    actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
+                }
             }
 
             @Override
-            public void onDrawerClosed(View drawerView)
+            public void onDrawerClosed(@NonNull View drawerView)
             {
-                getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home);
+                ActionBar actionBar = getSupportActionBar();
+                if (null != actionBar)
+                {
+                    actionBar.setHomeAsUpIndicator(R.drawable.ic_home);
+                }
             }
 
             @Override
@@ -222,12 +236,20 @@ public class OverviewActivity extends AppCompatActivity
             if (drawer.isDrawerOpen(Gravity.START))
             {
                 drawer.closeDrawers();
-                getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home);
+                ActionBar actionBar = getSupportActionBar();
+                if (null != actionBar)
+                {
+                    actionBar.setHomeAsUpIndicator(R.drawable.ic_home);
+                }
             }
             else
             {
                 drawer.openDrawer(Gravity.START);
-                getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
+                ActionBar actionBar = getSupportActionBar();
+                if (null != actionBar)
+                {
+                    actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
+                }
             }
             return true;
         default:
@@ -252,7 +274,8 @@ public class OverviewActivity extends AppCompatActivity
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults)
     {
         for (int i = 0; permissions.length > i; ++i)
         {
@@ -274,7 +297,10 @@ public class OverviewActivity extends AppCompatActivity
     private void setupBluetoothAdapter()
     {
         BluetoothManager btManager = (BluetoothManager)getSystemService(Context.BLUETOOTH_SERVICE);
-        this.btAdapter = btManager.getAdapter();
+        if (null != btManager)
+        {
+            this.btAdapter = btManager.getAdapter();
+        }
     }
 
     private void ensureBluetoothIsEnabled()

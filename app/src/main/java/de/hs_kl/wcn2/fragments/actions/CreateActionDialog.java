@@ -11,9 +11,9 @@ import android.widget.EditText;
 import de.hs_kl.wcn2.R;
 import de.hs_kl.wcn2.util.DefinedActionStorage;
 
-public class CreateActionDialog
+class CreateActionDialog
 {
-    public static Dialog buildCreateActionDialog(final ActionsFragment fragment)
+    static Dialog buildCreateActionDialog(final ActionsFragment fragment)
     {
         final Activity activity = fragment.getActivity();
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity);
@@ -42,7 +42,10 @@ public class CreateActionDialog
         {
             newAction.setText(null);
             newAction.requestFocus();
-            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            if (null != window)
+            {
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            }
         });
 
         return createActionDialog;

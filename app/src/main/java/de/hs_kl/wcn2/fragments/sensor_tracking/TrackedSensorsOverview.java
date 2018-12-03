@@ -12,7 +12,7 @@ import de.hs_kl.wcn2.R;
 import de.hs_kl.wcn2.ble_scanner.SensorData;
 import de.hs_kl.wcn2.util.TrackedSensorsStorage;
 
-public class TrackedSensorsOverview
+class TrackedSensorsOverview
 {
     private Context context;
     private TrackedSensorsStorage trackedSensorsStorage;
@@ -22,7 +22,7 @@ public class TrackedSensorsOverview
     private List<SensorData> trackedSensors = new ArrayList<>();
     private List<TrackedSensorView> trackedSensorViews = new ArrayList<>();
 
-    public TrackedSensorsOverview(Context context, View root)
+    TrackedSensorsOverview(Context context, View root)
     {
         this.context = context;
         this.trackedSensorsStorage = TrackedSensorsStorage.getInstance(this.context);
@@ -33,7 +33,7 @@ public class TrackedSensorsOverview
         label.setText(R.string.no_sensors_tracked);
     }
 
-    public void addSensor(SensorData sensorData)
+    void addSensor(SensorData sensorData)
     {
         for (int i = 0; this.trackedSensors.size() > i; ++i)
         {
@@ -50,13 +50,13 @@ public class TrackedSensorsOverview
         this.container.addView(view.getRoot());
     }
 
-    public void show()
+    void show()
     {
         updateViews();
         this.root.setVisibility(View.VISIBLE);
     }
 
-    public void updateViews()
+    void updateViews()
     {
         updateTrackedSensors();
         for (int i = 0; this.trackedSensors.size() > i; ++i)
@@ -106,7 +106,7 @@ public class TrackedSensorsOverview
         }
     }
 
-    public void hide()
+    void hide()
     {
         this.root.setVisibility(View.GONE);
     }

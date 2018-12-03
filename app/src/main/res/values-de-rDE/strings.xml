@@ -13,10 +13,6 @@
     <string name="sensor">Sensoren</string>
     <string name="about">Über uns</string>
 
-    <string name="scan_again">Erneut suchen</string>
-    <string name="scan_for_sensors">Nach Sensoren suchen</string>
-    <string name="scan_stated">Suche gestartet&#8230;</string>
-    <string name="scan_failed">Suche gescheitert!</string>
     <string name="no_sensors_found">Es wurden keine Sensoren gefunden.</string>
     <string name="no_sensors_tracked">Es werden keine Sensoren verfolgt.</string>
 
@@ -42,8 +38,6 @@
     <string name="tracked_sensors">Verfolgte Sensoren:</string>
     <string name="sensor_warning">Warnung</string>
     <string name="tracked_sensors_edit">Bearbeiten</string>
-    <string name="failed_to_write_file">Datei konnte nicht erstellt werden</string>
-    <string name="uses_default_action">Es wurden keine Aktionen definiert.</string>
     <string name="no_tracked_sensors">Wählen Sie mindestens einen Sensor bevor Sie messen!</string>
 
     <string name="temperature">%1$.1f °C</string>

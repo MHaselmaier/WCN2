@@ -16,7 +16,7 @@ import de.hs_kl.wcn2.ble_scanner.SensorData;
 import de.hs_kl.wcn2.util.Constants;
 import de.hs_kl.wcn2.util.TrackedSensorsStorage;
 
-public class Measurement
+class Measurement
 {
     private static final int WRITING_BUFFER = 3;
 
@@ -32,7 +32,7 @@ public class Measurement
     private final long startTimestamp;
     private long lastWrittenTimestamp;
 
-    public Measurement(Context context, String header, String filename, int averageRate)
+    Measurement(Context context, String header, String filename, int averageRate)
     {
         this.context = context;
 
@@ -56,7 +56,7 @@ public class Measurement
         }
     }
 
-    public synchronized void addData(SensorData sensorData, String action)
+    synchronized void addData(SensorData sensorData, String action)
     {
         this.actions.put(sensorData.getTimestamp() / 1000, action);
 
@@ -141,7 +141,7 @@ public class Measurement
         writer.flush();
     }
 
-    public synchronized void finish()
+    synchronized void finish()
     {
         writeDataUntilTimestamp(System.currentTimeMillis() / 1000);
         this.writer.close();
@@ -215,8 +215,15 @@ public class Measurement
 
             File file = new File(Constants.DATA_DIRECTORY_PATH + File.separator +
                     filename + ".txt");
-            file.getParentFile().mkdirs();
-            file.createNewFile();
+
+            if (!file.getParentFile().exists() && !file.getParentFile().mkdirs())
+            {
+                throw new Exception();
+            }
+            if (!file.exists() && !file.createNewFile())
+            {
+                throw  new Exception();
+            }
 
             writer = new PrintWriter(file, StandardCharsets.UTF_16.name());
         }

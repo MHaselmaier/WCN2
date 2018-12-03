@@ -10,7 +10,7 @@ import de.hs_kl.wcn2.R;
 import de.hs_kl.wcn2.ble_scanner.SensorData;
 import de.hs_kl.wcn2.util.LastSeenSinceUtil;
 
-public class TrackedSensorView
+class TrackedSensorView
 {
     private Context context;
     private View root;
@@ -23,7 +23,7 @@ public class TrackedSensorView
     private ImageView batteryLevel;
     private ImageView signalStrength;
 
-    public TrackedSensorView(Context context, SensorData sensorData)
+    TrackedSensorView(Context context, SensorData sensorData)
     {
         this.context = context;
         this.root = LayoutInflater.from(this.context).inflate(R.layout.tracked_sensor_overview, null);
@@ -40,7 +40,7 @@ public class TrackedSensorView
         updateView(sensorData);
     }
 
-    public void updateView(SensorData sensorData)
+    void updateView(SensorData sensorData)
     {
         if (sensorData.isTimedOut() || sensorData.isBatteryLow())
         {
@@ -81,7 +81,7 @@ public class TrackedSensorView
                 .getResources()));
     }
 
-    public View getRoot()
+    View getRoot()
     {
         return this.root;
     }

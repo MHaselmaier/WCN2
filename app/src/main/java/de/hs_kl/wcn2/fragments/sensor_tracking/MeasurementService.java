@@ -119,21 +119,27 @@ public class MeasurementService extends Service implements ScanResultListener
         this.bleScanner = BLEScanner.getInstance(getBaseContext());
 
         PowerManager powerManager = (PowerManager)getSystemService(Context.POWER_SERVICE);
-        this.wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-                MeasurementService.class.getSimpleName());
+        if (null != powerManager)
+        {
+            this.wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+                    MeasurementService.class.getSimpleName());
+        }
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
-        switch (intent.getAction())
+        if (null != intent.getAction())
         {
-        case MeasurementService.ACTION_START:
-            onActionStart(intent);
-            break;
-        case MeasurementService.ACTION_STOP:
-            onActionStop();
-            break;
+            switch (intent.getAction())
+            {
+            case MeasurementService.ACTION_START:
+                onActionStart(intent);
+                break;
+            case MeasurementService.ACTION_STOP:
+                onActionStop();
+                break;
+            }
         }
 
         return Service.START_STICKY;

@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ScanResultListener
 {
-    public List<ScanFilter> getScanFilter();
+    List<ScanFilter> getScanFilter();
 
-    public void onScanResult(SensorData result);
+    void onScanResult(SensorData result);
 }

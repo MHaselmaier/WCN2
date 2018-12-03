@@ -7,8 +7,10 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -38,8 +40,12 @@ public class UsageActivity extends AppCompatActivity
 
         setContentView(R.layout.usage_activity);
         setTitle("   " + getResources().getString(R.string.app_name));
-        getSupportActionBar().setIcon(R.drawable.ic_home);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ActionBar bar = getSupportActionBar();
+        if (null != bar)
+        {
+            getSupportActionBar().setIcon(R.drawable.ic_home);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
 
         this.content = findViewById(R.id.content);
         this.description = findViewById(R.id.description);
@@ -152,9 +158,8 @@ public class UsageActivity extends AppCompatActivity
         }, 1000));
 
         createAction.addStep(new Animation.Step(createAction, () ->
-        {
-            action.setBackgroundColor(Color.argb(50, 0, 0, 0));
-        }, 500));
+            action.setBackgroundColor(Color.argb(50, 0, 0, 0)),
+        500));
 
         final View actions = getLayoutInflater().inflate(R.layout.actions, container, false);
         emptyView = getLayoutInflater().inflate(R.layout.empty_list_item, actions.findViewById(
@@ -178,9 +183,13 @@ public class UsageActivity extends AppCompatActivity
         dialogBuilder.setPositiveButton(R.string.ok, null);
         dialogBuilder.setNegativeButton(R.string.cancel, null);
         final AlertDialog dialog = dialogBuilder.create();
-        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE |
-                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
+        Window window = dialog.getWindow();
+        if (null != window)
+        {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+            window.addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE |
+                    WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
+        }
         createAction.addStep(new Animation.Step(createAction, () ->
         {
             newAction.setBackgroundColor(Color.argb(255, 255, 255, 255));
@@ -350,9 +359,13 @@ public class UsageActivity extends AppCompatActivity
         dialogBuilder.setPositiveButton(R.string.ok, null);
         dialogBuilder.setNegativeButton(R.string.cancel, null);
         final AlertDialog dialog = dialogBuilder.create();
-        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
-        performMeasurement.addStep(new Animation.Step(performMeasurement, () -> dialog.show(), 250));
+        Window window = dialog.getWindow();
+        if (null != window)
+        {
+            dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+            dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
+        }
+        performMeasurement.addStep(new Animation.Step(performMeasurement, dialog::show, 250));
 
         final View sensorOverview = sensorTracking.findViewById(R.id.sensor_overview);
         final View actionOverview = sensorTracking.findViewById(R.id.action_overview);

@@ -12,14 +12,12 @@ public class DefinedActionStorage
 {
     private static DefinedActionStorage instance;
 
-    private Context context;
     private SharedPreferences actions;
     private List<String> cachedData;
 
     private DefinedActionStorage(Context context)
     {
-        this.context = context;
-        this.actions = this.context.getSharedPreferences(Constants.DEFINED_ACTIONS,
+        this.actions = context.getSharedPreferences(Constants.DEFINED_ACTIONS,
                 Context.MODE_PRIVATE);
 
         Object[] entries = this.actions.getAll().entrySet().toArray();

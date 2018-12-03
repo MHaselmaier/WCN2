@@ -76,6 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="2"
+            android:hint="@stirng/default_rate"
             android:inputType="number"
             android:selectAllOnFocus="true"
             android:singleLine="true"

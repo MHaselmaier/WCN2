@@ -15,13 +15,13 @@ import java.io.File;
 import de.hs_kl.wcn2.R;
 import de.hs_kl.wcn2.util.Constants;
 
-public class MeasurementView
+class MeasurementView
 {
     private View root;
     private CheckBox checkBox;
     private ImageButton more;
 
-    public MeasurementView(final ManageMeasurementsFragment fragment, ViewGroup parent,
+    MeasurementView(final ManageMeasurementsFragment fragment, ViewGroup parent,
                            final File measurement)
     {
         this.root = fragment.getActivity().getLayoutInflater().inflate(R.layout.measurement_item,
@@ -57,27 +57,27 @@ public class MeasurementView
         });
 
         this.more = this.root.findViewById(R.id.more);
-        final PopupMenu menu = new MeasurementMenu(fragment, this.more, measurement);
+        PopupMenu menu = new MeasurementMenu(fragment, this.more, measurement);
         this.more.setOnClickListener((v) -> menu.show());
         this.more.setVisibility(fragment.isSelectionModeEnabled() ? View.VISIBLE : View.INVISIBLE);
     }
 
-    public View getRoot()
+    View getRoot()
     {
         return this.root;
     }
 
-    public boolean isChecked()
+    boolean isChecked()
     {
         return this.checkBox.isChecked();
     }
 
-    public void uncheck()
+    void uncheck()
     {
         this.checkBox.setChecked(false);
     }
 
-    public void showCheckBox(boolean show)
+    void showCheckBox(boolean show)
     {
         this.checkBox.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
         this.more.setVisibility(show ? View.INVISIBLE : View.VISIBLE);

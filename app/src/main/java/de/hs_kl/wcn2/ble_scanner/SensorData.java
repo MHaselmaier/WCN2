@@ -1,5 +1,6 @@
 package de.hs_kl.wcn2.ble_scanner;
 
+import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -26,14 +27,18 @@ public class SensorData
                             + result.getTimestampNanos() / 1_000_000;
         this.rssi = result.getRssi();
 
-        byte[] rawData = result.getScanRecord().getManufacturerSpecificData(Constants.MANUFACTURER_ID);
-        if (null != rawData && 7 == rawData.length)
+        ScanRecord record = result.getScanRecord();
+        if (null != record)
         {
-            this.softwareID = rawData[0];
-            this.sensorID = rawData[1];
-            this.temperature = calculateTemperature(rawData[2], rawData[3]);
-            this.relativeHumidity = calculateRelativeHumidity(rawData[4], rawData[5]);
-            this.batteryVoltage = calculateBatteryVoltage(rawData[6]);
+            byte[] rawData = record.getManufacturerSpecificData(Constants.MANUFACTURER_ID);
+            if (null != rawData && 7 == rawData.length)
+            {
+                this.softwareID = rawData[0];
+                this.sensorID = rawData[1];
+                this.temperature = calculateTemperature(rawData[2], rawData[3]);
+                this.relativeHumidity = calculateRelativeHumidity(rawData[4], rawData[5]);
+                this.batteryVoltage = calculateBatteryVoltage(rawData[6]);
+            }
         }
 
         this.mnemonic = mnemonic;

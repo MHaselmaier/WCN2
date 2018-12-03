@@ -17,11 +17,11 @@ import java.util.Locale;
 
 import de.hs_kl.wcn2.R;
 
-public class StartMeasurementDialog
+class StartMeasurementDialog
 {
     private static final DateFormat dateFormat = new SimpleDateFormat("ddMMyyyy_HHmmss", Locale.US);
 
-    public static Dialog buildStartMeasurementDialog(final SensorTrackingFragment fragment)
+    static Dialog buildStartMeasurementDialog(final SensorTrackingFragment fragment)
     {
         Activity activity = fragment.getActivity();
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity);
@@ -67,7 +67,10 @@ public class StartMeasurementDialog
             checkBox.setChecked(false);
             selectAverageRateView.setVisibility(View.GONE);
             averageRate.setText(R.string.default_rate);
-            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            if (null != window)
+            {
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            }
         });
 
         return startMeasurementDialog;

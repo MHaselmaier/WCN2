@@ -13,9 +13,9 @@ import de.hs_kl.wcn2.R;
 import de.hs_kl.wcn2.ble_scanner.SensorData;
 import de.hs_kl.wcn2.util.TrackedSensorsStorage;
 
-public class MnemonicEditDialog
+class MnemonicEditDialog
 {
-    public static Dialog buildMnemonicEditDialog(final Context context, final SensorData sensorData)
+    static Dialog buildMnemonicEditDialog(final Context context, final SensorData sensorData)
     {
         final TrackedSensorsStorage trackedSensors = TrackedSensorsStorage.getInstance(context);
 
@@ -53,7 +53,10 @@ public class MnemonicEditDialog
                 mnemonicView.append(mnemonic);
             }
             mnemonicView.requestFocus();
-            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            if (null != window)
+            {
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            }
         });
 
         return mnemonicEditDialog;

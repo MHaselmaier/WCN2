@@ -8,12 +8,12 @@ import java.io.File;
 
 import de.hs_kl.wcn2.R;
 
-public class MeasurementMenu extends PopupMenu implements PopupMenu.OnMenuItemClickListener
+class MeasurementMenu extends PopupMenu implements PopupMenu.OnMenuItemClickListener
 {
     private ManageMeasurementsFragment fragment;
     private File measurement;
 
-    public MeasurementMenu(ManageMeasurementsFragment fragment, View anchor, File measurement)
+    MeasurementMenu(ManageMeasurementsFragment fragment, View anchor, File measurement)
     {
         super(fragment.getActivity(), anchor);
 

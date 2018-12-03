@@ -23,7 +23,7 @@ class FoundSensorView
     private ImageView batteryLevel;
     private ImageView signalStrength;
 
-    public FoundSensorView(Context context, SensorData sensorData)
+    FoundSensorView(Context context, SensorData sensorData)
     {
         this.context = context;
         this.trackedSensors = TrackedSensorsStorage.getInstance(this.context);
@@ -56,12 +56,12 @@ class FoundSensorView
         updateView(sensorData);
     }
 
-    public View getRoot()
+    View getRoot()
     {
         return this.root;
     }
 
-    public void updateView(SensorData sensorData)
+    void updateView(SensorData sensorData)
     {
         this.lastSeen.setText(LastSeenSinceUtil.getTimeSinceString(this.context,
                 sensorData.getTimestamp()));
