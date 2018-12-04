@@ -1,4 +1,4 @@
-package de.hskl.wcn2.fragments.manage_measurements;
+package de.hs_kl.wcn2.fragments.manage_measurements;
 
 import android.view.MenuItem;
 import android.view.View;
@@ -6,7 +6,7 @@ import android.widget.PopupMenu;
 
 import java.io.File;
 
-import de.hskl.wcn2.R;
+import de.hs_kl.wcn2.R;
 
 class MeasurementMenu extends PopupMenu implements PopupMenu.OnMenuItemClickListener
 {

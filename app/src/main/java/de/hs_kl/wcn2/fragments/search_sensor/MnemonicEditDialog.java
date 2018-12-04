@@ -1,4 +1,4 @@
-package de.hskl.wcn2.fragments.search_sensor;
+package de.hs_kl.wcn2.fragments.search_sensor;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -9,9 +9,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 
-import de.hskl.wcn2.R;
-import de.hskl.wcn2.ble_scanner.SensorData;
-import de.hskl.wcn2.util.TrackedSensorsStorage;
+import de.hs_kl.wcn2.R;
+import de.hs_kl.wcn2.ble_scanner.SensorData;
+import de.hs_kl.wcn2.util.TrackedSensorsStorage;
 
 class MnemonicEditDialog
 {

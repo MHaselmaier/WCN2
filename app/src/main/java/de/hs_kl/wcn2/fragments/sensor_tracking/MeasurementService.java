@@ -1,4 +1,4 @@
-package de.hskl.wcn2.fragments.sensor_tracking;
+package de.hs_kl.wcn2.fragments.sensor_tracking;
 
 import android.app.Notification;
 import android.app.Service;
@@ -18,18 +18,18 @@ import android.support.v4.app.NotificationManagerCompat;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hskl.wcn2.OverviewActivity;
-import de.hskl.wcn2.ble_scanner.BLEScanner;
-import de.hskl.wcn2.ble_scanner.ScanResultListener;
-import de.hskl.wcn2.ble_scanner.SensorData;
-import de.hskl.wcn2.util.Constants;
-import de.hskl.wcn2.util.TrackedSensorsStorage;
-import de.hskl.wcn2.util.WCN2Notifications;
+import de.hs_kl.wcn2.OverviewActivity;
+import de.hs_kl.wcn2.ble_scanner.BLEScanner;
+import de.hs_kl.wcn2.ble_scanner.ScanResultListener;
+import de.hs_kl.wcn2.ble_scanner.SensorData;
+import de.hs_kl.wcn2.util.Constants;
+import de.hs_kl.wcn2.util.TrackedSensorsStorage;
+import de.hs_kl.wcn2.util.WCN2Notifications;
 
 public class MeasurementService extends Service implements ScanResultListener
 {
-    public static final String ACTION_START = "de.hskl.wcn2.fragments.sensor_tracking.MeasurementService.START";
-    public static final String ACTION_STOP = "de.hskl.wcn2.fragments.sensor_tracking.MeasurementService.STOP";
+    public static final String ACTION_START = "de.hs_kl.wcn2.fragments.sensor_tracking.MeasurementService.START";
+    public static final String ACTION_STOP = "de.hs_kl.wcn2.fragments.sensor_tracking.MeasurementService.STOP";
 
     public static String action = "";
     public static long startTime = Long.MIN_VALUE;

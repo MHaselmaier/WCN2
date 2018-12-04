@@ -1,4 +1,4 @@
-package de.hskl.wcn2.usage;
+package de.hs_kl.wcn2.usage;
 
 import android.os.Handler;
 

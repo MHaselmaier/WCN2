@@ -1,4 +1,4 @@
-package de.hskl.wcn2.fragments.actions;
+package de.hs_kl.wcn2.fragments.actions;
 
 import android.app.Dialog;
 import android.app.Fragment;
@@ -10,8 +10,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import de.hskl.wcn2.R;
-import de.hskl.wcn2.util.DefinedActionStorage;
+import de.hs_kl.wcn2.R;
+import de.hs_kl.wcn2.util.DefinedActionStorage;
 
 public class ActionsFragment extends Fragment
 {

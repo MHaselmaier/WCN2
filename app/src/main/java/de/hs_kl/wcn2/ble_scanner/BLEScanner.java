@@ -1,4 +1,4 @@
-package de.hskl.wcn2.ble_scanner;
+package de.hs_kl.wcn2.ble_scanner;
 
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
@@ -14,8 +14,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import de.hskl.wcn2.util.Constants;
-import de.hskl.wcn2.util.TrackedSensorsStorage;
+import de.hs_kl.wcn2.util.Constants;
+import de.hs_kl.wcn2.util.TrackedSensorsStorage;
 
 public class BLEScanner
 {

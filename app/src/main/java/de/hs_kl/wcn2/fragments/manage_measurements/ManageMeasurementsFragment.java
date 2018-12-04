@@ -1,4 +1,4 @@
-package de.hskl.wcn2.fragments.manage_measurements;
+package de.hs_kl.wcn2.fragments.manage_measurements;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -19,8 +19,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hskl.wcn2.R;
-import de.hskl.wcn2.util.Constants;
+import de.hs_kl.wcn2.R;
+import de.hs_kl.wcn2.util.Constants;
 
 public class ManageMeasurementsFragment extends Fragment
 {

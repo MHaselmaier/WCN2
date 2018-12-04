@@ -1,4 +1,4 @@
-package de.hskl.wcn2.fragments.sensor_tracking;
+package de.hs_kl.wcn2.fragments.sensor_tracking;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import de.hskl.wcn2.R;
+import de.hs_kl.wcn2.R;
 
 class StartMeasurementDialog
 {

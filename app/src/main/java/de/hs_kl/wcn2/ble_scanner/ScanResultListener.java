@@ -1,4 +1,4 @@
-package de.hskl.wcn2.ble_scanner;
+package de.hs_kl.wcn2.ble_scanner;
 
 import android.bluetooth.le.ScanFilter;
 

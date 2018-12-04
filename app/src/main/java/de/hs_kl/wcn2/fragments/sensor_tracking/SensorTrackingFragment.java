@@ -1,4 +1,4 @@
-package de.hskl.wcn2.fragments.sensor_tracking;
+package de.hs_kl.wcn2.fragments.sensor_tracking;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -20,13 +20,13 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hskl.wcn2.OverviewActivity;
-import de.hskl.wcn2.ble_scanner.BLEScanner;
-import de.hskl.wcn2.R;
-import de.hskl.wcn2.ble_scanner.ScanResultListener;
-import de.hskl.wcn2.ble_scanner.SensorData;
-import de.hskl.wcn2.util.Constants;
-import de.hskl.wcn2.util.TrackedSensorsStorage;
+import de.hs_kl.wcn2.OverviewActivity;
+import de.hs_kl.wcn2.ble_scanner.BLEScanner;
+import de.hs_kl.wcn2.R;
+import de.hs_kl.wcn2.ble_scanner.ScanResultListener;
+import de.hs_kl.wcn2.ble_scanner.SensorData;
+import de.hs_kl.wcn2.util.Constants;
+import de.hs_kl.wcn2.util.TrackedSensorsStorage;
 
 public class SensorTrackingFragment extends Fragment implements ScanResultListener
 {

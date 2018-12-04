@@ -1,4 +1,4 @@
-package de.hskl.wcn2.fragments.actions;
+package de.hs_kl.wcn2.fragments.actions;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -8,8 +8,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 
-import de.hskl.wcn2.R;
-import de.hskl.wcn2.util.DefinedActionStorage;
+import de.hs_kl.wcn2.R;
+import de.hs_kl.wcn2.util.DefinedActionStorage;
 
 class CreateActionDialog
 {

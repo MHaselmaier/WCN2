@@ -1,12 +1,12 @@
-package de.hskl.wcn2.ble_scanner;
+package de.hs_kl.wcn2.ble_scanner;
 
 import android.bluetooth.le.ScanRecord;
 import android.bluetooth.le.ScanResult;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 
-import de.hskl.wcn2.R;
-import de.hskl.wcn2.util.Constants;
+import de.hs_kl.wcn2.R;
+import de.hs_kl.wcn2.util.Constants;
 
 public class SensorData
 {

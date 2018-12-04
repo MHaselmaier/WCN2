@@ -1,4 +1,4 @@
-package de.hskl.wcn2.fragments.sensor_tracking;
+package de.hs_kl.wcn2.fragments.sensor_tracking;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
@@ -9,8 +9,8 @@ import android.widget.Button;
 
 import java.util.Arrays;
 
-import de.hskl.wcn2.R;
-import de.hskl.wcn2.util.DefinedActionStorage;
+import de.hs_kl.wcn2.R;
+import de.hs_kl.wcn2.util.DefinedActionStorage;
 
 class ActionButtonsOverview
 {

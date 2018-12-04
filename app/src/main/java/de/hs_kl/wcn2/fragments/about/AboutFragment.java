@@ -1,4 +1,4 @@
-package de.hskl.wcn2.fragments.about;
+package de.hs_kl.wcn2.fragments.about;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -8,8 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import de.hskl.wcn2.R;
-import de.hskl.wcn2.usage.UsageActivity;
+import de.hs_kl.wcn2.R;
+import de.hs_kl.wcn2.usage.UsageActivity;
 
 public class AboutFragment extends Fragment
 {

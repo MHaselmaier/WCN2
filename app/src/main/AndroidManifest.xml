@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="de.hskl.wcn2">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="de.hs_kl.wcn2"
+        android:versionCode="2"
+        android:versionName="@string/version_info">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -22,10 +24,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:hardwareAccelerated="true">
-        <activity android:name="de.hskl.wcn2.usage.UsageActivity"
+        <activity android:name="de.hs_kl.wcn2.usage.UsageActivity"
                   android:screenOrientation="portrait"
                   android:noHistory="true"/>
-        <activity android:name="de.hskl.wcn2.OverviewActivity"
+        <activity android:name="de.hs_kl.wcn2.OverviewActivity"
                   android:screenOrientation="portrait"
                   android:launchMode="singleTask">
             <intent-filter>
@@ -36,7 +38,7 @@
         </activity>
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="de.hskl.fileprovider"
+            android:authorities="de.hs_kl.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -45,7 +47,7 @@
         </provider>
 
         <service
-            android:name="de.hskl.wcn2.fragments.sensor_tracking.MeasurementService"
+            android:name="de.hs_kl.wcn2.fragments.sensor_tracking.MeasurementService"
             android:exported="false" />
     </application>
 </manifest>

@@ -1,4 +1,4 @@
-package de.hskl.wcn2.fragments.sensor_tracking;
+package de.hs_kl.wcn2.fragments.sensor_tracking;
 
 import android.content.Context;
 import android.view.View;
@@ -8,9 +8,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hskl.wcn2.R;
-import de.hskl.wcn2.ble_scanner.SensorData;
-import de.hskl.wcn2.util.TrackedSensorsStorage;
+import de.hs_kl.wcn2.R;
+import de.hs_kl.wcn2.ble_scanner.SensorData;
+import de.hs_kl.wcn2.util.TrackedSensorsStorage;
 
 class TrackedSensorsOverview
 {

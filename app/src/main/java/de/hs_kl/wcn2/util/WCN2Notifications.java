@@ -1,4 +1,4 @@
-package de.hskl.wcn2.util;
+package de.hs_kl.wcn2.util;
 
 import android.app.Activity;
 import android.app.Notification;
@@ -9,8 +9,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
-import de.hskl.wcn2.OverviewActivity;
-import de.hskl.wcn2.R;
+import de.hs_kl.wcn2.OverviewActivity;
+import de.hs_kl.wcn2.R;
 
 public class WCN2Notifications
 {

@@ -1,4 +1,4 @@
-package de.hskl.wcn2.usage;
+package de.hs_kl.wcn2.usage;
 
 import android.app.AlertDialog;
 import android.graphics.Color;
@@ -23,7 +23,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hskl.wcn2.R;
+import de.hs_kl.wcn2.R;
 
 public class UsageActivity extends AppCompatActivity
 {

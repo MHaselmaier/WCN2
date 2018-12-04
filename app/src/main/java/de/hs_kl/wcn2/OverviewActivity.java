@@ -1,4 +1,4 @@
-package de.hskl.wcn2;
+package de.hs_kl.wcn2;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -28,14 +28,14 @@ import android.widget.Toast;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import de.hskl.wcn2.ble_scanner.BLEScanner;
-import de.hskl.wcn2.fragments.about.AboutFragment;
-import de.hskl.wcn2.fragments.actions.ActionsFragment;
-import de.hskl.wcn2.fragments.manage_measurements.ManageMeasurementsFragment;
-import de.hskl.wcn2.fragments.search_sensor.SearchSensorFragment;
-import de.hskl.wcn2.fragments.sensor_tracking.MeasurementService;
-import de.hskl.wcn2.fragments.sensor_tracking.SensorTrackingFragment;
-import de.hskl.wcn2.util.Constants;
+import de.hs_kl.wcn2.ble_scanner.BLEScanner;
+import de.hs_kl.wcn2.fragments.about.AboutFragment;
+import de.hs_kl.wcn2.fragments.actions.ActionsFragment;
+import de.hs_kl.wcn2.fragments.manage_measurements.ManageMeasurementsFragment;
+import de.hs_kl.wcn2.fragments.search_sensor.SearchSensorFragment;
+import de.hs_kl.wcn2.fragments.sensor_tracking.MeasurementService;
+import de.hs_kl.wcn2.fragments.sensor_tracking.SensorTrackingFragment;
+import de.hs_kl.wcn2.util.Constants;
 
 public class OverviewActivity extends AppCompatActivity
 {

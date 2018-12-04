@@ -1,4 +1,4 @@
-package de.hskl.wcn2.fragments.search_sensor;
+package de.hs_kl.wcn2.fragments.search_sensor;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,10 +8,10 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import de.hskl.wcn2.R;
-import de.hskl.wcn2.ble_scanner.SensorData;
-import de.hskl.wcn2.util.LastSeenSinceUtil;
-import de.hskl.wcn2.util.TrackedSensorsStorage;
+import de.hs_kl.wcn2.R;
+import de.hs_kl.wcn2.ble_scanner.SensorData;
+import de.hs_kl.wcn2.util.LastSeenSinceUtil;
+import de.hs_kl.wcn2.util.TrackedSensorsStorage;
 
 class FoundSensorView
 {

@@ -1,4 +1,4 @@
-package de.hskl.wcn2.fragments.manage_measurements;
+package de.hs_kl.wcn2.fragments.manage_measurements;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import java.io.File;
 
-import de.hskl.wcn2.R;
-import de.hskl.wcn2.util.Constants;
+import de.hs_kl.wcn2.R;
+import de.hs_kl.wcn2.util.Constants;
 
 class MeasurementView
 {
