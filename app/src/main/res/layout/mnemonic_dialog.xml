@@ -17,5 +17,6 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/mnemonic_comment"
-        android:inputType="text" />
+        android:inputType="text"
+        android:selectAllOnFocus="true" />
 </LinearLayout>

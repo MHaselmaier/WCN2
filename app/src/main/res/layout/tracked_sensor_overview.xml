@@ -8,46 +8,63 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:paddingLeft="5dp"
-        android:paddingTop="5dp"
-        android:paddingRight="5dp">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/sensor_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    tools:text="WCN1" />
+
+                <TextView
+                    android:id="@+id/mnemonic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="5dp"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    tools:text="[Linker Arm]" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/last_seen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sensor_not_seen"
+                android:textAlignment="textEnd"
+                android:textSize="14sp"
+                tools:text="Zuletzt gesehen: vor 10 Sekunden" />
+
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/sensor_warning"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
             android:contentDescription="@string/sensor_warning"
             android:scaleType="fitCenter"
             android:tint="@android:color/holo_orange_light"
             app:srcCompat="@drawable/ic_sensor_warning" />
 
-        <TextView
-            android:id="@+id/sensor_id"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            tools:text="WCN1" />
-
-        <TextView
-            android:id="@+id/mnemonic"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="5dp"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            tools:text="[Linker Arm]" />
-
-        <TextView
-            android:id="@+id/last_seen"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/sensor_not_seen"
-            android:textAlignment="textEnd"
-            android:textSize="16sp"
-            android:textStyle="bold" />
     </LinearLayout>
 
     <LinearLayout

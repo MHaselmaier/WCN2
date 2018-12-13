@@ -249,7 +249,6 @@ public class UsageActivity extends AppCompatActivity
         View sensorListItem = getLayoutInflater()
                 .inflate(R.layout.sensor_list_item, container, false);
         ((TextView)sensorListItem.findViewById(R.id.sensor_id)).setText("WCN1");
-        ((TextView)sensorListItem.findViewById(R.id.sensor_mac_address)).setText("1A:6E:64:F0:68:7A");
         ((ImageView)sensorListItem.findViewById(R.id.battery_level)).setImageDrawable(battery);
         ((ImageView)sensorListItem.findViewById(R.id.signal_strength)).setImageDrawable(signal);
         final Switch firstSwitch = sensorListItem.findViewById(R.id.sensor_tracked);
@@ -258,7 +257,6 @@ public class UsageActivity extends AppCompatActivity
 
         sensorListItem = getLayoutInflater().inflate(R.layout.sensor_list_item, container, false);
         ((TextView)sensorListItem.findViewById(R.id.sensor_id)).setText("WCN2");
-        ((TextView)sensorListItem.findViewById(R.id.sensor_mac_address)).setText("D9:0A:58:E0:99:E5");
         ((ImageView)sensorListItem.findViewById(R.id.battery_level)).setImageDrawable(battery);
         ((ImageView)sensorListItem.findViewById(R.id.signal_strength)).setImageDrawable(signal);
         sensorListItem.findViewById(R.id.sensor_tracked).setClickable(false);
@@ -266,7 +264,6 @@ public class UsageActivity extends AppCompatActivity
 
         sensorListItem = getLayoutInflater().inflate(R.layout.sensor_list_item, container, false);
         ((TextView)sensorListItem.findViewById(R.id.sensor_id)).setText("WCN3");
-        ((TextView)sensorListItem.findViewById(R.id.sensor_mac_address)).setText("C7:45:1B:C8:8F:90");
         ((ImageView)sensorListItem.findViewById(R.id.battery_level)).setImageDrawable(battery);
         ((ImageView)sensorListItem.findViewById(R.id.signal_strength)).setImageDrawable(signal);
         final Switch secondSwitch = sensorListItem.findViewById(R.id.sensor_tracked);

@@ -29,20 +29,18 @@ class FoundSensorView
         this.trackedSensors = TrackedSensorsStorage.getInstance(this.context);
         this.root = LayoutInflater.from(this.context).inflate(R.layout.sensor_list_item, null);
 
+        boolean isTracked = this.trackedSensors.isTracked(sensorData);
         ImageButton mnemonicEdit = this.root.findViewById(R.id.mnemonic_edit);
         mnemonicEdit.setOnClickListener((v) ->
                 MnemonicEditDialog.buildMnemonicEditDialog(this.context, sensorData).show());
+        mnemonicEdit.setVisibility(isTracked ? View.VISIBLE: View.INVISIBLE);
 
-        boolean isTracked = this.trackedSensors.isTracked(sensorData);
         int labelResourceID = (isTracked ? R.string.sensor_tracked : R.string.sensor_not_tracked);
         Switch trackSwitch = this.root.findViewById(R.id.sensor_tracked);
         trackSwitch.setChecked(isTracked);
         trackSwitch.setText(labelResourceID);
         trackSwitch.setOnCheckedChangeListener(new SensorTrackedChangeListener(this.context,
-                sensorData));
-
-        TextView macAddress = this.root.findViewById(R.id.sensor_mac_address);
-        macAddress.setText(sensorData.getMacAddress());
+                sensorData, mnemonicEdit));
 
         TextView sensorID = this.root.findViewById(R.id.sensor_id);
         sensorID.setText(this.context.getResources().getString(R.string.sensor_id,
