@@ -251,8 +251,11 @@ public class UsageActivity extends AppCompatActivity
         ((TextView)sensorListItem.findViewById(R.id.sensor_id)).setText("WCN1");
         ((ImageView)sensorListItem.findViewById(R.id.battery_level)).setImageDrawable(battery);
         ((ImageView)sensorListItem.findViewById(R.id.signal_strength)).setImageDrawable(signal);
-        final Switch firstSwitch = sensorListItem.findViewById(R.id.sensor_tracked);
+        Switch firstSwitch = sensorListItem.findViewById(R.id.sensor_tracked);
         firstSwitch.setClickable(false);
+        ImageView firstMnemonicEdit = sensorListItem.findViewById(R.id.mnemonic_edit);
+        firstMnemonicEdit.setVisibility(View.INVISIBLE);
+        ((TextView)sensorListItem.findViewById(R.id.last_seen)).setText(getString(R.string.sensor_last_seen) + " " + getResources().getString(R.string.sensor_seen_just_now));
         layout.addView(sensorListItem, 1);
 
         sensorListItem = getLayoutInflater().inflate(R.layout.sensor_list_item, container, false);
@@ -260,14 +263,19 @@ public class UsageActivity extends AppCompatActivity
         ((ImageView)sensorListItem.findViewById(R.id.battery_level)).setImageDrawable(battery);
         ((ImageView)sensorListItem.findViewById(R.id.signal_strength)).setImageDrawable(signal);
         sensorListItem.findViewById(R.id.sensor_tracked).setClickable(false);
+        sensorListItem.findViewById(R.id.mnemonic_edit).setVisibility(View.INVISIBLE);
+        ((TextView)sensorListItem.findViewById(R.id.last_seen)).setText(getString(R.string.sensor_last_seen) + " " + getResources().getString(R.string.sensor_seen_just_now));
         layout.addView(sensorListItem, 2);
 
         sensorListItem = getLayoutInflater().inflate(R.layout.sensor_list_item, container, false);
         ((TextView)sensorListItem.findViewById(R.id.sensor_id)).setText("WCN3");
         ((ImageView)sensorListItem.findViewById(R.id.battery_level)).setImageDrawable(battery);
         ((ImageView)sensorListItem.findViewById(R.id.signal_strength)).setImageDrawable(signal);
-        final Switch secondSwitch = sensorListItem.findViewById(R.id.sensor_tracked);
+        Switch secondSwitch = sensorListItem.findViewById(R.id.sensor_tracked);
         secondSwitch.setClickable(false);
+        ImageView secondMnemonicEdit = sensorListItem.findViewById(R.id.mnemonic_edit);
+        secondMnemonicEdit.setVisibility(View.INVISIBLE);
+        ((TextView)sensorListItem.findViewById(R.id.last_seen)).setText(getString(R.string.sensor_last_seen) + " " + getResources().getString(R.string.sensor_seen_just_now));
         layout.addView(sensorListItem, 3);
 
         selectSensors.addStep(new Animation.Step(selectSensors, () ->
@@ -281,20 +289,24 @@ public class UsageActivity extends AppCompatActivity
         {
             firstSwitch.setChecked(true);
             firstSwitch.setText(R.string.sensor_tracked);
+            firstMnemonicEdit.setVisibility(View.VISIBLE);
         }, 500));
 
         selectSensors.addStep(new Animation.Step(selectSensors, () ->
         {
             secondSwitch.setChecked(true);
             secondSwitch.setText(R.string.sensor_tracked);
+            secondMnemonicEdit.setVisibility(View.VISIBLE);
         }, 500));
 
         selectSensors.addStep(new Animation.Step(selectSensors, () ->
         {
             firstSwitch.setChecked(false);
             firstSwitch.setText(R.string.sensor_not_tracked);
+            firstMnemonicEdit.setVisibility(View.INVISIBLE);
             secondSwitch.setChecked(false);
             secondSwitch.setText(R.string.sensor_not_tracked);
+            secondMnemonicEdit.setVisibility(View.INVISIBLE);
             container.removeAllViews();
             container.addView(sensorTracking);
         }, 1000));
@@ -314,7 +326,7 @@ public class UsageActivity extends AppCompatActivity
         View trackedSensor1 = getLayoutInflater().inflate(R.layout.tracked_sensor_overview, trackedSensors);
         trackedSensor1.findViewById(R.id.sensor_warning).setVisibility(View.GONE);
         ((TextView)trackedSensor1.findViewById(R.id.sensor_id)).setText("WCN1");
-        ((TextView)trackedSensor1.findViewById(R.id.last_seen)).setText(getString(R.string.sensor_last_seen) + getResources().getString(R.string.sensor_seen_just_now));
+        ((TextView)trackedSensor1.findViewById(R.id.last_seen)).setText(getString(R.string.sensor_last_seen) + " " + getResources().getString(R.string.sensor_seen_just_now));
         ((TextView)trackedSensor1.findViewById(R.id.temperature)).setText("21,5 °C");
         ((TextView)trackedSensor1.findViewById(R.id.humidity)).setText("36,9 %");
         ((ImageView)trackedSensor1.findViewById(R.id.battery_level)).setImageDrawable(getDrawable(R.drawable.ic_battery_full));
@@ -323,7 +335,7 @@ public class UsageActivity extends AppCompatActivity
         View trackedSensor2 = getLayoutInflater().inflate(R.layout.tracked_sensor_overview, trackedSensors, false);
         trackedSensor2.findViewById(R.id.sensor_warning).setVisibility(View.GONE);
         ((TextView)trackedSensor2.findViewById(R.id.sensor_id)).setText("WCN3");
-        ((TextView)trackedSensor2.findViewById(R.id.last_seen)).setText(getString(R.string.sensor_last_seen) + getResources().getString(R.string.sensor_seen_just_now));
+        ((TextView)trackedSensor2.findViewById(R.id.last_seen)).setText(getString(R.string.sensor_last_seen) + " " + getResources().getString(R.string.sensor_seen_just_now));
         ((TextView)trackedSensor2.findViewById(R.id.temperature)).setText("21,4 °C");
         ((TextView)trackedSensor2.findViewById(R.id.humidity)).setText("36,8 %");
         ((ImageView)trackedSensor2.findViewById(R.id.battery_level)).setImageDrawable(getDrawable(R.drawable.ic_battery_full));
