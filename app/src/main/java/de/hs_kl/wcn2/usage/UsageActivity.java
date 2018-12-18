@@ -103,11 +103,11 @@ public class UsageActivity extends AppCompatActivity
 
     private Animation makeIntroductionAnimation()
     {
-        final DrawerLayout drawer = (DrawerLayout)getLayoutInflater()
+        DrawerLayout drawer = (DrawerLayout)getLayoutInflater()
                 .inflate(R.layout.activity_overview, this.content, false);
-        final ConstraintLayout container = drawer.findViewById(R.id.fragments);
+        ConstraintLayout container = drawer.findViewById(R.id.fragments);
 
-        final View sensorTracking = getLayoutInflater()
+        View sensorTracking = getLayoutInflater()
                 .inflate(R.layout.sensor_tracking, container, false);
         LinearLayout trackedSensorViews = sensorTracking.findViewById(R.id.tracked_sensors);
         View emptyView = trackedSensorViews.findViewById(R.id.empty_list_item);
@@ -130,11 +130,11 @@ public class UsageActivity extends AppCompatActivity
 
     private Animation makeCreateActionAnimation()
     {
-        final DrawerLayout drawer = (DrawerLayout)getLayoutInflater()
+        DrawerLayout drawer = (DrawerLayout)getLayoutInflater()
                 .inflate(R.layout.activity_overview, this.content, false);
-        final ConstraintLayout container = drawer.findViewById(R.id.fragments);
+        ConstraintLayout container = drawer.findViewById(R.id.fragments);
 
-        final View sensorTracking = getLayoutInflater()
+        View sensorTracking = getLayoutInflater()
                 .inflate(R.layout.sensor_tracking, container, false);
         sensorTracking.findViewById(R.id.measurement_button).setClickable(false);
         LinearLayout trackedSensorViews = sensorTracking.findViewById(R.id.tracked_sensors);
@@ -150,7 +150,7 @@ public class UsageActivity extends AppCompatActivity
             container.addView(sensorTracking);
         }, R.string.create_action_description);
 
-        final View action = drawer.findViewById(R.id.action);
+        View action = drawer.findViewById(R.id.action);
         createAction.addStep(new Animation.Step(createAction, () ->
         {
             action.setBackgroundColor(Color.argb(255, 255, 255, 255));
@@ -159,9 +159,9 @@ public class UsageActivity extends AppCompatActivity
 
         createAction.addStep(new Animation.Step(createAction, () ->
             action.setBackgroundColor(Color.argb(50, 0, 0, 0)),
-        500));
+        1000));
 
-        final View actions = getLayoutInflater().inflate(R.layout.actions, container, false);
+        View actions = getLayoutInflater().inflate(R.layout.actions, container, false);
         emptyView = getLayoutInflater().inflate(R.layout.empty_list_item, actions.findViewById(
                 R.id.actions));
         ((TextView)emptyView.findViewById(R.id.label)).setText(R.string.no_actions_defined);
@@ -170,11 +170,11 @@ public class UsageActivity extends AppCompatActivity
             container.removeAllViews();
             container.addView(actions);
             drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        }, 250));
+        }, 750));
 
-        final View newAction = actions.findViewById(R.id.add);
+        View newAction = actions.findViewById(R.id.add);
         createAction.addStep(new Animation.Step(createAction, () ->
-                newAction.setBackgroundColor(Color.argb(50, 0, 0, 0)), 500));
+                newAction.setBackgroundColor(Color.argb(50, 0, 0, 0)), 1000));
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         View dialogView = getLayoutInflater().inflate(R.layout.action_dialog, container, false);
@@ -182,7 +182,7 @@ public class UsageActivity extends AppCompatActivity
         dialogBuilder.setView(dialogView);
         dialogBuilder.setPositiveButton(R.string.ok, null);
         dialogBuilder.setNegativeButton(R.string.cancel, null);
-        final AlertDialog dialog = dialogBuilder.create();
+        AlertDialog dialog = dialogBuilder.create();
         Window window = dialog.getWindow();
         if (null != window)
         {
@@ -194,25 +194,25 @@ public class UsageActivity extends AppCompatActivity
         {
             newAction.setBackgroundColor(Color.argb(255, 255, 255, 255));
             dialog.show();
-        }, 250));
+        }, 750));
 
         createAction.addStep(new Animation.Step(createAction, () ->
         {
             dialog.hide();
             container.removeAllViews();
             container.addView(sensorTracking);
-        }, 1000));
+        }, 2000));
 
         return createAction;
     }
 
     private Animation makeSelectTrackedSensorsAnimation()
     {
-        final DrawerLayout drawer = (DrawerLayout)getLayoutInflater()
+        DrawerLayout drawer = (DrawerLayout)getLayoutInflater()
                 .inflate(R.layout.activity_overview, this.content, false);
-        final ConstraintLayout container = drawer.findViewById(R.id.fragments);
+        ConstraintLayout container = drawer.findViewById(R.id.fragments);
 
-        final View sensorTracking = getLayoutInflater()
+        View sensorTracking = getLayoutInflater()
                 .inflate(R.layout.sensor_tracking, container, false);
         sensorTracking.findViewById(R.id.measurement_button).setClickable(false);
         LinearLayout trackedSensorViews = sensorTracking.findViewById(R.id.tracked_sensors);
@@ -228,7 +228,7 @@ public class UsageActivity extends AppCompatActivity
             container.addView(sensorTracking);
         }, R.string.select_tracked_sensors_description);
 
-        final View sensor = drawer.findViewById(R.id.sensor);
+        View sensor = drawer.findViewById(R.id.sensor);
         selectSensors.addStep(new Animation.Step(selectSensors, () ->
         {
             sensor.setBackgroundColor(Color.argb(255, 255, 255, 255));
@@ -236,9 +236,9 @@ public class UsageActivity extends AppCompatActivity
         }, 1000));
 
         selectSensors.addStep(new Animation.Step(selectSensors, () ->
-                sensor.setBackgroundColor(Color.argb(50, 0, 0, 0)), 500));
+                sensor.setBackgroundColor(Color.argb(50, 0, 0, 0)), 1000));
 
-        final View searchSensor = getLayoutInflater()
+        View searchSensor = getLayoutInflater()
                 .inflate(R.layout.search_sensor, container, false);
         LinearLayout layout = searchSensor.findViewById(R.id.layout);
         layout.removeView(layout.findViewById(R.id.empty_list_item));
@@ -283,21 +283,21 @@ public class UsageActivity extends AppCompatActivity
             container.removeAllViews();
             container.addView(searchSensor);
             drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        }, 250));
+        }, 750));
 
         selectSensors.addStep(new Animation.Step(selectSensors, () ->
         {
             firstSwitch.setChecked(true);
             firstSwitch.setText(R.string.sensor_tracked);
             firstMnemonicEdit.setVisibility(View.VISIBLE);
-        }, 500));
+        }, 1000));
 
         selectSensors.addStep(new Animation.Step(selectSensors, () ->
         {
             secondSwitch.setChecked(true);
             secondSwitch.setText(R.string.sensor_tracked);
             secondMnemonicEdit.setVisibility(View.VISIBLE);
-        }, 500));
+        }, 750));
 
         selectSensors.addStep(new Animation.Step(selectSensors, () ->
         {
@@ -309,18 +309,18 @@ public class UsageActivity extends AppCompatActivity
             secondMnemonicEdit.setVisibility(View.INVISIBLE);
             container.removeAllViews();
             container.addView(sensorTracking);
-        }, 1000));
+        }, 2000));
 
         return selectSensors;
     }
 
     private Animation makePerformMeasurementAnimation()
     {
-        final DrawerLayout drawer = (DrawerLayout)getLayoutInflater()
+        DrawerLayout drawer = (DrawerLayout)getLayoutInflater()
                 .inflate(R.layout.activity_overview, this.content, false);
-        final ConstraintLayout container = drawer.findViewById(R.id.fragments);
+        ConstraintLayout container = drawer.findViewById(R.id.fragments);
 
-        final View sensorTracking = getLayoutInflater()
+        View sensorTracking = getLayoutInflater()
                 .inflate(R.layout.sensor_tracking, container, false);
         LinearLayout trackedSensors = sensorTracking.findViewById(R.id.tracked_sensors);
         View trackedSensor1 = getLayoutInflater().inflate(R.layout.tracked_sensor_overview, trackedSensors);
@@ -352,12 +352,12 @@ public class UsageActivity extends AppCompatActivity
             container.addView(sensorTracking);
         }, R.string.perform_measurement_description);
 
-        final Button startMeasurement = sensorTracking.findViewById(R.id.measurement_button);
+        Button startMeasurement = sensorTracking.findViewById(R.id.measurement_button);
         performMeasurement.addStep(new Animation.Step(performMeasurement, () ->
         {
             startMeasurement.performClick();
             startMeasurement.setPressed(true);
-        }, 500));
+        }, 1000));
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         View dialogView = getLayoutInflater().inflate(R.layout.measurement_dialog, container, false);
@@ -367,7 +367,7 @@ public class UsageActivity extends AppCompatActivity
         dialogBuilder.setView(dialogView);
         dialogBuilder.setPositiveButton(R.string.ok, null);
         dialogBuilder.setNegativeButton(R.string.cancel, null);
-        final AlertDialog dialog = dialogBuilder.create();
+        AlertDialog dialog = dialogBuilder.create();
         Window window = dialog.getWindow();
         if (null != window)
         {
@@ -376,25 +376,36 @@ public class UsageActivity extends AppCompatActivity
         }
         performMeasurement.addStep(new Animation.Step(performMeasurement, dialog::show, 250));
 
-        final View sensorOverview = sensorTracking.findViewById(R.id.sensor_overview);
-        final View actionOverview = sensorTracking.findViewById(R.id.action_overview);
+        View sensorOverview = sensorTracking.findViewById(R.id.sensor_overview);
+        View actionOverview = sensorTracking.findViewById(R.id.action_overview);
         GridLayout gridLayout = actionOverview.findViewById(R.id.actions);
         View actionButton = getLayoutInflater().inflate(R.layout.action_button, gridLayout, false);
-        final Button button = actionButton.findViewById(R.id.button);
-        button.setText("Sit-Ups");
+        Button button = actionButton.findViewById(R.id.button);
+        button.setText("Push-Ups");
         button.setClickable(false);
+        gridLayout.addView(actionButton);
+        actionButton = getLayoutInflater().inflate(R.layout.action_button, gridLayout, false);
+        Button button2 = actionButton.findViewById(R.id.button);
+        button2.setText("Sit-Ups");
+        button2.setClickable(false);
         gridLayout.addView(actionButton);
         View view = getLayoutInflater().inflate(R.layout.action_button, gridLayout, false);
         view.setVisibility(View.INVISIBLE);
         gridLayout.addView(view);
-        final TextView time = sensorTracking.findViewById(R.id.measurement_time);
+        TextView time = sensorTracking.findViewById(R.id.measurement_time);
         performMeasurement.addStep(new Animation.Step(performMeasurement, () ->
         {
             dialog.hide();
             sensorOverview.setVisibility(View.GONE);
             actionOverview.setVisibility(View.VISIBLE);
             time.setText("00:00");
-        }, 500));
+        }, 1500));
+
+        performMeasurement.addStep(new Animation.Step(performMeasurement, () -> time.setText("00:01")
+                , 1000));
+
+        performMeasurement.addStep(new Animation.Step(performMeasurement, () -> time.setText("00:02")
+                , 1000));
 
         performMeasurement.addStep(new Animation.Step(performMeasurement, () ->
         {
@@ -402,10 +413,10 @@ public class UsageActivity extends AppCompatActivity
             button.getBackground().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
         }, 500));
 
-        performMeasurement.addStep(new Animation.Step(performMeasurement, () -> time.setText("00:01")
+        performMeasurement.addStep(new Animation.Step(performMeasurement, () -> time.setText("00:03")
                 , 500));
 
-        performMeasurement.addStep(new Animation.Step(performMeasurement, () -> time.setText("00:02")
+        performMeasurement.addStep(new Animation.Step(performMeasurement, () -> time.setText("00:04")
                 , 1000));
 
         performMeasurement.addStep(new Animation.Step(performMeasurement, () ->
@@ -414,7 +425,7 @@ public class UsageActivity extends AppCompatActivity
             actionOverview.setVisibility(View.GONE);
             time.setText("--:--");
             button.getBackground().clearColorFilter();
-        }, 500));
+        }, 750));
 
         return performMeasurement;
     }
