@@ -50,8 +50,9 @@ class MnemonicEditDialog
             String mnemonic = trackedSensors.getMnemonic(sensorData.getMacAddress());
             if (!mnemonic.equals("null"))
             {
-                mnemonicView.append(mnemonic);
+                mnemonicView.setText(mnemonic);
             }
+            mnemonicView.selectAll();
             mnemonicView.requestFocus();
             if (null != window)
             {
