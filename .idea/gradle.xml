@@ -9,6 +9,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/wcn2" />
+            <option value="$PROJECT_DIR$/wcn2_alarm" />
             <option value="$PROJECT_DIR$/wcn2_sensors" />
           </set>
         </option>

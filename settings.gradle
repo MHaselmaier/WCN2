@@ -1,1 +1,1 @@
-include ':wcn2', ':wcn2_sensors'
+include ':wcn2', ':wcn2_sensors', ':wcn2_alarm'

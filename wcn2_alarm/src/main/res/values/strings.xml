@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">WCN2 Alarm</string>
+
+    <string name="version_info" translatable="false">19.03</string>
+</resources>
