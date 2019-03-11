@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hs_kl.wcn2.OverviewActivity;
-import de.hs_kl.wcn2_sensors.BLEScanner;
+import de.hs_kl.wcn2_sensors.WCN2Scanner;
 import de.hs_kl.wcn2_sensors.ScanResultListener;
 import de.hs_kl.wcn2_sensors.SensorData;
 import de.hs_kl.wcn2.util.Constants;
@@ -97,7 +97,7 @@ public class MeasurementService extends Service implements ScanResultListener
                 if (BluetoothAdapter.STATE_OFF == bluetoothState ||
                         Settings.Secure.LOCATION_MODE_OFF == locationMode)
                 {
-                    BLEScanner.setBluetoothLeScanner(null);
+                    WCN2Scanner.setBluetoothLeScanner(null);
                     intent = new Intent(MeasurementService.this, OverviewActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
                             Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -147,7 +147,7 @@ public class MeasurementService extends Service implements ScanResultListener
 
     private void onActionStart(Intent intent)
     {
-        BLEScanner.registerScanResultListener(this);
+        WCN2Scanner.registerScanResultListener(this);
         String filename = intent.getStringExtra(Constants.MEASUREMENT_FILENAME);
         String header = intent.getStringExtra(Constants.MEASUREMENT_HEADER);
         int averageRate = intent.getIntExtra(Constants.MEASUREMENT_RATE, 1);
@@ -171,7 +171,7 @@ public class MeasurementService extends Service implements ScanResultListener
     private void onActionStop()
     {
         this.measurement.finish();
-        BLEScanner.unregisterScanResultListener(this);
+        WCN2Scanner.unregisterScanResultListener(this);
         MeasurementService.action = "";
         MeasurementService.startTime = Long.MIN_VALUE;
 

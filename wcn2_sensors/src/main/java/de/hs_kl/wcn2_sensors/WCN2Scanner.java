@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class BLEScanner
+public class WCN2Scanner
 {
     private static BluetoothLeScanner bleScanner;
     private static Set<ScanResultListener> scanResultListeners = new HashSet<>();
@@ -41,7 +41,7 @@ public class BLEScanner
 
         private void dispatchScanResult(ScanResult result)
         {
-            for (ScanResultListener listener: BLEScanner.scanResultListeners)
+            for (ScanResultListener listener: WCN2Scanner.scanResultListeners)
             {
                 if (0 == listener.getScanFilter().size())
                 {
@@ -66,23 +66,23 @@ public class BLEScanner
             switch(errorCode)
             {
                 case SCAN_FAILED_ALREADY_STARTED:
-                    Log.e(BLEScanner.class.getSimpleName(),
+                    Log.e(WCN2Scanner.class.getSimpleName(),
                             "Failed to start scanning: already scanning!");
                     break;
                 case SCAN_FAILED_APPLICATION_REGISTRATION_FAILED:
-                    Log.e(BLEScanner.class.getSimpleName(),
+                    Log.e(WCN2Scanner.class.getSimpleName(),
                             "Failed to start scanning: app cannot be registered!");
                     break;
                 case SCAN_FAILED_FEATURE_UNSUPPORTED:
-                    Log.e(BLEScanner.class.getSimpleName(),
+                    Log.e(WCN2Scanner.class.getSimpleName(),
                             "Failed to start scanning: power optimized scan not supported!");
                     break;
                 case SCAN_FAILED_INTERNAL_ERROR:
-                    Log.e(BLEScanner.class.getSimpleName(),
+                    Log.e(WCN2Scanner.class.getSimpleName(),
                             "Failed to start scanning: internal error!");
                     break;
                 default:
-                    Log.e(BLEScanner.class.getSimpleName(),
+                    Log.e(WCN2Scanner.class.getSimpleName(),
                             "Failed to start scanning!");
                     break;
             }
@@ -92,8 +92,8 @@ public class BLEScanner
     public static void setBluetoothLeScanner(BluetoothLeScanner bleScanner)
     {
         stopScan();
-        BLEScanner.bleScanner = bleScanner;
-        if (0 < BLEScanner.scanResultListeners.size())
+        WCN2Scanner.bleScanner = bleScanner;
+        if (0 < WCN2Scanner.scanResultListeners.size())
         {
             startScan();
         }
@@ -101,9 +101,9 @@ public class BLEScanner
 
     public static void registerScanResultListener(ScanResultListener scanResultlistener)
     {
-        BLEScanner.scanResultListeners.add(scanResultlistener);
+        WCN2Scanner.scanResultListeners.add(scanResultlistener);
 
-        if (1 == BLEScanner.scanResultListeners.size())
+        if (1 == WCN2Scanner.scanResultListeners.size())
         {
             startScan();
         }
@@ -111,9 +111,9 @@ public class BLEScanner
 
     public static void unregisterScanResultListener(ScanResultListener scanResultListener)
     {
-        BLEScanner.scanResultListeners.remove(scanResultListener);
+        WCN2Scanner.scanResultListeners.remove(scanResultListener);
 
-        if (0 == BLEScanner.scanResultListeners.size())
+        if (0 == WCN2Scanner.scanResultListeners.size())
         {
             stopScan();
         }
@@ -121,18 +121,18 @@ public class BLEScanner
 
     private static void startScan()
     {
-        if (null == BLEScanner.bleScanner) return;
+        if (null == WCN2Scanner.bleScanner) return;
 
-        BLEScanner.bleScanner.startScan(getScanFilters(), getScanSettings(), BLEScanner.scanCallback);
+        WCN2Scanner.bleScanner.startScan(getScanFilters(), getScanSettings(), WCN2Scanner.scanCallback);
     }
 
     private static void stopScan()
     {
-        if (null == BLEScanner.bleScanner) return;
+        if (null == WCN2Scanner.bleScanner) return;
 
         try
         {
-            BLEScanner.bleScanner.stopScan(BLEScanner.scanCallback);
+            WCN2Scanner.bleScanner.stopScan(WCN2Scanner.scanCallback);
         }
         catch(IllegalStateException e) {}
     }

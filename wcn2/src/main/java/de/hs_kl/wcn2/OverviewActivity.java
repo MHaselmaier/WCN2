@@ -28,7 +28,7 @@ import android.widget.Toast;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import de.hs_kl.wcn2_sensors.BLEScanner;
+import de.hs_kl.wcn2_sensors.WCN2Scanner;
 import de.hs_kl.wcn2.fragments.about.AboutFragment;
 import de.hs_kl.wcn2.fragments.actions.ActionsFragment;
 import de.hs_kl.wcn2.fragments.manage_measurements.ManageMeasurementsFragment;
@@ -49,7 +49,7 @@ public class OverviewActivity extends AppCompatActivity
             int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
             if (BluetoothAdapter.STATE_OFF == state)
             {
-                BLEScanner.setBluetoothLeScanner(null);
+                WCN2Scanner.setBluetoothLeScanner(null);
                 Intent enableBluetoothIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(enableBluetoothIntent, Constants.REQUEST_ENABLE_BT);
             }
@@ -305,7 +305,7 @@ public class OverviewActivity extends AppCompatActivity
     {
         if (this.btAdapter.isEnabled())
         {
-            BLEScanner.setBluetoothLeScanner(this.btAdapter.getBluetoothLeScanner());
+            WCN2Scanner.setBluetoothLeScanner(this.btAdapter.getBluetoothLeScanner());
         }
         else
         {
@@ -320,7 +320,7 @@ public class OverviewActivity extends AppCompatActivity
         {
             if (Settings.Secure.LOCATION_MODE_OFF != Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE))
             {
-                BLEScanner.setBluetoothLeScanner(this.btAdapter.getBluetoothLeScanner());
+                WCN2Scanner.setBluetoothLeScanner(this.btAdapter.getBluetoothLeScanner());
                 return;
             }
         }
@@ -373,7 +373,7 @@ public class OverviewActivity extends AppCompatActivity
     {
         if (RESULT_OK == resultCode)
         {
-            BLEScanner.setBluetoothLeScanner(this.btAdapter.getBluetoothLeScanner());
+            WCN2Scanner.setBluetoothLeScanner(this.btAdapter.getBluetoothLeScanner());
         }
         else
         {
@@ -394,7 +394,7 @@ public class OverviewActivity extends AppCompatActivity
                 finish();
                 return;
             }
-            BLEScanner.setBluetoothLeScanner(this.btAdapter.getBluetoothLeScanner());
+            WCN2Scanner.setBluetoothLeScanner(this.btAdapter.getBluetoothLeScanner());
         }
         catch(Exception e) {}
 

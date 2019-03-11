@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hs_kl.wcn2.OverviewActivity;
-import de.hs_kl.wcn2_sensors.BLEScanner;
+import de.hs_kl.wcn2_sensors.WCN2Scanner;
 import de.hs_kl.wcn2.R;
 import de.hs_kl.wcn2_sensors.ScanResultListener;
 import de.hs_kl.wcn2_sensors.SensorData;
@@ -196,7 +196,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     {
         super.onResume();
 
-        BLEScanner.registerScanResultListener(this);
+        WCN2Scanner.registerScanResultListener(this);
 
         startUIUpdater();
     }
@@ -206,7 +206,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     {
         super.onPause();
 
-        BLEScanner.unregisterScanResultListener(this);
+        WCN2Scanner.unregisterScanResultListener(this);
     }
 
     private void startUIUpdater()
