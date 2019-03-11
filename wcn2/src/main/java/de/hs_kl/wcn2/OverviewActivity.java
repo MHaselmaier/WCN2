@@ -41,7 +41,6 @@ public class OverviewActivity extends AppCompatActivity
 {
     public static boolean isVisible;
 
-    private BLEScanner bleScanner;
     private BluetoothAdapter btAdapter;
     private BroadcastReceiver btAdapterChangeReceiver = new BroadcastReceiver() {
         @Override
@@ -50,7 +49,7 @@ public class OverviewActivity extends AppCompatActivity
             int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
             if (BluetoothAdapter.STATE_OFF == state)
             {
-                OverviewActivity.this.bleScanner.setBluetoothLeScanner(null);
+                BLEScanner.setBluetoothLeScanner(null);
                 Intent enableBluetoothIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(enableBluetoothIntent, Constants.REQUEST_ENABLE_BT);
             }
@@ -85,7 +84,6 @@ public class OverviewActivity extends AppCompatActivity
 
         requestPermissions();
 
-        this.bleScanner = BLEScanner.getInstance(this);
         registerReceiver(this.btAdapterChangeReceiver,
                 new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
         setupBluetoothAdapter();
@@ -307,7 +305,7 @@ public class OverviewActivity extends AppCompatActivity
     {
         if (this.btAdapter.isEnabled())
         {
-            this.bleScanner.setBluetoothLeScanner(this.btAdapter.getBluetoothLeScanner());
+            BLEScanner.setBluetoothLeScanner(this.btAdapter.getBluetoothLeScanner());
         }
         else
         {
@@ -322,7 +320,7 @@ public class OverviewActivity extends AppCompatActivity
         {
             if (Settings.Secure.LOCATION_MODE_OFF != Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE))
             {
-                this.bleScanner.setBluetoothLeScanner(this.btAdapter.getBluetoothLeScanner());
+                BLEScanner.setBluetoothLeScanner(this.btAdapter.getBluetoothLeScanner());
                 return;
             }
         }
@@ -375,7 +373,7 @@ public class OverviewActivity extends AppCompatActivity
     {
         if (RESULT_OK == resultCode)
         {
-            this.bleScanner.setBluetoothLeScanner(this.btAdapter.getBluetoothLeScanner());
+            BLEScanner.setBluetoothLeScanner(this.btAdapter.getBluetoothLeScanner());
         }
         else
         {
@@ -396,7 +394,7 @@ public class OverviewActivity extends AppCompatActivity
                 finish();
                 return;
             }
-            this.bleScanner.setBluetoothLeScanner(this.btAdapter.getBluetoothLeScanner());
+            BLEScanner.setBluetoothLeScanner(this.btAdapter.getBluetoothLeScanner());
         }
         catch(Exception e) {}
 

@@ -35,7 +35,6 @@ public class MeasurementService extends Service implements ScanResultListener
     public static long startTime = Long.MIN_VALUE;
 
     private Measurement measurement;
-    private BLEScanner bleScanner;
     private PowerManager.WakeLock wakeLock;
 
     private  TrackedSensorsStorage trackedSensorsStorage;
@@ -98,7 +97,7 @@ public class MeasurementService extends Service implements ScanResultListener
                 if (BluetoothAdapter.STATE_OFF == bluetoothState ||
                         Settings.Secure.LOCATION_MODE_OFF == locationMode)
                 {
-                    MeasurementService.this.bleScanner.setBluetoothLeScanner(null);
+                    BLEScanner.setBluetoothLeScanner(null);
                     intent = new Intent(MeasurementService.this, OverviewActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
                             Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -117,7 +116,6 @@ public class MeasurementService extends Service implements ScanResultListener
         filter.addAction(LocationManager.MODE_CHANGED_ACTION);
         registerReceiver(this.broadcastReceiver, filter);
 
-        this.bleScanner = BLEScanner.getInstance(getBaseContext());
         this.trackedSensorsStorage = TrackedSensorsStorage.getInstance(getBaseContext());
 
         PowerManager powerManager = (PowerManager)getSystemService(Context.POWER_SERVICE);
@@ -149,7 +147,7 @@ public class MeasurementService extends Service implements ScanResultListener
 
     private void onActionStart(Intent intent)
     {
-        this.bleScanner.registerScanResultListener(this);
+        BLEScanner.registerScanResultListener(this);
         String filename = intent.getStringExtra(Constants.MEASUREMENT_FILENAME);
         String header = intent.getStringExtra(Constants.MEASUREMENT_HEADER);
         int averageRate = intent.getIntExtra(Constants.MEASUREMENT_RATE, 1);
@@ -173,7 +171,7 @@ public class MeasurementService extends Service implements ScanResultListener
     private void onActionStop()
     {
         this.measurement.finish();
-        this.bleScanner.unregisterScanResultListener(this);
+        BLEScanner.unregisterScanResultListener(this);
         MeasurementService.action = "";
         MeasurementService.startTime = Long.MIN_VALUE;
 

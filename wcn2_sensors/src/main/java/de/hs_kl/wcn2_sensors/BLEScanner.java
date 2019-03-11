@@ -5,7 +5,6 @@ import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
-import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 
@@ -16,18 +15,10 @@ import java.util.Set;
 
 public class BLEScanner
 {
-    private static BLEScanner instance;
+    private static BluetoothLeScanner bleScanner;
+    private static Set<ScanResultListener> scanResultListeners = new HashSet<>();
 
-    private BluetoothLeScanner bleScanner;
-    private Set<ScanResultListener> scanResultListeners = new HashSet<>();
-    //private TrackedSensorsStorage trackedSensors;
-
-    private BLEScanner(Context context)
-    {
-        //this.trackedSensors = TrackedSensorsStorage.getInstance(context);
-    }
-
-    private ScanCallback scanCallback = new ScanCallback()
+    private static ScanCallback scanCallback = new ScanCallback()
     {
         @Override
         public void onBatchScanResults(List<ScanResult> results)
@@ -50,19 +41,18 @@ public class BLEScanner
 
         private void dispatchScanResult(ScanResult result)
         {
-            for (ScanResultListener listener: BLEScanner.this.scanResultListeners)
+            for (ScanResultListener listener: BLEScanner.scanResultListeners)
             {
-                String mnemonic = ""; //BLEScanner.this.trackedSensors.getMnemonic(result.getDevice().getAddress());
                 if (0 == listener.getScanFilter().size())
                 {
-                    listener.onScanResult(new SensorData(result, mnemonic));
+                    listener.onScanResult(new SensorData(result));
                     continue;
                 }
                 for (ScanFilter scanFilter: listener.getScanFilter())
                 {
                     if (scanFilter.matches(result))
                     {
-                        listener.onScanResult(new SensorData(result, mnemonic));
+                        listener.onScanResult(new SensorData(result));
                         break;
                     }
                 }
@@ -76,73 +66,73 @@ public class BLEScanner
             switch(errorCode)
             {
                 case SCAN_FAILED_ALREADY_STARTED:
-                    Log.d(BLEScanner.class.getSimpleName(),
+                    Log.e(BLEScanner.class.getSimpleName(),
                             "Failed to start scanning: already scanning!");
                     break;
                 case SCAN_FAILED_APPLICATION_REGISTRATION_FAILED:
-                    Log.d(BLEScanner.class.getSimpleName(),
+                    Log.e(BLEScanner.class.getSimpleName(),
                             "Failed to start scanning: app cannot be registered!");
                     break;
                 case SCAN_FAILED_FEATURE_UNSUPPORTED:
-                    Log.d(BLEScanner.class.getSimpleName(),
+                    Log.e(BLEScanner.class.getSimpleName(),
                             "Failed to start scanning: power optimized scan not supported!");
                     break;
                 case SCAN_FAILED_INTERNAL_ERROR:
-                    Log.d(BLEScanner.class.getSimpleName(),
+                    Log.e(BLEScanner.class.getSimpleName(),
                             "Failed to start scanning: internal error!");
                     break;
                 default:
-                    Log.d(BLEScanner.class.getSimpleName(),
+                    Log.e(BLEScanner.class.getSimpleName(),
                             "Failed to start scanning!");
                     break;
             }
         }
     };
 
-    public void setBluetoothLeScanner(BluetoothLeScanner bleScanner)
+    public static void setBluetoothLeScanner(BluetoothLeScanner bleScanner)
     {
         stopScan();
-        this.bleScanner = bleScanner;
-        if (0 < this.scanResultListeners.size())
+        BLEScanner.bleScanner = bleScanner;
+        if (0 < BLEScanner.scanResultListeners.size())
         {
             startScan();
         }
     }
 
-    public void registerScanResultListener(ScanResultListener scanResultlistener)
+    public static void registerScanResultListener(ScanResultListener scanResultlistener)
     {
-        this.scanResultListeners.add(scanResultlistener);
+        BLEScanner.scanResultListeners.add(scanResultlistener);
 
-        if (1 == this.scanResultListeners.size())
+        if (1 == BLEScanner.scanResultListeners.size())
         {
             startScan();
         }
     }
 
-    public void unregisterScanResultListener(ScanResultListener scanResultListener)
+    public static void unregisterScanResultListener(ScanResultListener scanResultListener)
     {
-        this.scanResultListeners.remove(scanResultListener);
+        BLEScanner.scanResultListeners.remove(scanResultListener);
 
-        if (0 == this.scanResultListeners.size())
+        if (0 == BLEScanner.scanResultListeners.size())
         {
             stopScan();
         }
     }
 
-    private void startScan()
+    private static void startScan()
     {
-        if (null == this.bleScanner) return;
+        if (null == BLEScanner.bleScanner) return;
 
-        this.bleScanner.startScan(getScanFilters(), getScanSettings(), this.scanCallback);
+        BLEScanner.bleScanner.startScan(getScanFilters(), getScanSettings(), BLEScanner.scanCallback);
     }
 
-    private void stopScan()
+    private static void stopScan()
     {
-        if (null == this.bleScanner) return;
+        if (null == BLEScanner.bleScanner) return;
 
         try
         {
-            this.bleScanner.stopScan(this.scanCallback);
+            BLEScanner.bleScanner.stopScan(BLEScanner.scanCallback);
         }
         catch(IllegalStateException e) {}
     }
@@ -173,15 +163,5 @@ public class BLEScanner
             builder.setPhy(ScanSettings.PHY_LE_ALL_SUPPORTED);
         }
         return builder.build();
-    }
-
-    public static BLEScanner getInstance(Context context)
-    {
-        if (null == BLEScanner.instance)
-        {
-            BLEScanner.instance = new BLEScanner(context);
-        }
-
-        return BLEScanner.instance;
     }
 }

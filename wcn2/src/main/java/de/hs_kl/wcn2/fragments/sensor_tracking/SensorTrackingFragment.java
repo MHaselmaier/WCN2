@@ -38,7 +38,6 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     private Button measurementButton;
     private TextView measurementTime;
 
-    private BLEScanner bleScanner;
     private TrackedSensorsStorage trackedSensorsStorage;
 
     private TrackedSensorsOverview trackedSensorsOverview;
@@ -81,7 +80,6 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         setHasOptionsMenu(true);
         setRetainInstance(true);
 
-        this.bleScanner = BLEScanner.getInstance(getActivity());
         this.trackedSensorsStorage = TrackedSensorsStorage.getInstance(getActivity());
     }
 
@@ -198,7 +196,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     {
         super.onResume();
 
-        this.bleScanner.registerScanResultListener(this);
+        BLEScanner.registerScanResultListener(this);
 
         startUIUpdater();
     }
@@ -208,7 +206,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     {
         super.onPause();
 
-        this.bleScanner.unregisterScanResultListener(this);
+        BLEScanner.unregisterScanResultListener(this);
     }
 
     private void startUIUpdater()

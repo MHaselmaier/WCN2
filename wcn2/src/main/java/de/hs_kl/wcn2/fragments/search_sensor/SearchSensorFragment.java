@@ -23,7 +23,6 @@ import de.hs_kl.wcn2.util.TrackedSensorsStorage;
 public class SearchSensorFragment extends Fragment implements ScanResultListener
 {
     private Handler uiUpdater = new Handler();
-    private BLEScanner bleScanner;
     private TrackedSensorsStorage trackedSensorsStorage;
     private LinearLayout foundSensorsContainer;
     private View emptyListItem;
@@ -68,7 +67,6 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
         setHasOptionsMenu(true);
         setRetainInstance(true);
 
-        this.bleScanner = BLEScanner.getInstance(getActivity());
         this.trackedSensorsStorage = TrackedSensorsStorage.getInstance(getActivity());
     }
 
@@ -96,7 +94,7 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
     {
         super.onResume();
 
-        this.bleScanner.registerScanResultListener(this);
+        BLEScanner.registerScanResultListener(this);
 
         startUIUpdater();
     }
@@ -141,6 +139,6 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
     {
         super.onPause();
 
-        this.bleScanner.unregisterScanResultListener(this);
+        BLEScanner.unregisterScanResultListener(this);
     }
 }
