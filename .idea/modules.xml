@@ -3,7 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Android-Projekt.iml" filepath="$PROJECT_DIR$/Android-Projekt.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wcn2/wcn2.iml" filepath="$PROJECT_DIR$/wcn2/wcn2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wcn2_sensors/wcn2_sensors.iml" filepath="$PROJECT_DIR$/wcn2_sensors/wcn2_sensors.iml" />
     </modules>
   </component>
 </project>

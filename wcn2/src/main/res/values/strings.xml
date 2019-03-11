@@ -1,0 +1,110 @@
+<resources>
+    <string name="app_name">WCN2 App</string>
+    <string name="bt_was_not_enabled">Bluetooth was not enabled but it is needed to run the app.</string>
+    <string name="denied_permission_location">The app needs to access your location to receive sensor data.</string>
+    <string name="denied_permission_write_external_storage">The app needs to access your file storage to save measurements.</string>
+    <string name="allow">Allow</string>
+    <string name="deny">Deny</string>
+    <string name="enable_location">WCN2 App wants to turn on Location Service</string>
+
+    <string name="overview">Overview</string>
+    <string name="measurement">Measurements</string>
+    <string name="action">Actions</string>
+    <string name="sensor">Sensors</string>
+    <string name="about">About</string>
+
+    <string name="no_sensors_found">No sensors found.</string>
+    <string name="no_sensors_tracked">No sensors tracked.</string>
+
+    <string name="found_sensors">Found Sensors:</string>
+    <string name="mnemonic">[%1s]</string>
+    <string name="sensor_id">WCN%1d</string>
+    <string name="sensor_not_seen">Not found</string>
+    <string name="sensor_last_seen">Last seen:</string>
+    <string name="sensor_seen_just_now">just now</string>
+    <string name="sensor_seen_seconds_ago">%1$d seconds ago</string>
+    <string name="sensor_seen_a_minute_ago">one minute ago</string>
+    <string name="sensor_seen_minutes_ago">%1$d minutes ago</string>
+    <string name="sensor_seen_an_hour_ago">one hour ago</string>
+    <string name="sensor_seen_hours_ago">%1$d hours ago</string>
+
+    <string name="sensor_tracked">Tracked</string>
+    <string name="sensor_not_tracked">Not tracked</string>
+
+    <string name="time">%1$02d:%2$02d</string>
+    <string name="no_time">--:--</string>
+    <string name="measurement_button_start">Start Measurement</string>
+    <string name="measurement_button_stop">Stop Measurement</string>
+    <string name="tracked_sensors">Tracked Sensors:</string>
+    <string name="sensor_warning">Warning</string>
+    <string name="tracked_sensors_edit">Edit</string>
+    <string name="no_tracked_sensors">Choose at least one sensor before starting a measurement!</string>
+
+    <string name="temperature">%1$.1f °C</string>
+    <string name="humidity">%1$.1f %%</string>
+    <string name="batterylevel">Battery level</string>
+    <string name="signalstrength">Signal strength</string>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="measurement_header">Start Measurement</string>
+    <string name="measurement_filename">Filename:</string>
+    <string name="measurement_date_format" translatable="false">ddMMyyyy_HHmmss</string>
+    <string name="measurement_description">Description:</string>
+    <string name="measurement_comment">Here you can describe the measurement. It will be saved inside the resulting file as an header.</string>
+    <string name="create_reduced_file">Create reduced file:</string>
+    <string name="average_every">Average every</string>
+    <string name="default_rate" translatable="false">30</string>
+    <string name="seconds">seconds</string>
+    <string name="mnemonic_header">Mnemonic:</string>
+    <string name="mnemonic_comment">Comment !</string>
+    <string name="no_measurements_saved">No Measurements saved.</string>
+
+    <string name="failed_to_create_file">Measurement file could not be created!</string>
+    <string name="saved_measurements">Saved Measurements:</string>
+    <string name="more">More</string>
+    <string name="open">Open</string>
+    <string name="share">Share</string>
+    <string name="delete">Delete</string>
+    <string name="deleted">Deleted</string>
+    <string name="delete_failed">Failed to delete</string>
+
+    <string name="add">Add</string>
+    <string name="remove">Remove</string>
+    <string name="defined_actions">Defined Actions:</string>
+    <string name="no_actions_defined">No Actions defined.</string>
+
+    <string name="action_header">New Action:</string>
+    <string name="action_comment">Action</string>
+
+    <string name="measurement_channel_name">Measurements</string>
+    <string name="measurement_channel_description">Currently the sensor data is recorded and will be saved to a measurement file.</string>
+    <string name="measurement_notification_title">Measurement is ongoing&#8230;</string>
+    <string name="sensor_data_channel_name">No Sensor Data</string>
+    <string name="sensor_data_channel_description">No data is currently received from one or more tracked sensors. The battery may be empty or the sensor is out of range.</string>
+    <string name="sensor_data_content">No Data currently received from WCN%1$d!</string>
+    <string name="sensor_data_content_mnemonic">No Data currently received from WCN%1$d [%2$s]!</string>
+    <string name="sensor_battery_low_channel_name">Sensor Battery is low</string>
+    <string name="sensor_battery_low_channel_description">The battery of one or more tracked sensors is low. The sensor will be turned off soon and should be recharged.</string>
+    <string name="sensor_battery_low_content">The battery of WCN%1$d is low!</string>
+    <string name="sensor_battery_low_content_mnemonic">The battery of WCN%1$d [%2$s] is low!</string>
+
+    <string name="university">Kaiserslautern University of Applied Sciences</string>
+    <string name="university_info">www.hs-kl.de</string>
+    <string name="development">App Development:</string>
+    <string name="development_info">Matthias Haselmaier, B. Sc.\nmatthias.haselmaier@hs-kl.de</string>
+    <string name="version">Version:</string>
+    <string name="wcn2">Wireless Climate Network - WCN2 -\nSensor Development:</string>
+    <string name="wcn2_info">FB Informatik und Mikrosystemtechnik\nAG Picard\nD 66482 Zweibrücken\nantoni.picard@hs-kl.de</string>
+    <string name="help_info">Problems with usage:</string>
+    <string name="help">Show Help</string>
+
+    <string name="skip">Skip</string>
+    <string name="next">Next</string>
+    <string name="introduction_description">This will guide you through your first steps before the measurements can start.</string>
+    <string name="create_action_description">Define the actions which are performed during the measurements.</string>
+    <string name="select_tracked_sensors_description">Select the sensors which should be tracked during the measurements.</string>
+    <string name="perform_measurement_description">Start the measurement and select the currently performed action.</string>
+
+    <string name="version_info" translatable="false">19.01b</string>
+</resources>
