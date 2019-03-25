@@ -19,14 +19,31 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/measurement_time"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:textAlignment="viewStart"
-                android:textSize="26sp"
-                tools:text="Your Alarms:" />
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:text="Your Alarms:"
+                    android:textAlignment="viewStart"
+                    android:textSize="26sp" />
+
+                <ImageButton
+                    android:id="@+id/add_alarm"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_margin="5dp"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitXY"
+                    android:tint="@color/colorPrimaryDark"
+                    app:srcCompat="@drawable/ic_add" />
+
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -38,18 +55,13 @@
                 android:layout_height="match_parent">
 
                 <LinearLayout
-                    android:id="@+id/tracked_sensors"
+                    android:id="@+id/alarms"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:divider="@android:color/darker_gray"
                     android:orientation="vertical"
                     android:showDividers="middle">
 
-                    <include
-                        layout="@layout/empty_list_item"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="visible" />
                 </LinearLayout>
             </ScrollView>
 
