@@ -1,9 +1,10 @@
 package de.hs_kl.wcn2_alarm;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class OverviewActivity extends AppCompatActivity
+import de.hs_kl.wcn2_sensors.WCN2Activity;
+
+public class OverviewActivity extends WCN2Activity
 {
     @Override
     protected void onCreate(Bundle savedInstanceState)

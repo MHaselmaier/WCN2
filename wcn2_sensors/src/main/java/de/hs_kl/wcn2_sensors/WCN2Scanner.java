@@ -141,7 +141,7 @@ public class WCN2Scanner
     {
         List<ScanFilter> scanFilters = new ArrayList<>();
         ScanFilter.Builder builder = new ScanFilter.Builder();
-        builder.setManufacturerData(SensorConstants.MANUFACTURER_ID, new byte[]{});
+        builder.setManufacturerData(Constants.MANUFACTURER_ID, new byte[]{});
         scanFilters.add(builder.build());
         return scanFilters;
     }
@@ -149,7 +149,7 @@ public class WCN2Scanner
     private static ScanSettings getScanSettings()
     {
         ScanSettings.Builder builder = new ScanSettings.Builder();
-        builder.setReportDelay(SensorConstants.BLESCANNER_REPORT_DELAY);
+        builder.setReportDelay(Constants.BLESCANNER_REPORT_DELAY);
         builder.setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
         {

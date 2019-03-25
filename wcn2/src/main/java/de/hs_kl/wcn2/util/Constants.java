@@ -6,9 +6,7 @@ import java.io.File;
 
 public class Constants
 {
-    public static final int REQUEST_ENABLE_BT = 1;
-    public static final int REQUEST_ENABLE_LOCATION = 2;
-    public static final int REQUEST_PERMISSIONS = 3;
+    public static final int REQUEST_WRITE_PERMISSION = 2;
 
     public static final String TRACKED_SENSORS_ID = "tracked_sensors_id";
     public static final String TRACKED_SENSORS_MNEMONIC = "tracked_sensors_mnemonic";

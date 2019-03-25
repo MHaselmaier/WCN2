@@ -1,0 +1,7 @@
+<resources>
+    <string name="denied_permission_location">Die App benötigt Zugriff auf die Position, um die Sensordaten empfangen zu können.</string>
+    <string name="bt_was_not_enabled">Bluetooth wurde nicht eingeschaltet, wird allerdings zum Betrieb dieser App benötigt.</string>
+    <string name="enable_location">WCN2 App fordert die Berechtigung, den Standort zu aktivieren</string>
+    <string name="allow">Zulassen</string>
+    <string name="deny">Ablehnen</string>
+</resources>

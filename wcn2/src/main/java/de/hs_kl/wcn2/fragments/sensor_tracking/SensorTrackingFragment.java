@@ -140,7 +140,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
                 permission[0]))
         {
             ActivityCompat.requestPermissions(getActivity(), permission,
-                    Constants.REQUEST_PERMISSIONS);
+                    Constants.REQUEST_WRITE_PERMISSION);
             return false;
         }
         return true;

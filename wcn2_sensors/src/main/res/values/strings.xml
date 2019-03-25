@@ -1,0 +1,7 @@
+<resources>
+    <string name="denied_permission_location">The app needs to access your location to receive sensor data.</string>
+    <string name="bt_was_not_enabled">Bluetooth was not enabled but it is needed to run the app.</string>
+    <string name="enable_location">WCN2 App wants to turn on Location Service</string>
+    <string name="allow">Allow</string>
+    <string name="deny">Deny</string>
+</resources>
