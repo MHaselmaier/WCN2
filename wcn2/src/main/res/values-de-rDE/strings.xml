@@ -2,6 +2,9 @@
     <string name="app_name">WCN2 App</string>
     <string name="denied_permission_write_external_storage">Die App benötigt Zugriff auf den Speicher, um die Messungen zu speichern.</string>
 
+    <string name="drawer_open">Drawer offen</string>
+    <string name="drawer_closed">Drawer geschlossen</string>
+
     <string name="overview">Übersicht</string>
     <string name="measurement">Messungen</string>
     <string name="action">Aktionen</string>

@@ -1,6 +1,7 @@
 package de.hs_kl.wcn2.fragments.sensor_tracking;
 
 import android.content.Context;
+import android.os.Handler;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -44,10 +45,17 @@ class TrackedSensorsOverview
             }
         }
 
+        int position = this.trackedSensors.size();
         this.trackedSensors.add(sensorData);
-        TrackedSensorView view = new TrackedSensorView(this.context, sensorData);
-        this.trackedSensorViews.add(view);
-        this.container.addView(view.getRoot());
+        this.trackedSensorViews.add(null);
+        Handler handler = new Handler();
+        new Thread(() -> {
+            TrackedSensorView view = new TrackedSensorView(this.context, sensorData);
+            handler.post(() -> {
+                this.trackedSensorViews.set(position, view);
+                this.container.addView(view.getRoot());
+            });
+        }).start();
     }
 
     void show()
@@ -61,6 +69,7 @@ class TrackedSensorsOverview
         updateTrackedSensors();
         for (int i = 0; this.trackedSensors.size() > i; ++i)
         {
+            if (null == this.trackedSensorViews.get(i)) continue;
             this.trackedSensorViews.get(i).updateView(this.trackedSensors.get(i));
         }
 

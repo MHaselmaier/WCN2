@@ -1,6 +1,6 @@
 package de.hs_kl.wcn2.fragments.about;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,18 +17,17 @@ public class AboutFragment extends Fragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         setRetainInstance(true);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle b)
     {
-        View view = getActivity().getLayoutInflater().inflate(R.layout.about, container, false);
+        View view = inflater.inflate(R.layout.about, container, false);
 
         Button help = view.findViewById(R.id.help_button);
-        help.setOnClickListener((v) -> startActivity(new Intent(getActivity(), UsageActivity.class)));
+        Intent intent = new Intent(getActivity(), UsageActivity.class);
+        help.setOnClickListener((v) -> startActivity(intent));
 
         return view;
     }

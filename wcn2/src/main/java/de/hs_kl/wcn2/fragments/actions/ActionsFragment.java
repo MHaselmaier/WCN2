@@ -1,7 +1,8 @@
 package de.hs_kl.wcn2.fragments.actions;
 
 import android.app.Dialog;
-import android.app.Fragment;
+import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,11 +11,15 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.hs_kl.wcn2.R;
 import de.hs_kl.wcn2.util.DefinedActionStorage;
 
 public class ActionsFragment extends Fragment
 {
+    private View noActionsDefinedView;
     private LinearLayout actionList;
     private DefinedActionStorage definedActions;
 
@@ -22,49 +27,56 @@ public class ActionsFragment extends Fragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         setRetainInstance(true);
 
         this.definedActions = DefinedActionStorage.getInstance(getActivity());
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle b)
     {
-        View view = getActivity().getLayoutInflater().inflate(R.layout.actions, container, false);
+        View view = inflater.inflate(R.layout.actions, container, false);
 
+        this.noActionsDefinedView = view.findViewById(R.id.no_actions_defined);
         this.actionList = view.findViewById(R.id.actions);
-        loadActionViews();
 
-        final Dialog createActionDialog = CreateActionDialog.buildCreateActionDialog(this);
+        Dialog createActionDialog = CreateActionDialog.buildCreateActionDialog(this);
         ImageButton add = view.findViewById(R.id.add);
         add.setOnClickListener((v) -> createActionDialog.show());
 
         return view;
     }
 
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        loadActionViews();
+    }
+
     public void loadActionViews()
     {
         this.actionList.removeAllViews();
+        this.noActionsDefinedView.setVisibility(View.VISIBLE);
 
-        String[] actions = this.definedActions.getDefinedActions();
-        if (0 == actions.length)
-        {
-            LayoutInflater inflater = getActivity().getLayoutInflater();
-            View emptyView = inflater.inflate(R.layout.empty_list_item, this.actionList);
-            TextView label = emptyView.findViewById(R.id.label);
-            label.setText(R.string.no_actions_defined);
-            return;
-        }
+        Handler handler = new Handler();
+        new Thread(() -> {
+            String[] actions = this.definedActions.getDefinedActions();
+            if (0 < actions.length)
+            {
+                handler.post(() -> this.noActionsDefinedView.setVisibility(View.GONE));
+            }
 
-        for (final String action: actions)
-        {
-            this.actionList.addView(createActionView(action));
-        }
+            for (String action: actions)
+            {
+                View actionView = createActionView(action);
+                handler.post(() -> this.actionList.addView(actionView));
+            }
+        }).start();
     }
 
-    private View createActionView(final String action)
+    private View createActionView(String action)
     {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View actionView = inflater.inflate(R.layout.action, this.actionList, false);
@@ -94,13 +106,5 @@ public class ActionsFragment extends Fragment
         });
 
         return actionView;
-    }
-
-    @Override
-    public void onHiddenChanged(boolean hidden)
-    {
-        if (hidden) return;
-
-        loadActionViews();
     }
 }

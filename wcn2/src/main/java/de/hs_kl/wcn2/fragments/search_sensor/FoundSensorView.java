@@ -19,6 +19,7 @@ class FoundSensorView
     private TrackedSensorsStorage trackedSensors;
     private View root;
     private TextView lastSeen;
+    private Switch trackSwitch;
     private TextView mnemonic;
     private ImageView batteryLevel;
     private ImageView signalStrength;
@@ -35,11 +36,9 @@ class FoundSensorView
                 MnemonicEditDialog.buildMnemonicEditDialog(this.context, sensorData).show());
         mnemonicEdit.setVisibility(isTracked ? View.VISIBLE: View.INVISIBLE);
 
-        int labelResourceID = (isTracked ? R.string.sensor_tracked : R.string.sensor_not_tracked);
-        Switch trackSwitch = this.root.findViewById(R.id.sensor_tracked);
-        trackSwitch.setChecked(isTracked);
-        trackSwitch.setText(labelResourceID);
-        trackSwitch.setOnCheckedChangeListener(new SensorTrackedChangeListener(this.context,
+        this.trackSwitch = this.root.findViewById(R.id.sensor_tracked);
+        this.trackSwitch.setText((isTracked ? R.string.sensor_tracked : R.string.sensor_not_tracked));
+        this.trackSwitch.setOnCheckedChangeListener(new SensorTrackedChangeListener(this.context,
                 sensorData, mnemonicEdit));
 
         TextView sensorID = this.root.findViewById(R.id.sensor_id);
@@ -50,8 +49,6 @@ class FoundSensorView
         this.mnemonic = this.root.findViewById(R.id.mnemonic);
         this.batteryLevel = this.root.findViewById(R.id.battery_level);
         this.signalStrength = this.root.findViewById(R.id.signal_strength);
-
-        updateView(sensorData);
     }
 
     View getRoot()
@@ -67,6 +64,8 @@ class FoundSensorView
                 .getBatteryLevelDrawable(this.context.getResources()));
         this.signalStrength.setImageDrawable(sensorData
                 .getSignalStrengthDrawable(this.context.getResources()));
+        boolean isTracked = this.trackedSensors.isTracked(sensorData);
+        this.trackSwitch.setChecked(isTracked);
         String mnemonic = this.trackedSensors.getMnemonic(sensorData.getMacAddress());
         if (mnemonic.equals("null"))
         {

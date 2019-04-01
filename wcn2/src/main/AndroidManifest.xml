@@ -17,10 +17,12 @@
         android:hardwareAccelerated="true">
         <activity android:name="de.hs_kl.wcn2.usage.UsageActivity"
                   android:screenOrientation="portrait"
-                  android:noHistory="true"/>
+                  android:noHistory="true"
+                  android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name="de.hs_kl.wcn2.OverviewActivity"
                   android:screenOrientation="portrait"
-                  android:launchMode="singleTask">
+                  android:launchMode="singleTask"
+                  android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

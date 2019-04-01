@@ -112,14 +112,24 @@
 
     </android.support.v7.widget.CardView>
 
+    <TextView
+        android:id="@+id/no_actions_defined"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="@string/no_actions_defined"
+        android:textAlignment="textStart"
+        android:textSize="24sp"
+        android:visibility="gone" />
+
     <ScrollView
         android:id="@+id/action_overview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="5dp"
         android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"
         android:visibility="gone">
 
         <GridLayout

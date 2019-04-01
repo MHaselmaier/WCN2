@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:id="@+id/a1"
+           android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/overview"
+            android:icon="@drawable/ic_overview"
+            android:title="@string/overview" />
+
+    </group>
+
+    <group android:id="@+id/a2"
+           android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/measurement"
+            android:icon="@drawable/ic_measurement"
+            android:title="@string/measurement" />
+
+    </group>
+
+    <group android:id="@+id/a3"
+           android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/action"
+            android:icon="@drawable/ic_action"
+            android:title="@string/action" />
+
+    </group>
+
+    <group android:id="@+id/a4"
+           android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/sensor"
+            android:icon="@drawable/ic_sensor"
+            android:title="@string/sensor" />
+
+    </group>
+
+    <group android:id="@+id/a5"
+           android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/about"
+            android:icon="@drawable/ic_about"
+            android:title="@string/about" />
+
+    </group>
+
+</menu>

@@ -1,6 +1,7 @@
 package de.hs_kl.wcn2.fragments.search_sensor;
 
-import android.app.Fragment;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.bluetooth.le.ScanFilter;
 import android.os.Bundle;
 import android.os.Handler;
@@ -53,26 +54,32 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
 
     private void addSensor(SensorData sensorData)
     {
+        int position = this.foundSensors.size();
         this.foundSensors.add(sensorData);
-        FoundSensorView view = new FoundSensorView(getActivity(), sensorData);
-        this.foundSensorsViews.add(view);
-        this.foundSensorsContainer.addView(view.getRoot());
-        updateFoundSensorsViews();
+        this.foundSensorsViews.add(null);
+
+        Handler handler = new Handler();
+        new Thread(() -> {
+            FoundSensorView view = new FoundSensorView(getActivity(), sensorData);
+            handler.post(() -> {
+                this.foundSensorsViews.set(position, view);
+                this.foundSensorsContainer.addView(view.getRoot());
+                updateFoundSensorsViews();
+            });
+        }).start();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         setRetainInstance(true);
 
         this.trackedSensorsStorage = TrackedSensorsStorage.getInstance(getActivity());
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
-                             Bundle savedInstanceState)
+    public View onCreateView(@NonNull LayoutInflater inflater, final ViewGroup container, Bundle b)
     {
         View view = inflater.inflate(R.layout.search_sensor, container, false);
 
@@ -80,11 +87,6 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
         this.emptyListItem = view.findViewById(R.id.empty_list_item);
         TextView label = this.emptyListItem.findViewById(R.id.label);
         label.setText(R.string.no_sensors_found);
-
-        for (SensorData sensorData: TrackedSensorsStorage.getInstance(getActivity()).getTrackedSensors())
-        {
-            addSensor(sensorData);
-        }
 
         return view;
     }
@@ -95,6 +97,13 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
         super.onResume();
 
         WCN2Scanner.registerScanResultListener(this);
+
+        this.foundSensors.clear();
+        this.foundSensorsViews.clear();
+        for (SensorData sensorData: this.trackedSensorsStorage.getTrackedSensors())
+        {
+            addSensor(sensorData);
+        }
 
         startUIUpdater();
     }
@@ -107,8 +116,6 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
             @Override
             public void run()
             {
-                if (isHidden()) return;
-
                 updateFoundSensorsViews();
                 SearchSensorFragment.this.uiUpdater.postDelayed(this, Constants.UI_UPDATE_INTERVAL);
             }
@@ -119,19 +126,11 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
     {
         for (int i = 0; this.foundSensors.size() > i; ++i)
         {
+            if (null == foundSensorsViews.get(i)) continue;
             this.foundSensorsViews.get(i).updateView(this.foundSensors.get(i));
         }
 
         this.emptyListItem.setVisibility(this.foundSensors.isEmpty() ? View.VISIBLE : View.GONE);
-    }
-
-    @Override
-    public void onHiddenChanged(boolean hidden)
-    {
-        if (hidden) return;
-
-
-        startUIUpdater();
     }
 
     @Override
@@ -140,5 +139,6 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
         super.onPause();
 
         WCN2Scanner.unregisterScanResultListener(this);
+        this.uiUpdater.removeCallbacksAndMessages(null);
     }
 }

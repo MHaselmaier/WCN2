@@ -6,7 +6,7 @@ import android.bluetooth.le.ScanFilter;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
@@ -77,20 +77,18 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         setRetainInstance(true);
 
         this.trackedSensorsStorage = TrackedSensorsStorage.getInstance(getActivity());
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
-                             Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle b)
     {
         View view = inflater.inflate(R.layout.sensor_tracking, container, false);
 
         this.measurementTime = view.findViewById(R.id.measurement_time);
-        final Dialog dialog = StartMeasurementDialog.buildStartMeasurementDialog(this);
+        Dialog dialog = StartMeasurementDialog.buildStartMeasurementDialog(this);
         this.measurementButton = view.findViewById(R.id.measurement_button);
         this.measurementButton.setOnClickListener((v) ->
         {
@@ -106,7 +104,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
 
         ImageButton edit = view.findViewById(R.id.edit_tracked_sensors);
         edit.setOnClickListener((v) ->
-                ((OverviewActivity)getActivity()).changeViewTo(Constants.WCNView.SEARCH_SENSOR));
+                ((OverviewActivity)getActivity()).changeToSearchSensorFragment());
 
         this.trackedSensorsOverview = new TrackedSensorsOverview(getActivity(),
                 view.findViewById(R.id.sensor_overview));
@@ -149,8 +147,6 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     @Override
     public void onViewCreated(View view, Bundle savedInstanceBundle)
     {
-        super.onViewCreated(view, savedInstanceBundle);
-
         if (Long.MIN_VALUE == MeasurementService.startTime) return;
 
         this.tracking = true;

@@ -5,10 +5,11 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -27,7 +28,9 @@ import de.hs_kl.wcn2.R;
 
 public class UsageActivity extends AppCompatActivity
 {
-    private FrameLayout content;
+    private DrawerLayout drawer;
+    private FrameLayout container;
+    private NavigationView navigationView;
     private TextView description;
     private LinearLayout stepIndicator;
     private List<Animation> animations = new ArrayList<>();
@@ -39,26 +42,28 @@ public class UsageActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.usage_activity);
-        setTitle("   " + getResources().getString(R.string.app_name));
-        ActionBar bar = getSupportActionBar();
-        if (null != bar)
-        {
-            getSupportActionBar().setIcon(R.drawable.ic_home);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
 
-        this.content = findViewById(R.id.content);
+        this.drawer = findViewById(R.id.drawer);
+        this.container = this.drawer.findViewById(R.id.fragments);
+        this.navigationView = this.drawer.findViewById(R.id.navigation);
+        this.navigationView.setClickable(false);
         this.description = findViewById(R.id.description);
         this.stepIndicator = findViewById(R.id.step_indicator);
+
+        Toolbar toolbar = this.drawer.findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+                R.string.drawer_open, R.string.drawer_closed);
+        toggle.syncState();
 
         Button next = findViewById(R.id.next);
         next.setOnClickListener((v) ->
         {
-            UsageActivity.this.animations.get(UsageActivity.this.state).stop();
+            this.animations.get(this.state).stop();
 
-            if (UsageActivity.this.animations.size() - 1 > UsageActivity.this.state)
+            if (this.animations.size() - 1 > this.state)
             {
-                UsageActivity.this.animations.get(++UsageActivity.this.state).start();
+                this.animations.get(++this.state).start();
                 updateDescription();
                 updateStepIndicator();
             }
@@ -103,12 +108,8 @@ public class UsageActivity extends AppCompatActivity
 
     private Animation makeIntroductionAnimation()
     {
-        DrawerLayout drawer = (DrawerLayout)getLayoutInflater()
-                .inflate(R.layout.activity_overview, this.content, false);
-        ConstraintLayout container = drawer.findViewById(R.id.fragments);
-
         View sensorTracking = getLayoutInflater()
-                .inflate(R.layout.sensor_tracking, container, false);
+                .inflate(R.layout.sensor_tracking, this.container, false);
         LinearLayout trackedSensorViews = sensorTracking.findViewById(R.id.tracked_sensors);
         View emptyView = trackedSensorViews.findViewById(R.id.empty_list_item);
         emptyView.setVisibility(View.VISIBLE);
@@ -116,11 +117,10 @@ public class UsageActivity extends AppCompatActivity
         sensorTracking.findViewById(R.id.measurement_button).setClickable(false);
         Animation introduction = new Animation(() ->
         {
-            this.content.removeAllViews();
-            this.content.addView(drawer);
-            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            container.removeAllViews();
-            container.addView(sensorTracking);
+            this.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            this.container.removeAllViews();
+            this.container.removeAllViews();
+            this.container.addView(sensorTracking);
         }, R.string.introduction_description);
 
         introduction.addStep(new Animation.Step(introduction, () -> {}, 5000));
@@ -130,12 +130,8 @@ public class UsageActivity extends AppCompatActivity
 
     private Animation makeCreateActionAnimation()
     {
-        DrawerLayout drawer = (DrawerLayout)getLayoutInflater()
-                .inflate(R.layout.activity_overview, this.content, false);
-        ConstraintLayout container = drawer.findViewById(R.id.fragments);
-
         View sensorTracking = getLayoutInflater()
-                .inflate(R.layout.sensor_tracking, container, false);
+                .inflate(R.layout.sensor_tracking, this.container, false);
         sensorTracking.findViewById(R.id.measurement_button).setClickable(false);
         LinearLayout trackedSensorViews = sensorTracking.findViewById(R.id.tracked_sensors);
         View emptyView = trackedSensorViews.findViewById(R.id.empty_list_item);
@@ -143,23 +139,19 @@ public class UsageActivity extends AppCompatActivity
         ((TextView)emptyView.findViewById(R.id.label)).setText(R.string.no_sensors_found);
         Animation createAction = new Animation(() ->
         {
-            this.content.removeAllViews();
-            this.content.addView(drawer);
-            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            container.removeAllViews();
-            container.addView(sensorTracking);
+            this.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            this.container.removeAllViews();
+            this.container.addView(sensorTracking);
         }, R.string.create_action_description);
 
-        View action = drawer.findViewById(R.id.action);
         createAction.addStep(new Animation.Step(createAction, () ->
         {
-            action.setBackgroundColor(Color.argb(255, 255, 255, 255));
-            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
+            this.navigationView.setCheckedItem(R.id.overview);
+            this.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
         }, 1000));
 
         createAction.addStep(new Animation.Step(createAction, () ->
-            action.setBackgroundColor(Color.argb(50, 0, 0, 0)),
-        1000));
+            this.navigationView.setCheckedItem(R.id.action), 1000));
 
         View actions = getLayoutInflater().inflate(R.layout.actions, container, false);
         emptyView = getLayoutInflater().inflate(R.layout.empty_list_item, actions.findViewById(
@@ -167,9 +159,9 @@ public class UsageActivity extends AppCompatActivity
         ((TextView)emptyView.findViewById(R.id.label)).setText(R.string.no_actions_defined);
         createAction.addStep(new Animation.Step(createAction, () ->
         {
-            container.removeAllViews();
-            container.addView(actions);
-            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            this.container.removeAllViews();
+            this.container.addView(actions);
+            this.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }, 750));
 
         View newAction = actions.findViewById(R.id.add);
@@ -208,12 +200,8 @@ public class UsageActivity extends AppCompatActivity
 
     private Animation makeSelectTrackedSensorsAnimation()
     {
-        DrawerLayout drawer = (DrawerLayout)getLayoutInflater()
-                .inflate(R.layout.activity_overview, this.content, false);
-        ConstraintLayout container = drawer.findViewById(R.id.fragments);
-
         View sensorTracking = getLayoutInflater()
-                .inflate(R.layout.sensor_tracking, container, false);
+                .inflate(R.layout.sensor_tracking, this.container, false);
         sensorTracking.findViewById(R.id.measurement_button).setClickable(false);
         LinearLayout trackedSensorViews = sensorTracking.findViewById(R.id.tracked_sensors);
         View emptyView = trackedSensorViews.findViewById(R.id.empty_list_item);
@@ -221,25 +209,22 @@ public class UsageActivity extends AppCompatActivity
         ((TextView)emptyView.findViewById(R.id.label)).setText(R.string.no_sensors_found);
         Animation selectSensors = new Animation(() ->
         {
-            this.content.removeAllViews();
-            this.content.addView(drawer);
-            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            container.removeAllViews();
-            container.addView(sensorTracking);
+            this.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            this.container.removeAllViews();
+            this.container.addView(sensorTracking);
         }, R.string.select_tracked_sensors_description);
 
-        View sensor = drawer.findViewById(R.id.sensor);
         selectSensors.addStep(new Animation.Step(selectSensors, () ->
         {
-            sensor.setBackgroundColor(Color.argb(255, 255, 255, 255));
-            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
+            this.navigationView.setCheckedItem(R.id.overview);
+            this.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
         }, 1000));
 
         selectSensors.addStep(new Animation.Step(selectSensors, () ->
-                sensor.setBackgroundColor(Color.argb(50, 0, 0, 0)), 1000));
+                this.navigationView.setCheckedItem(R.id.sensor), 1000));
 
         View searchSensor = getLayoutInflater()
-                .inflate(R.layout.search_sensor, container, false);
+                .inflate(R.layout.search_sensor, this.container, false);
         LinearLayout layout = searchSensor.findViewById(R.id.layout);
         layout.removeView(layout.findViewById(R.id.empty_list_item));
 
@@ -247,7 +232,7 @@ public class UsageActivity extends AppCompatActivity
         Drawable signal = getDrawable(R.drawable.ic_signal_100);
 
         View sensorListItem = getLayoutInflater()
-                .inflate(R.layout.sensor_list_item, container, false);
+                .inflate(R.layout.sensor_list_item, this.container, false);
         ((TextView)sensorListItem.findViewById(R.id.sensor_id)).setText("WCN1");
         ((ImageView)sensorListItem.findViewById(R.id.battery_level)).setImageDrawable(battery);
         ((ImageView)sensorListItem.findViewById(R.id.signal_strength)).setImageDrawable(signal);
@@ -258,7 +243,7 @@ public class UsageActivity extends AppCompatActivity
         ((TextView)sensorListItem.findViewById(R.id.last_seen)).setText(getString(R.string.sensor_last_seen) + " " + getResources().getString(R.string.sensor_seen_just_now));
         layout.addView(sensorListItem, 1);
 
-        sensorListItem = getLayoutInflater().inflate(R.layout.sensor_list_item, container, false);
+        sensorListItem = getLayoutInflater().inflate(R.layout.sensor_list_item, this.container, false);
         ((TextView)sensorListItem.findViewById(R.id.sensor_id)).setText("WCN2");
         ((ImageView)sensorListItem.findViewById(R.id.battery_level)).setImageDrawable(battery);
         ((ImageView)sensorListItem.findViewById(R.id.signal_strength)).setImageDrawable(signal);
@@ -267,7 +252,7 @@ public class UsageActivity extends AppCompatActivity
         ((TextView)sensorListItem.findViewById(R.id.last_seen)).setText(getString(R.string.sensor_last_seen) + " " + getResources().getString(R.string.sensor_seen_just_now));
         layout.addView(sensorListItem, 2);
 
-        sensorListItem = getLayoutInflater().inflate(R.layout.sensor_list_item, container, false);
+        sensorListItem = getLayoutInflater().inflate(R.layout.sensor_list_item, this.container, false);
         ((TextView)sensorListItem.findViewById(R.id.sensor_id)).setText("WCN3");
         ((ImageView)sensorListItem.findViewById(R.id.battery_level)).setImageDrawable(battery);
         ((ImageView)sensorListItem.findViewById(R.id.signal_strength)).setImageDrawable(signal);
@@ -280,9 +265,9 @@ public class UsageActivity extends AppCompatActivity
 
         selectSensors.addStep(new Animation.Step(selectSensors, () ->
         {
-            container.removeAllViews();
-            container.addView(searchSensor);
-            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            this.container.removeAllViews();
+            this.container.addView(searchSensor);
+            this.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }, 750));
 
         selectSensors.addStep(new Animation.Step(selectSensors, () ->
@@ -307,8 +292,8 @@ public class UsageActivity extends AppCompatActivity
             secondSwitch.setChecked(false);
             secondSwitch.setText(R.string.sensor_not_tracked);
             secondMnemonicEdit.setVisibility(View.INVISIBLE);
-            container.removeAllViews();
-            container.addView(sensorTracking);
+            this.container.removeAllViews();
+            this.container.addView(sensorTracking);
         }, 2000));
 
         return selectSensors;
@@ -316,12 +301,8 @@ public class UsageActivity extends AppCompatActivity
 
     private Animation makePerformMeasurementAnimation()
     {
-        DrawerLayout drawer = (DrawerLayout)getLayoutInflater()
-                .inflate(R.layout.activity_overview, this.content, false);
-        ConstraintLayout container = drawer.findViewById(R.id.fragments);
-
         View sensorTracking = getLayoutInflater()
-                .inflate(R.layout.sensor_tracking, container, false);
+                .inflate(R.layout.sensor_tracking, this.container, false);
         LinearLayout trackedSensors = sensorTracking.findViewById(R.id.tracked_sensors);
         View trackedSensor1 = getLayoutInflater().inflate(R.layout.tracked_sensor_overview, trackedSensors);
         trackedSensor1.findViewById(R.id.sensor_warning).setVisibility(View.GONE);
@@ -345,11 +326,9 @@ public class UsageActivity extends AppCompatActivity
         sensorTracking.findViewById(R.id.measurement_button).setClickable(false);
         Animation performMeasurement = new Animation(() ->
         {
-            this.content.removeAllViews();
-            this.content.addView(drawer);
-            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            container.removeAllViews();
-            container.addView(sensorTracking);
+            this.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            this.container.removeAllViews();
+            this.container.addView(sensorTracking);
         }, R.string.perform_measurement_description);
 
         Button startMeasurement = sensorTracking.findViewById(R.id.measurement_button);
@@ -360,7 +339,7 @@ public class UsageActivity extends AppCompatActivity
         }, 1000));
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        View dialogView = getLayoutInflater().inflate(R.layout.measurement_dialog, container, false);
+        View dialogView = getLayoutInflater().inflate(R.layout.measurement_dialog, this.container, false);
         dialogView.findViewById(R.id.measurement_filename).setEnabled(false);
         dialogView.findViewById(R.id.measurement_header).setEnabled(false);
         dialogView.findViewById(R.id.average).setEnabled(false);

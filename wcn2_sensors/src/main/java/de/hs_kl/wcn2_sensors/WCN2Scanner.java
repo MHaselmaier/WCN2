@@ -6,6 +6,7 @@ import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.os.Build;
+import android.os.Handler;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -15,8 +16,11 @@ import java.util.Set;
 
 public class WCN2Scanner
 {
+    private static boolean scanning = false;
     private static BluetoothLeScanner bleScanner;
     private static Set<ScanResultListener> scanResultListeners = new HashSet<>();
+
+    private static long lastScanStarted = 0;
 
     private static ScanCallback scanCallback = new ScanCallback()
     {
@@ -115,21 +119,34 @@ public class WCN2Scanner
 
         if (0 == WCN2Scanner.scanResultListeners.size())
         {
-            stopScan();
+            // Keep scanning if last scan was started lass then 35 seconds ago.
+            // Android denies scanning if it is started too many times in 30 seconds.
+            // If a new ScanResultListener registers to early, the scan could be started
+            // too many times in 30 seconds and no results would be received.
+            Handler handler = new Handler();
+            handler.postDelayed(() -> {
+                if (0 == WCN2Scanner.scanResultListeners.size())
+                {
+                    WCN2Scanner.stopScan();
+                }
+            }, Math.max(35, System.currentTimeMillis() - WCN2Scanner.lastScanStarted));
         }
     }
 
     private static void startScan()
     {
-        if (null == WCN2Scanner.bleScanner) return;
+        if (null == WCN2Scanner.bleScanner || WCN2Scanner.scanning) return;
 
+        WCN2Scanner.scanning = true;
+        WCN2Scanner.lastScanStarted = System.currentTimeMillis();
         WCN2Scanner.bleScanner.startScan(getScanFilters(), getScanSettings(), WCN2Scanner.scanCallback);
     }
 
     private static void stopScan()
     {
-        if (null == WCN2Scanner.bleScanner) return;
+        if (null == WCN2Scanner.bleScanner || !WCN2Scanner.scanning) return;
 
+        WCN2Scanner.scanning = false;
         try
         {
             WCN2Scanner.bleScanner.stopScan(WCN2Scanner.scanCallback);

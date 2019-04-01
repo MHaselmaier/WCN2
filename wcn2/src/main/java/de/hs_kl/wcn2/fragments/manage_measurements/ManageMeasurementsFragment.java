@@ -1,10 +1,12 @@
 package de.hs_kl.wcn2.fragments.manage_measurements;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -80,7 +82,7 @@ public class ManageMeasurementsFragment extends Fragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle b)
     {
         View view = inflater.inflate(R.layout.manage_measurement, container, false);
 
@@ -93,13 +95,14 @@ public class ManageMeasurementsFragment extends Fragment
     }
 
     @Override
-    public void onHiddenChanged(boolean hidden)
+    public void onResume()
     {
-        if (hidden) return;
+        super.onResume();
 
         disableSelectionMode();
         loadFiles();
     }
+
 
     public boolean isSelectionModeEnabled()
     {
@@ -127,21 +130,27 @@ public class ManageMeasurementsFragment extends Fragment
 
     private void loadFiles()
     {
-        File[] files = new File(Constants.DATA_DIRECTORY_PATH).listFiles();
-        if (null == files) files = new File[0];
-
-        for (File file: files)
+        this.measurements.clear();
+        this.measurementViews.clear();
+        this.measurementsContainer.removeAllViews();
+        Handler handler = new Handler();
+        new Thread(() ->
         {
-            if (!this.measurements.contains(file))
-            {
-                this.measurements.add(file);
-                MeasurementView view = new MeasurementView(this, this.measurementsContainer, file);
-                this.measurementViews.add(view);
-                this.measurementsContainer.addView(view.getRoot());
-            }
-        }
+            File[] files = new File(Constants.DATA_DIRECTORY_PATH).listFiles();
+            if (null == files) files = new File[0];
 
-        updateMeasurementViews();
+            for (File file: files)
+            {
+                MeasurementView view = new MeasurementView(this,
+                        this.measurementsContainer, file);
+
+                handler.post(() -> {
+                    this.measurements.add(file);
+                    this.measurementViews.add(view);
+                    this.measurementsContainer.addView(view.getRoot());
+                });
+            }
+        }).start();
     }
 
     private void updateMeasurementViews()
