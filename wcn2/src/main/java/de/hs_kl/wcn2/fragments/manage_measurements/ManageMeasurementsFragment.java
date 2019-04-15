@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -137,7 +138,14 @@ public class ManageMeasurementsFragment extends Fragment
         new Thread(() ->
         {
             File[] files = new File(Constants.DATA_DIRECTORY_PATH).listFiles();
-            if (null == files) files = new File[0];
+            if (null == files)
+            {
+                View view = LayoutInflater.from(getContext()).inflate(R.layout.empty_list_item,
+                        this.measurementsContainer);
+                TextView label = view.findViewById(R.id.label);
+                label.setText(R.string.no_measurements_saved);
+                return;
+            }
 
             for (File file: files)
             {
