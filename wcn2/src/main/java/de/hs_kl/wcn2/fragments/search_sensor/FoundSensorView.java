@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import de.hs_kl.wcn2.R;
 import de.hs_kl.wcn2_sensors.SensorData;
-import de.hs_kl.wcn2.util.LastSeenSinceUtil;
+import de.hs_kl.wcn2_sensors.util.LastSeenSinceUtil;
 import de.hs_kl.wcn2.util.TrackedSensorsStorage;
 
 class FoundSensorView

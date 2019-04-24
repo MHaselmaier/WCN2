@@ -1,10 +1,10 @@
-package de.hs_kl.wcn2.util;
+package de.hs_kl.wcn2_sensors.util;
 
 import android.content.Context;
 
 import java.util.concurrent.TimeUnit;
 
-import de.hs_kl.wcn2.R;
+import de.hs_kl.wcn2_sensors.R;
 
 public class LastSeenSinceUtil
 {

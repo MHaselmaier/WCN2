@@ -16,15 +16,6 @@
 
     <string name="found_sensors">Found Sensors:</string>
     <string name="mnemonic">[%1s]</string>
-    <string name="sensor_id">WCN%1d</string>
-    <string name="sensor_not_seen">Not found</string>
-    <string name="sensor_last_seen">Last seen:</string>
-    <string name="sensor_seen_just_now">just now</string>
-    <string name="sensor_seen_seconds_ago">%1$d seconds ago</string>
-    <string name="sensor_seen_a_minute_ago">one minute ago</string>
-    <string name="sensor_seen_minutes_ago">%1$d minutes ago</string>
-    <string name="sensor_seen_an_hour_ago">one hour ago</string>
-    <string name="sensor_seen_hours_ago">%1$d hours ago</string>
 
     <string name="sensor_tracked">Tracked</string>
     <string name="sensor_not_tracked">Not tracked</string>
@@ -40,8 +31,6 @@
 
     <string name="temperature">%1$.1f °C</string>
     <string name="humidity">%1$.1f %%</string>
-    <string name="batterylevel">Battery level</string>
-    <string name="signalstrength">Signal strength</string>
 
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
