@@ -16,4 +16,6 @@
 
     <string name="batterylevel">Batterie Status</string>
     <string name="signalstrength">Signal Stärke</string>
+
+    <string name="no_sensors_found">Es wurden keine Sensoren gefunden.</string>
 </resources>

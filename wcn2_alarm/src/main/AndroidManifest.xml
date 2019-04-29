@@ -19,6 +19,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name="de.hs_kl.wcn2_alarm.create_alarm.CreateAlarmActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

@@ -1,14 +1,14 @@
 package de.hs_kl.wcn2_alarm;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import de.hs_kl.wcn2_sensors.SensorData;
+import de.hs_kl.wcn2_alarm.alarms.WCN2Alarm;
+import de.hs_kl.wcn2_alarm.create_alarm.CreateAlarmActivity;
 import de.hs_kl.wcn2_sensors.WCN2Activity;
 
 public class OverviewActivity extends WCN2Activity
@@ -25,18 +25,18 @@ public class OverviewActivity extends WCN2Activity
         alarms.addView(t);
 
         ImageButton addAlarm = findViewById(R.id.add_alarm);
-        addAlarm.setOnClickListener((v) -> {
+        Intent intent = new Intent(getBaseContext(), CreateAlarmActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        addAlarm.setOnClickListener((v) -> startActivity(intent));
+    }
 
-            List<SensorData> sensors = new ArrayList<>();
-            for (byte i = 0; 3 > i; ++i)
-            {
-                sensors.add(new SensorData(i, "Test", "00:00:00:00:00:00"));
-            }
+    @Override
+    public void onResume()
+    {
+        super.onResume();
 
-            WCN2Alarm alarm = new WCN2TemperatureAlarm(this, "Test", sensors, 20);
-
-            alarms.addView(alarm.getView());
-
-        });
+        WCN2Alarm[] alarms = AlarmStorage.getInstance(this).getAlarms();
+        for (WCN2Alarm alarm: alarms)
+            Log.d("wcntesting", alarm.getName());
     }
 }

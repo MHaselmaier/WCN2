@@ -11,7 +11,6 @@
     <string name="sensor">Sensors</string>
     <string name="about">About</string>
 
-    <string name="no_sensors_found">No sensors found.</string>
     <string name="no_sensors_tracked">No sensors tracked.</string>
 
     <string name="found_sensors">Found Sensors:</string>

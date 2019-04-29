@@ -17,5 +17,7 @@
     <string name="batterylevel">Battery level</string>
     <string name="signalstrength">Signal strength</string>
 
+    <string name="no_sensors_found">No sensors found.</string>
+
     <string name="sensor_id" translatable="false">WCN%1d</string>
 </resources>

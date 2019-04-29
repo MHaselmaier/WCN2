@@ -11,7 +11,6 @@
     <string name="sensor">Sensoren</string>
     <string name="about">Über uns</string>
 
-    <string name="no_sensors_found">Es wurden keine Sensoren gefunden.</string>
     <string name="no_sensors_tracked">Es werden keine Sensoren verfolgt.</string>
 
     <string name="found_sensors">Gefundene Sensoren:</string>

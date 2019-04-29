@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp">
+
+    <Spinner
+        android:id="@+id/type"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:entries="@array/types" />
+
+    <Spinner
+        android:id="@+id/operator"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:entries="@array/operators" />
+
+    <EditText
+        android:id="@+id/threshold"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:inputType="numberSigned|numberDecimal" />
+
+    <TextView
+        android:id="@+id/unit"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="°C"
+        android:textSize="20sp" />
+
+</LinearLayout>

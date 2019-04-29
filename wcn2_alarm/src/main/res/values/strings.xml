@@ -1,5 +1,23 @@
 <resources>
     <string name="app_name">WCN2 Alarm</string>
 
+    <string-array name="types">
+        <item>Temperature</item>
+        <item>Humidity</item>
+        <item>Presence</item>
+    </string-array>
+
+    <string-array name="units">
+        <item>°C</item>
+        <item>%</item>
+        <item>sec</item>
+    </string-array>
+
+    <string-array name="operators">
+        <item>&gt;</item>
+        <item>=</item>
+        <item>&lt;</item>
+    </string-array>
+
     <string name="version_info" translatable="false">19.03</string>
 </resources>
