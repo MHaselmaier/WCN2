@@ -1,8 +1,5 @@
 package de.hs_kl.wcn2_alarm.alarms;
 
-import android.content.Context;
-
-import java.util.Collection;
 import java.util.List;
 
 import de.hs_kl.wcn2_sensors.SensorData;
@@ -11,10 +8,10 @@ public class WCN2HumidityAlarm extends WCN2Alarm
 {
     private float humidityThreshold;
 
-    public WCN2HumidityAlarm(Context context, String name, Operator operator,
+    public WCN2HumidityAlarm(String name, Operator operator,
                                 float humidityThreshold, List<SensorData> sensors)
     {
-        super(context, name, operator, sensors);
+        super(name, operator, sensors);
 
         this.humidityThreshold = humidityThreshold;
     }
@@ -49,6 +46,7 @@ public class WCN2HumidityAlarm extends WCN2Alarm
     @Override
     public boolean equals(Object o)
     {
+        if (!super.equals(o)) return false;
         if (this == o) return true;
         if (null == o || getClass() != o.getClass()) return false;
 

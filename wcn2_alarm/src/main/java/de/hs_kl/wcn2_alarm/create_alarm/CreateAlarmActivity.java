@@ -166,31 +166,17 @@ public class CreateAlarmActivity extends AppCompatActivity
         List<WCN2Alarm> alarms = new ArrayList<>();
         for (int i = 0; this.thresholdTypes.size() > i; ++i)
         {
-            WCN2Alarm alarm = null;
             WCN2Alarm.Operator operator = WCN2Alarm.Operator.values()[this.thresholdOperators.get(i)];
             String name = this.name + (this.thresholdTypes.size() > 1 ? i : "");
-            switch (this.thresholdTypes.get(i))
-            {
-            case 0:
-                alarm = new WCN2TemperatureAlarm(this, name, operator, this.thresholdValues.get(i),
-                        this.selectedSensors);
-                break;
-            case 1:
-                alarm = new WCN2HumidityAlarm(this, name, operator, this.thresholdValues.get(i),
-                        this.selectedSensors);
-                break;
-            case 2:
-                alarm = new WCN2PresenceAlarm(this, name, operator,
-                        this.thresholdValues.get(i).longValue(), this.selectedSensors);
-                break;
-            }
+            WCN2Alarm alarm = WCN2Alarm.createAlarm(name, this.thresholdTypes.get(i), operator,
+                    this.thresholdValues.get(i), this.selectedSensors);
             alarms.add(alarm);
         }
 
         WCN2Alarm newAlarm = alarms.get(0);
         if (1 < alarms.size())
         {
-            newAlarm = new WCN2CompoundAlarm(this, this.name, alarms);
+            newAlarm = new WCN2CompoundAlarm(this.name, alarms);
         }
 
         return newAlarm;

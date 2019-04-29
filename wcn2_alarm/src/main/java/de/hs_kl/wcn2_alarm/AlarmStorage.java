@@ -46,19 +46,18 @@ public class AlarmStorage
                     Operator operator = Operator.values()[this.alarms.getInt(name + ":" + n + ":operator", -1)];
                     float value = this.alarms.getFloat(name + ":" + n + ":value", Float.NaN);
                     List<SensorData> sensorData = loadSensorData(name + ":" + n);
-                    WCN2Alarm alarm = WCN2Alarm.createAlarm(context, name + ":" + n, type, operator,
+                    WCN2Alarm alarm = WCN2Alarm.createAlarm(name + ":" + n, type, operator,
                             value, sensorData);
                     allAlarms.add(alarm);
                 }
-                this.cachedData.set(position, new WCN2CompoundAlarm(context, name, allAlarms));
+                this.cachedData.set(position, new WCN2CompoundAlarm(name, allAlarms));
             }
             else
             {
                 Operator operator = Operator.values()[this.alarms.getInt(name + ":operator", -1)];
                 float value = this.alarms.getFloat(name + ":value", Float.NaN);
                 List<SensorData> sensorData = loadSensorData(name);
-                WCN2Alarm alarm = WCN2Alarm.createAlarm(context, name, type, operator,
-                        value, sensorData);
+                WCN2Alarm alarm = WCN2Alarm.createAlarm(name, type, operator, value, sensorData);
                 this.cachedData.set(position, alarm);
             }
         }
