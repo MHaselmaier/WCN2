@@ -3,7 +3,6 @@ package de.hs_kl.wcn2_alarm;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
@@ -53,7 +52,6 @@ public class OverviewActivity extends WCN2Activity
 
     private void updateUI()
     {
-        Log.d("wcntesting", "update");
         for (WCN2AlarmView alarmView: this.alarmViews)
             alarmView.updateView();
 
