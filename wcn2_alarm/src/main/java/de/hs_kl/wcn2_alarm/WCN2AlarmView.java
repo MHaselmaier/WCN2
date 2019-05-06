@@ -114,8 +114,10 @@ public class WCN2AlarmView
                     sensorData.getBatteryLevelDrawable(this.context.getResources()));
             this.signalStrengthViews.get(sensorData.getMacAddress()).setImageDrawable(
                     sensorData.getSignalStrengthDrawable(this.context.getResources()));
-            this.temperatureViews.get(sensorData.getMacAddress()).setText(sensorData.getTemperature() + " °C");
-            this.humidityViews.get(sensorData.getMacAddress()).setText(sensorData.getRelativeHumidity() + " %");
+            this.temperatureViews.get(sensorData.getMacAddress()).setText(
+                    this.context.getString(R.string.temperature, sensorData.getTemperature()));
+            this.humidityViews.get(sensorData.getMacAddress()).setText(
+                    this.context.getString(R.string.humidity, sensorData.getRelativeHumidity()));
         }
     }
 }
