@@ -1,8 +1,6 @@
 package de.hs_kl.wcn2_alarm;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.PorterDuff;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -112,7 +110,6 @@ public class WCN2AlarmView
 
         for (SensorData sensorData: this.alarm.getSensorData())
         {
-            Log.d("wcntesting", sensorData.getMacAddress());
             this.batteryLevelViews.get(sensorData.getMacAddress()).setImageDrawable(
                     sensorData.getBatteryLevelDrawable(this.context.getResources()));
             this.signalStrengthViews.get(sensorData.getMacAddress()).setImageDrawable(

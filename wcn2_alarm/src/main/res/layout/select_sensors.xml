@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="2dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
         android:text="Select the sensors that trigger the alarm:"
         android:textSize="18sp" />
 
@@ -19,9 +19,16 @@
         android:id="@+id/no_sensors_found"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
         android:text="@string/no_sensors_found"
         android:textAlignment="textStart"
         android:textSize="18sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider" />
 
     <ScrollView
         android:id="@+id/sensors"
@@ -39,6 +46,11 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider" />
 
     <Button
         android:id="@+id/save"
