@@ -28,9 +28,6 @@
     <string name="tracked_sensors_edit">Edit</string>
     <string name="no_tracked_sensors">Choose at least one sensor before starting a measurement!</string>
 
-    <string name="temperature">%1$.1f °C</string>
-    <string name="humidity">%1$.1f %%</string>
-
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="measurement_header">Start Measurement</string>

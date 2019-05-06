@@ -19,5 +19,8 @@
 
     <string name="no_sensors_found">No sensors found.</string>
 
+    <string name="temperature" translatable="false">%1$.1f °C</string>
+    <string name="humidity" translatable="false">%1$.1f %%</string>
+
     <string name="sensor_id" translatable="false">WCN%1d</string>
 </resources>

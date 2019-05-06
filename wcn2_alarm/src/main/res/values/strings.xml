@@ -2,7 +2,7 @@
     <string name="app_name">WCN2 Alarm</string>
 
     <string name="your_alarms">Your Alarms:</string>
-    <stirng name="add_alarm">Add Alarm</stirng>
+    <string name="add_alarm">Add Alarm</string>
 
     <string name="toggle_sensors">Toggle Sensors</string>
     <string name="connected_sensors">Connected Sensors</string>
