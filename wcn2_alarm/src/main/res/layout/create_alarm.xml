@@ -19,7 +19,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Create Alarm"
+                android:text="@string/create_alarm"
                 android:textAlignment="center"
                 android:textSize="24sp" />
 

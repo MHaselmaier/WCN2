@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">WCN2 Alarm</string>
+
+    <string name="your_alarms">Deine Alarme:</string>
+    <stirng name="add_alarm">Alarm hinzufügen</stirng>
+
+    <string name="toggle_sensors">Toggle Sensoren</string>
+    <string name="connected_sensors">Verbundene Sensoren</string>
+
+    <string name="create_alarm">Erstelle Alarm</string>
+
+    <string name="enter_name">Bitte gebe einen Namen an:</string>
+    <string name="name">Name</string>
+    <string name="select_thresholds">Wähle Thresholds</string>
+
+    <string name="select_sensors_label">Wähle die Sensoren, die den Alarm auslösen:</string>
+    <string name="save">Speichern</string>
+
+    <string name="define_thresholds">Definiere Thresholds, die den Alarm auslösen:</string>
+    <string name="add_threshold">Threshold hinzufügen</string>
+    <string name="select_sensors">Wähle Sensoren</string>
+
+    <string-array name="types">
+        <item>Temperatur</item>
+        <item>Feuchtigkeit</item>
+        <item>Anwesenheit</item>
+    </string-array>
+
+    <string-array name="units">
+        <item>°C</item>
+        <item>%</item>
+        <item>sek</item>
+    </string-array>
+</resources>

@@ -14,7 +14,7 @@
         android:orientation="horizontal">
 
         <Switch
-            android:id="@+id/switch1"
+            android:id="@+id/activate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
@@ -31,7 +31,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/toggle_connected_sensors"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
@@ -41,16 +40,16 @@
             android:layout_width="15dp"
             android:layout_height="15dp"
             android:layout_gravity="center"
+            android:contentDescription="@string/toggle_sensors"
             android:tint="#E6616161"
             app:srcCompat="@drawable/ic_down" />
 
         <TextView
-            android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:gravity="center"
-            android:text="Connected Sensors:"
+            android:text="@string/connected_sensors"
             android:textSize="18sp" />
     </LinearLayout>
 

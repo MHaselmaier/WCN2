@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
-        android:text="Define the thresholds that trigger the alarm:"
+        android:text="@string/define_thresholds"
         android:textSize="18sp" />
 
     <View
@@ -23,7 +23,7 @@
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1">
 
         <LinearLayout
@@ -52,6 +52,7 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:background="@android:color/transparent"
+            android:contentDescription="@string/add_threshold"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_add"
             android:tint="@color/colorPrimaryDark"
@@ -65,7 +66,7 @@
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Select Sensors"
+            android:text="@string/select_sensors"
             android:textColor="@color/colorPrimaryDark"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
