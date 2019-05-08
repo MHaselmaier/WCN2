@@ -1,10 +1,13 @@
 package de.hs_kl.wcn2.fragments.manage_measurements;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
@@ -38,6 +41,14 @@ public class ManageMeasurementsFragment extends Fragment
     {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+
+        String[] permission = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(getActivity(),
+                permission[0]))
+        {
+            ActivityCompat.requestPermissions(getActivity(), permission,
+                    Constants.REQUEST_WRITE_PERMISSION);
+        }
     }
 
     @Override
@@ -138,10 +149,12 @@ public class ManageMeasurementsFragment extends Fragment
             File[] files = new File(Constants.DATA_DIRECTORY_PATH).listFiles();
             if (null == files)
             {
-                View view = LayoutInflater.from(getContext()).inflate(R.layout.empty_list_item,
-                        this.measurementsContainer);
-                TextView label = view.findViewById(R.id.label);
-                label.setText(R.string.no_measurements_saved);
+                handler.post(() -> {
+                    View view = LayoutInflater.from(getContext()).inflate(R.layout.empty_list_item,
+                            this.measurementsContainer);
+                    TextView label = view.findViewById(R.id.label);
+                    label.setText(R.string.no_measurements_saved);
+                });
                 return;
             }
 
