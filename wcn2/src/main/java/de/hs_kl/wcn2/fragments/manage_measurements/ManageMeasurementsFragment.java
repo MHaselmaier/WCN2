@@ -4,16 +4,15 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -83,7 +82,7 @@ public class ManageMeasurementsFragment extends Fragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle b)
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle b)
     {
         View view = inflater.inflate(R.layout.manage_measurement, container, false);
 
@@ -103,7 +102,6 @@ public class ManageMeasurementsFragment extends Fragment
         disableSelectionMode();
         loadFiles();
     }
-
 
     public boolean isSelectionModeEnabled()
     {
@@ -149,13 +147,11 @@ public class ManageMeasurementsFragment extends Fragment
 
             for (File file: files)
             {
-                MeasurementView view = new MeasurementView(this,
-                        this.measurementsContainer, file);
-
+                MeasurementView view = new MeasurementView(this, file);
                 handler.post(() -> {
                     this.measurements.add(file);
                     this.measurementViews.add(view);
-                    this.measurementsContainer.addView(view.getRoot());
+                    this.measurementsContainer.addView(view);
                 });
             }
         }).start();
@@ -185,7 +181,7 @@ public class ManageMeasurementsFragment extends Fragment
         if (0 <= index)
         {
             this.measurements.remove(index);
-            this.measurementsContainer.removeView(this.measurementViews.remove(index).getRoot());
+            this.measurementsContainer.removeView(this.measurementViews.remove(index));
         }
     }
 

@@ -3,20 +3,22 @@ package de.hs_kl.wcn2.fragments.sensor_tracking;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.util.AttributeSet;
 import android.widget.GridLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import java.util.Arrays;
 
 import de.hs_kl.wcn2.R;
 import de.hs_kl.wcn2.util.DefinedActionStorage;
 
-class ActionButtonsOverview
+class ActionButtonsOverview extends LinearLayout
 {
     private Context context;
-    private View root;
     private GridLayout container;
     private View noActionsDefinedView;
 
@@ -25,19 +27,30 @@ class ActionButtonsOverview
 
     private Button selectedActionButton;
 
-    ActionButtonsOverview(Context context, View root)
+    public ActionButtonsOverview(@NonNull Context context)
     {
+        this(context, null);
+    }
+
+    public ActionButtonsOverview(@NonNull Context context, AttributeSet attrs)
+    {
+        this(context, attrs, R.attr.cardViewStyle);
+    }
+
+    public ActionButtonsOverview(@NonNull Context context, AttributeSet attrs, int defStyleAttr)
+    {
+        super(context, attrs, defStyleAttr);
+        inflate(context, R.layout.action_buttons_overview, this);
+
         this.context = context;
-        this.root = root;
-        this.container = this.root.findViewById(R.id.actions);
-        this.noActionsDefinedView = ((View)this.root.getParent())
-                .findViewById(R.id.no_actions_defined);
+        this.container = findViewById(R.id.actions);
+        this.noActionsDefinedView = findViewById(R.id.no_actions_defined);
         this.definedActionStorage = DefinedActionStorage.getInstance(this.context);
     }
 
     void show()
     {
-        this.root.setVisibility(View.VISIBLE);
+        setVisibility(View.VISIBLE);
         updateViews();
     }
 
@@ -120,6 +133,6 @@ class ActionButtonsOverview
     void hide()
     {
         deselectActionButton();
-        this.root.setVisibility(View.GONE);
+        setVisibility(View.GONE);
     }
 }

@@ -44,7 +44,7 @@ public class OverviewActivity extends WCN2Activity
         {
             WCN2AlarmView alarmView = new WCN2AlarmView(this, alarm);
             this.alarmViews.add(alarmView);
-            this.alarms.addView(alarmView.getRoot());
+            this.alarms.addView(alarmView);
         }
 
         this.uiUpdater.post(this::updateUI);

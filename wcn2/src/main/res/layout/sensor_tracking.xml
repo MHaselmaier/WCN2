@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -40,105 +38,23 @@
 
     </android.support.v7.widget.CardView>
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/sensor_overview"
+    <de.hs_kl.wcn2.fragments.sensor_tracking.TrackedSensorsOverview
+        android:id="@+id/tracked_sensors_overview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:visibility="visible">
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <android.support.constraint.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tracked_sensors"
-                    android:textSize="26sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageButton
-                    android:id="@+id/edit_tracked_sensors"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:background="@android:color/transparent"
-                    android:contentDescription="@string/tracked_sensors_edit"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/ic_edit"
-                    android:tint="@color/colorPrimaryDark"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </android.support.constraint.ConstraintLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?android:attr/listDivider" />
-
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:id="@+id/tracked_sensors"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:divider="@android:color/darker_gray"
-                    android:orientation="vertical"
-                    android:showDividers="middle">
-
-                    <include
-                        layout="@layout/empty_list_item"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone" />
-                </LinearLayout>
-            </ScrollView>
-
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
-
-    <TextView
-        android:id="@+id/no_actions_defined"
+    <de.hs_kl.wcn2.fragments.sensor_tracking.ActionButtonsOverview
+        android:id="@+id/action_buttons_overview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:text="@string/no_actions_defined"
-        android:textAlignment="textStart"
-        android:textSize="24sp"
-        android:visibility="gone" />
-
-    <ScrollView
-        android:id="@+id/action_overview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginBottom="5dp"
-        android:visibility="gone">
+        android:visibility="gone" />
 
-        <GridLayout
-            android:id="@+id/actions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:columnCount="2"
-            android:isScrollContainer="false">
-
-        </GridLayout>
-    </ScrollView>
 </LinearLayout>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/no_actions_defined"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/no_actions_defined"
+        android:textAlignment="textStart"
+        android:textSize="24sp" />
+
+    <ScrollView
+        android:id="@+id/action_overview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <GridLayout
+            android:id="@+id/actions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="2"
+            android:isScrollContainer="false">
+
+        </GridLayout>
+    </ScrollView>
+
+</LinearLayout>

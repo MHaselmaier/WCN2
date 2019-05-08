@@ -2,7 +2,6 @@ package de.hs_kl.wcn2_alarm;
 
 import android.content.Context;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,12 +13,11 @@ import java.util.Map;
 import de.hs_kl.wcn2_alarm.alarms.WCN2Alarm;
 import de.hs_kl.wcn2_sensors.SensorData;
 
-public class WCN2AlarmView
+public class WCN2AlarmView extends LinearLayout
 {
     private Context context;
     private  WCN2Alarm alarm;
 
-    private LinearLayout root;
     private LinearLayout connectedSensors;
 
     private Map<String, ImageView> batteryLevelViews = new HashMap<>();
@@ -29,17 +27,18 @@ public class WCN2AlarmView
 
     public WCN2AlarmView(Context context, WCN2Alarm alarm)
     {
+        super(context);
+        inflate(context, R.layout.alarm_overview, this);
+
         this.context = context;
         this.alarm = alarm;
 
-        this.root = (LinearLayout)LayoutInflater.from(this.context)
-                                                .inflate(R.layout.alarm_overview, null);
-        this.connectedSensors = this.root.findViewById(R.id.connected_sensors);
+        this.connectedSensors = findViewById(R.id.connected_sensors);
 
-        TextView alarmName = this.root.findViewById(R.id.name);
-        alarmName.setText(alarm.getName());
+        TextView alarmName = findViewById(R.id.name);
+        alarmName.setText(this.alarm.getName());
 
-        View toggleConnectedSensors = this.root.findViewById(R.id.toggle_connected_sensors);
+        View toggleConnectedSensors = findViewById(R.id.toggle_connected_sensors);
         toggleConnectedSensors.setOnClickListener((v) -> {
             ImageView arrow = v.findViewById(R.id.arrow);
             switch (this.connectedSensors.getVisibility())
@@ -69,8 +68,7 @@ public class WCN2AlarmView
 
     private void addSensorDataView(SensorData sensorData)
     {
-        LayoutInflater inflater = LayoutInflater.from(this.context);
-        View sensorView = inflater.inflate(R.layout.connected_sensor, null);
+        View sensorView = inflate(this.context, R.layout.connected_sensor, null);
 
         ImageView signalStrength = sensorView.findViewById(R.id.signal_strength);
         this.signalStrengthViews.put(sensorData.getMacAddress(), signalStrength);
@@ -90,26 +88,24 @@ public class WCN2AlarmView
         this.connectedSensors.addView(sensorView);
     }
 
-    public View getRoot()
-    {
-        return  this.root;
-    }
-
     public void updateView()
     {
         if (this.alarm.isTriggered())
         {
-            int padding = this.root.getPaddingTop();
-            this.root.setBackgroundResource(R.drawable.border_shape);
-            this.root.setPadding(padding, padding, padding, padding);
+            int padding = getPaddingTop();
+            setBackgroundResource(R.drawable.border_shape);
+            setPadding(padding, padding, padding, padding);
         }
         else
         {
-            this.root.setBackgroundResource(0);
+            setBackgroundResource(0);
         }
 
         for (SensorData sensorData: this.alarm.getSensorData())
         {
+            if (!this.batteryLevelViews.containsKey(sensorData.getMacAddress()))
+                addSensorDataView(sensorData);
+
             this.batteryLevelViews.get(sensorData.getMacAddress()).setImageDrawable(
                     sensorData.getBatteryLevelDrawable(this.context.getResources()));
             this.signalStrengthViews.get(sensorData.getMacAddress()).setImageDrawable(

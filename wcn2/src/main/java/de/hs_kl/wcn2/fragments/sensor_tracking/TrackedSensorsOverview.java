@@ -2,6 +2,9 @@ package de.hs_kl.wcn2.fragments.sensor_tracking;
 
 import android.content.Context;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
+import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -13,22 +16,33 @@ import de.hs_kl.wcn2.R;
 import de.hs_kl.wcn2_sensors.SensorData;
 import de.hs_kl.wcn2.util.TrackedSensorsStorage;
 
-class TrackedSensorsOverview
+public class TrackedSensorsOverview extends CardView
 {
     private Context context;
     private TrackedSensorsStorage trackedSensorsStorage;
-    private View root;
     private LinearLayout container;
     private View emptyListItem;
     private List<SensorData> trackedSensors = new ArrayList<>();
     private List<TrackedSensorView> trackedSensorViews = new ArrayList<>();
 
-    TrackedSensorsOverview(Context context, View root)
+    public TrackedSensorsOverview(@NonNull Context context)
     {
+        this(context, null);
+    }
+
+    public TrackedSensorsOverview(@NonNull Context context, AttributeSet attrs)
+    {
+        this(context, attrs, R.attr.cardViewStyle);
+    }
+
+    public TrackedSensorsOverview(@NonNull Context context, AttributeSet attrs, int defStyleAttr)
+    {
+        super(context, attrs, defStyleAttr);
+        inflate(context, R.layout.tracked_sensor_overview, this);
+
         this.context = context;
         this.trackedSensorsStorage = TrackedSensorsStorage.getInstance(this.context);
-        this.root = root;
-        this.container = this.root.findViewById(R.id.tracked_sensors);
+        this.container = findViewById(R.id.tracked_sensors);
         this.emptyListItem = this.container.findViewById(R.id.empty_list_item);
         TextView label = this.emptyListItem.findViewById(R.id.label);
         label.setText(R.string.no_sensors_tracked);
@@ -53,7 +67,7 @@ class TrackedSensorsOverview
             TrackedSensorView view = new TrackedSensorView(this.context, sensorData);
             handler.post(() -> {
                 this.trackedSensorViews.set(position, view);
-                this.container.addView(view.getRoot());
+                this.container.addView(view);
             });
         }).start();
     }
@@ -61,7 +75,7 @@ class TrackedSensorsOverview
     void show()
     {
         updateViews();
-        this.root.setVisibility(View.VISIBLE);
+        setVisibility(View.VISIBLE);
     }
 
     void updateViews()
@@ -89,7 +103,7 @@ class TrackedSensorsOverview
             if (!this.trackedSensorsStorage.isTracked(this.trackedSensors.get(i)))
             {
                 this.trackedSensors.remove(i);
-                this.container.removeView(this.trackedSensorViews.remove(i).getRoot());
+                this.container.removeView(this.trackedSensorViews.remove(i));
             }
         }
     }
@@ -117,6 +131,6 @@ class TrackedSensorsOverview
 
     void hide()
     {
-        this.root.setVisibility(View.GONE);
+        setVisibility(View.GONE);
     }
 }

@@ -1,128 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/sensor_id"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    tools:text="WCN1" />
-
-                <TextView
-                    android:id="@+id/mnemonic"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="5dp"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    tools:text="[Linker Arm]" />
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/last_seen"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/sensor_not_seen"
-                android:textAlignment="textEnd"
-                android:textSize="14sp"
-                tools:text="Zuletzt gesehen: vor 10 Sekunden" />
-
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/sensor_warning"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/sensor_warning"
-            android:scaleType="fitCenter"
-            android:tint="@android:color/holo_orange_light"
-            app:srcCompat="@drawable/ic_sensor_warning" />
-
-    </LinearLayout>
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:paddingBottom="5dp">
-
-        <TextView
-            android:id="@+id/temperature"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:textAlignment="center"
-            android:textSize="16sp"
-            tools:text="21,5 °C" />
-
-        <TextView
-            android:id="@+id/humidity"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:textAlignment="center"
-            android:textSize="16sp"
-            tools:text="36,9 %" />
+        android:orientation="vertical">
 
         <android.support.constraint.ConstraintLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp">
 
-            <ImageView
-                android:id="@+id/battery_level"
+            <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:contentDescription="@string/batterylevel"
-                android:tint="@color/colorPrimaryDark"
+                android:layout_height="wrap_content"
+                android:text="@string/tracked_sensors"
+                android:textSize="26sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/signal_strength"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_battery_almost_empty" />
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/signal_strength"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:contentDescription="@string/signalstrength"
+            <ImageButton
+                android:id="@+id/edit_tracked_sensors"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/tracked_sensors_edit"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_edit"
                 android:tint="@color/colorPrimaryDark"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/battery_level"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_signal_0" />
+                app:layout_constraintTop_toTopOf="parent" />
         </android.support.constraint.ConstraintLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/tracked_sensors"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@android:color/darker_gray"
+                android:orientation="vertical"
+                android:showDividers="middle">
+
+                <include
+                    layout="@layout/empty_list_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </ScrollView>
 
     </LinearLayout>
 
-</LinearLayout>
+</android.support.v7.widget.CardView>

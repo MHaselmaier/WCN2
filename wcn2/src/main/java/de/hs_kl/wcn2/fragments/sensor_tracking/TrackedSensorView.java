@@ -1,19 +1,18 @@
 package de.hs_kl.wcn2.fragments.sensor_tracking;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import de.hs_kl.wcn2.R;
 import de.hs_kl.wcn2_sensors.SensorData;
 import de.hs_kl.wcn2_sensors.util.LastSeenSinceUtil;
 
-class TrackedSensorView
+class TrackedSensorView extends LinearLayout
 {
     private Context context;
-    private View root;
     private ImageView warning;
     private TextView sensorID;
     private TextView mnemonic;
@@ -25,17 +24,19 @@ class TrackedSensorView
 
     TrackedSensorView(Context context, SensorData sensorData)
     {
-        this.context = context;
-        this.root = LayoutInflater.from(this.context).inflate(R.layout.tracked_sensor_overview, null);
+        super(context);
 
-        this.warning = this.root.findViewById(R.id.sensor_warning);
-        this.sensorID = this.root.findViewById(R.id.sensor_id);
-        this.mnemonic = this.root.findViewById(R.id.mnemonic);
-        this.lastSeen = this.root.findViewById(R.id.last_seen);
-        this.temperature = this.root.findViewById(R.id.temperature);
-        this.humidity = this.root.findViewById(R.id.humidity);
-        this.batteryLevel = this.root.findViewById(R.id.battery_level);
-        this.signalStrength = this.root.findViewById(R.id.signal_strength);
+        this.context = context;
+        inflate(context, R.layout.tracked_sensor_view, this);
+
+        this.warning = findViewById(R.id.sensor_warning);
+        this.sensorID = findViewById(R.id.sensor_id);
+        this.mnemonic = findViewById(R.id.mnemonic);
+        this.lastSeen = findViewById(R.id.last_seen);
+        this.temperature = findViewById(R.id.temperature);
+        this.humidity = findViewById(R.id.humidity);
+        this.batteryLevel = findViewById(R.id.battery_level);
+        this.signalStrength = findViewById(R.id.signal_strength);
 
         updateView(sensorData);
     }
@@ -79,10 +80,5 @@ class TrackedSensorView
 
         this.signalStrength.setImageDrawable(sensorData.getSignalStrengthDrawable(this.context
                 .getResources()));
-    }
-
-    View getRoot()
-    {
-        return this.root;
     }
 }

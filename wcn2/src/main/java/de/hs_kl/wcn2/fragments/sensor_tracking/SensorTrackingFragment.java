@@ -6,6 +6,7 @@ import android.bluetooth.le.ScanFilter;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
@@ -83,7 +84,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle b)
+    public View onCreateView(@NonNull LayoutInflater inflater, final ViewGroup container, Bundle b)
     {
         View view = inflater.inflate(R.layout.sensor_tracking, container, false);
 
@@ -106,11 +107,9 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
         edit.setOnClickListener((v) ->
                 ((OverviewActivity)getActivity()).changeToSearchSensorFragment());
 
-        this.trackedSensorsOverview = new TrackedSensorsOverview(getActivity(),
-                view.findViewById(R.id.sensor_overview));
+        this.trackedSensorsOverview = view.findViewById(R.id.tracked_sensors_overview);
         this.trackedSensorsOverview.show();
-        this.actionButtonsOverview = new ActionButtonsOverview(getActivity(),
-                view.findViewById(R.id.action_overview));
+        this.actionButtonsOverview = view.findViewById(R.id.action_buttons_overview);
         this.actionButtonsOverview.hide();
 
         return view;
@@ -145,7 +144,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceBundle)
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceBundle)
     {
         if (Long.MIN_VALUE == MeasurementService.startTime) return;
 

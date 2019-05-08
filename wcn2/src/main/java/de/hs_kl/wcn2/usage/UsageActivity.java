@@ -304,7 +304,7 @@ public class UsageActivity extends AppCompatActivity
         View sensorTracking = getLayoutInflater()
                 .inflate(R.layout.sensor_tracking, this.container, false);
         LinearLayout trackedSensors = sensorTracking.findViewById(R.id.tracked_sensors);
-        View trackedSensor1 = getLayoutInflater().inflate(R.layout.tracked_sensor_overview, trackedSensors);
+        View trackedSensor1 = getLayoutInflater().inflate(R.layout.tracked_sensor_view, trackedSensors);
         trackedSensor1.findViewById(R.id.sensor_warning).setVisibility(View.GONE);
         ((TextView)trackedSensor1.findViewById(R.id.sensor_id)).setText("WCN1");
         ((TextView)trackedSensor1.findViewById(R.id.last_seen)).setText(getString(R.string.sensor_last_seen) + " " + getResources().getString(R.string.sensor_seen_just_now));
@@ -313,7 +313,7 @@ public class UsageActivity extends AppCompatActivity
         ((ImageView)trackedSensor1.findViewById(R.id.battery_level)).setImageDrawable(getDrawable(R.drawable.ic_battery_full));
         ((ImageView)trackedSensor1.findViewById(R.id.signal_strength)).setImageDrawable(getDrawable(R.drawable.ic_signal_100));
 
-        View trackedSensor2 = getLayoutInflater().inflate(R.layout.tracked_sensor_overview, trackedSensors, false);
+        View trackedSensor2 = getLayoutInflater().inflate(R.layout.tracked_sensor_view, trackedSensors, false);
         trackedSensor2.findViewById(R.id.sensor_warning).setVisibility(View.GONE);
         ((TextView)trackedSensor2.findViewById(R.id.sensor_id)).setText("WCN3");
         ((TextView)trackedSensor2.findViewById(R.id.last_seen)).setText(getString(R.string.sensor_last_seen) + " " + getResources().getString(R.string.sensor_seen_just_now));
@@ -355,8 +355,9 @@ public class UsageActivity extends AppCompatActivity
         }
         performMeasurement.addStep(new Animation.Step(performMeasurement, dialog::show, 250));
 
-        View sensorOverview = sensorTracking.findViewById(R.id.sensor_overview);
-        View actionOverview = sensorTracking.findViewById(R.id.action_overview);
+        View sensorOverview = sensorTracking.findViewById(R.id.tracked_sensors_overview);
+        View actionOverview = sensorTracking.findViewById(R.id.action_buttons_overview);
+        actionOverview.findViewById(R.id.no_actions_defined).setVisibility(View.GONE);
         GridLayout gridLayout = actionOverview.findViewById(R.id.actions);
         View actionButton = getLayoutInflater().inflate(R.layout.action_button, gridLayout, false);
         Button button = actionButton.findViewById(R.id.button);
