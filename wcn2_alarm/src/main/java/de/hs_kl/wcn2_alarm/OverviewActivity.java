@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +40,18 @@ public class OverviewActivity extends WCN2Activity
         super.onResume();
 
         this.alarms.removeAllViews();
-        for (WCN2Alarm alarm: AlarmStorage.getInstance(this).getAlarms())
+        WCN2Alarm[] alarms = AlarmStorage.getInstance(this).getAlarms();
+        for (WCN2Alarm alarm: alarms)
         {
             WCN2AlarmView alarmView = new WCN2AlarmView(this, alarm);
             this.alarmViews.add(alarmView);
             this.alarms.addView(alarmView);
+        }
+        if (0 == alarms.length)
+        {
+            TextView noAlarms = new TextView(this);
+            noAlarms.setText(R.string.no_alarms_defined);
+            this.alarms.addView(noAlarms);
         }
 
         this.uiUpdater.post(this::updateUI);

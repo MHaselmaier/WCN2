@@ -4,6 +4,7 @@
 
     <string name="your_alarms">Deine Alarme:</string>
     <string name="add_alarm">Alarm hinzufügen</string>
+    <string name="no_alarms_defined">Keine Alarme definiert</string>
 
     <string name="toggle_sensors">Toggle Sensoren</string>
     <string name="connected_sensors">Verbundene Sensoren</string>

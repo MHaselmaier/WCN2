@@ -3,6 +3,7 @@
 
     <string name="your_alarms">Your Alarms:</string>
     <string name="add_alarm">Add Alarm</string>
+    <string name="no_alarms_defined">No Alarms defined</string>
 
     <string name="toggle_sensors">Toggle Sensors</string>
     <string name="connected_sensors">Connected Sensors</string>
