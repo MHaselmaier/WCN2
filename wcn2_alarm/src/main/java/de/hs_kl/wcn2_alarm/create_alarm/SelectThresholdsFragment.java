@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +21,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.hs_kl.wcn2_alarm.R;
-
-import static android.content.Intent.FLAG_ACTIVITY_NO_ANIMATION;
 
 public class SelectThresholdsFragment extends Fragment
 {
@@ -84,7 +81,7 @@ public class SelectThresholdsFragment extends Fragment
     {
         if (!isAtLeastOneThresholdSet())
         {
-            Toast.makeText(getContext(), "No Thresholds specified!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), R.string.no_thresholds_defined, Toast.LENGTH_LONG).show();
             return;
         }
 

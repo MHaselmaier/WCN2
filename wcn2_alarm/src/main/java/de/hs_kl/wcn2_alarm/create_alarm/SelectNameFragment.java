@@ -43,13 +43,13 @@ public class SelectNameFragment extends Fragment
         String enteredName = this.name.getText().toString().trim();
         if (enteredName.isEmpty())
         {
-            Toast.makeText(getContext(), "A name must be provided!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), R.string.no_name_provided, Toast.LENGTH_LONG).show();
             return;
         }
 
         if (AlarmStorage.getInstance(getContext()).isSaved(enteredName))
         {
-            Toast.makeText(getContext(), "This name is already in use!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), R.string.name_already_used, Toast.LENGTH_LONG).show();
             return;
         }
 

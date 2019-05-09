@@ -96,7 +96,7 @@ public class SelectSensorsFragment extends Fragment implements ScanResultListene
     {
         if (!isAtLeastOneSensorSelected())
         {
-            Toast.makeText(getContext(), "Select at least one sensor!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), R.string.no_sensor_selected, Toast.LENGTH_LONG).show();
             return;
         }
 

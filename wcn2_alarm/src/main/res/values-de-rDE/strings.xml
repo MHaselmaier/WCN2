@@ -13,13 +13,17 @@
     <string name="enter_name">Bitte gebe einen Namen an:</string>
     <string name="name">Name</string>
     <string name="select_thresholds">Wähle Thresholds</string>
+    <string name="no_name_provided">Es muss ein Name vergeben werden!</string>
+    <string name="name_already_used">Der Name wird bereits verwendet!</string>
 
     <string name="select_sensors_label">Wähle die Sensoren, die den Alarm auslösen:</string>
     <string name="save">Speichern</string>
+    <string name="no_sensor_selected">Wähle mindestens einen Sensor!</string>
 
     <string name="define_thresholds">Definiere Thresholds, die den Alarm auslösen:</string>
     <string name="add_threshold">Threshold hinzufügen</string>
     <string name="select_sensors">Wähle Sensoren</string>
+    <string name="no_thresholds_defined">Keine Thresholds definiert!</string>
 
     <string-array name="types">
         <item>Temperatur</item>
