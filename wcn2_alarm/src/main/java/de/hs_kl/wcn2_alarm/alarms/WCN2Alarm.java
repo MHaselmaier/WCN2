@@ -56,6 +56,7 @@ public abstract class WCN2Alarm implements ScanResultListener
 
     protected List<SensorData> sensors;
     protected String name;
+    protected boolean activated;
     protected Operator operator;
 
     public WCN2Alarm(String name, Operator operator, List<SensorData> sensors)
@@ -70,6 +71,26 @@ public abstract class WCN2Alarm implements ScanResultListener
     public String getName()
     {
         return this.name;
+    }
+
+    public void setActivated(boolean activated)
+    {
+        if (this.activated == activated) return;
+
+        this.activated = activated;
+        if (this.activated)
+        {
+            WCN2Scanner.registerScanResultListener(this);
+        }
+        else
+        {
+            WCN2Scanner.unregisterScanResultListener(this);
+        }
+    }
+
+    public boolean isActivated()
+    {
+        return this.activated;
     }
 
     public Operator getOperator()

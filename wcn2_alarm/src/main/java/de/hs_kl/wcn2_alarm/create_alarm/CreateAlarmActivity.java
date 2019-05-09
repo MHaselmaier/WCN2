@@ -12,9 +12,6 @@ import de.hs_kl.wcn2_alarm.OverviewActivity;
 import de.hs_kl.wcn2_alarm.R;
 import de.hs_kl.wcn2_alarm.alarms.WCN2Alarm;
 import de.hs_kl.wcn2_alarm.alarms.WCN2CompoundAlarm;
-import de.hs_kl.wcn2_alarm.alarms.WCN2HumidityAlarm;
-import de.hs_kl.wcn2_alarm.alarms.WCN2PresenceAlarm;
-import de.hs_kl.wcn2_alarm.alarms.WCN2TemperatureAlarm;
 import de.hs_kl.wcn2_sensors.SensorData;
 
 public class CreateAlarmActivity extends AppCompatActivity

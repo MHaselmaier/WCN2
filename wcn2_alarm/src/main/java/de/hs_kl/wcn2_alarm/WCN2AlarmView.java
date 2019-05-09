@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -34,6 +35,13 @@ public class WCN2AlarmView extends LinearLayout
         this.alarm = alarm;
 
         this.connectedSensors = findViewById(R.id.connected_sensors);
+
+        Switch activate = findViewById(R.id.activate);
+        activate.setChecked(this.alarm.isActivated());
+        activate.setOnCheckedChangeListener((b, isChecked) -> {
+            this.alarm.setActivated(isChecked);
+            AlarmStorage.getInstance(this.context).saveAlarm(this.alarm);
+        });
 
         TextView alarmName = findViewById(R.id.name);
         alarmName.setText(this.alarm.getName());

@@ -39,8 +39,7 @@ public class OverviewActivity extends WCN2Activity
         super.onResume();
 
         this.alarms.removeAllViews();
-        WCN2Alarm[] alarms = AlarmStorage.getInstance(this).getAlarms();
-        for (WCN2Alarm alarm: alarms)
+        for (WCN2Alarm alarm: AlarmStorage.getInstance(this).getAlarms())
         {
             WCN2AlarmView alarmView = new WCN2AlarmView(this, alarm);
             this.alarmViews.add(alarmView);
