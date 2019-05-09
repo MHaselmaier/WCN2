@@ -9,7 +9,7 @@
     <string name="toggle_sensors">Toggle Sensoren</string>
     <string name="connected_sensors">Verbundene Sensoren</string>
 
-    <string name="create_alarm">Erstelle Alarm</string>
+    <string name="create_alarm">Erstelle Alarm:</string>
 
     <string name="enter_name">Bitte gebe einen Namen an:</string>
     <string name="name">Name</string>

@@ -8,7 +8,7 @@
     <string name="toggle_sensors">Toggle Sensors</string>
     <string name="connected_sensors">Connected Sensors</string>
 
-    <string name="create_alarm">Create Alarm</string>
+    <string name="create_alarm">Create Alarm:</string>
 
     <string name="enter_name">Please enter a name:</string>
     <string name="name">Name</string>
