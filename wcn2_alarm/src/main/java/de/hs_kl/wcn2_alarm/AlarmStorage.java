@@ -167,28 +167,40 @@ public class AlarmStorage
 
     public synchronized void deleteAlarm(WCN2Alarm alarm)
     {
-        if (!this.cachedData.remove(alarm)) return;
+        deleteAlarm(alarm.getName());
+    }
 
-        SharedPreferences.Editor editor = this.alarms.edit();
-        editor.remove(alarm.getName() + ":type");
-        editor.remove(alarm.getName() + ":position");
-        editor.remove(alarm.getName() + ":operator");
-        editor.remove(alarm.getName() + ":value");
-        editor.remove(alarm.getName() + ":activated");
-
-        for (String name: this.alarms.getStringSet(alarm.getName() + ":names", new HashSet<>()))
+    public synchronized void deleteAlarm(String alarm)
+    {
+        for (WCN2Alarm a: this.cachedData)
         {
-            editor.remove(alarm.getName() + ":" + name + ":type");
-            editor.remove(alarm.getName() + ":" + name + ":operator");
-            editor.remove(alarm.getName() + ":" + name + ":value");
-            editor.remove(alarm.getName() + ":" + name + ":activated");
-            deleteSensorData(alarm.getName() + ":" + name);
+            if (a.getName().equals(alarm))
+            {
+                this.cachedData.remove(a);
+                break;
+            }
         }
 
-        deleteSensorData(alarm.getName());
+        SharedPreferences.Editor editor = this.alarms.edit();
+        editor.remove(alarm + ":type");
+        editor.remove(alarm + ":position");
+        editor.remove(alarm + ":operator");
+        editor.remove(alarm + ":value");
+        editor.remove(alarm + ":activated");
+
+        for (String name: this.alarms.getStringSet(alarm + ":names", new HashSet<>()))
+        {
+            editor.remove(alarm + ":" + name + ":type");
+            editor.remove(alarm + ":" + name + ":operator");
+            editor.remove(alarm + ":" + name + ":value");
+            editor.remove(alarm + ":" + name + ":activated");
+            deleteSensorData(alarm + ":" + name);
+        }
+
+        deleteSensorData(alarm);
 
         Set<String> names = this.alarms.getStringSet("names", new HashSet<>());
-        if (names.remove(alarm.getName()))
+        if (names.remove(alarm))
         {
             editor.putStringSet("names", names);
         }

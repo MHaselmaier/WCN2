@@ -12,18 +12,28 @@ import de.hs_kl.wcn2_alarm.OverviewActivity;
 import de.hs_kl.wcn2_alarm.R;
 import de.hs_kl.wcn2_alarm.alarms.WCN2Alarm;
 import de.hs_kl.wcn2_alarm.alarms.WCN2CompoundAlarm;
+import de.hs_kl.wcn2_alarm.alarms.WCN2HumidityAlarm;
+import de.hs_kl.wcn2_alarm.alarms.WCN2PresenceAlarm;
+import de.hs_kl.wcn2_alarm.alarms.WCN2TemperatureAlarm;
 import de.hs_kl.wcn2_sensors.SensorData;
 
 public class CreateAlarmActivity extends AppCompatActivity
 {
+    public static final String EXTRA_MODE = "mode";
+    public static final String MODE_CREATE = "create";
+    public static final String MODE_EDIT = "edit";
+    public static final String EXTRA_NAME = "name";
+    public static final String EXTRA_TYPES = "types";
+    public static final String EXTRA_OPERATORS = "operators";
+    public static final String EXTRA_VALUES = "values";
+    public static final String EXTRA_MAC_ADDRESSES = "macAddresses";
+    public static final String EXTRA_IDS = "ids";
     static final String EXTRA_SENDER = "sender";
-    static final String EXTRA_NAME = "name";
-    static final String EXTRA_TYPES = "types";
-    static final String EXTRA_OPERATORS = "operators";
-    static final String EXTRA_VALUES = "values";
-    static final String EXTRA_MAC_ADDRESSES = "macAddresses";
-    static final String EXTRA_IDS = "ids";
 
+    static final String EXTRA_ORIGINAL_NAME = "originalName";
+    private String originalName;
+
+    private String mode = MODE_CREATE;
     private String name;
     private ArrayList<Integer> thresholdTypes;
     private ArrayList<Integer> thresholdOperators;
@@ -36,20 +46,25 @@ public class CreateAlarmActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_alarm);
 
+        loadSavedInstanceState(getIntent().getExtras());
         loadSavedInstanceState(savedInstanceState);
 
-        getSupportFragmentManager().beginTransaction()
-                                   .replace(R.id.fragment, new SelectNameFragment())
-                                   .commit();
+        if (this.mode.equals(MODE_EDIT))
+        {
+            loadCurrentAlarmValues();
+        }
+
+        startSelectNameFragment();
     }
 
     private void loadSavedInstanceState(Bundle savedInstanceState)
     {
         if (null == savedInstanceState) return;
 
-        String name;
-        if (null != (name = savedInstanceState.getString(EXTRA_NAME)))
-            this.name = name;
+        this.mode = savedInstanceState.getString(EXTRA_MODE, this.mode);
+        this.originalName = savedInstanceState.getString(EXTRA_ORIGINAL_NAME, this.originalName);
+
+        this.name = savedInstanceState.getString(EXTRA_NAME, this.name);
         ArrayList<Integer> intList;
         if (null != (intList = savedInstanceState.getIntegerArrayList(EXTRA_TYPES)))
             this.thresholdTypes = intList;
@@ -70,11 +85,105 @@ public class CreateAlarmActivity extends AppCompatActivity
         }
     }
 
+    private void loadCurrentAlarmValues()
+    {
+        WCN2Alarm currentAlarm = null;
+        for (WCN2Alarm alarm: AlarmStorage.getInstance(this).getAlarms())
+        {
+            if (alarm.getName().equals(this.name))
+            {
+                currentAlarm = alarm;
+                break;
+            }
+        }
+        if (null == currentAlarm) return;
+
+        this.originalName = this.name;
+        this.selectedSensors = new ArrayList<>(currentAlarm.getSensorData());
+
+        List<WCN2Alarm> allAlarms = new ArrayList<>();
+        if (currentAlarm instanceof WCN2CompoundAlarm)
+        {
+            WCN2CompoundAlarm compoundAlarm = (WCN2CompoundAlarm)currentAlarm;
+            allAlarms.addAll(compoundAlarm.getAlarms());
+        }
+        else
+        {
+            allAlarms.add(currentAlarm);
+        }
+
+        this.thresholdTypes = new ArrayList<>();
+        this.thresholdValues = new ArrayList<>();
+        this.thresholdOperators = new ArrayList<>();
+        for (WCN2Alarm alarm: allAlarms)
+        {
+            int type = -1;
+            if (alarm instanceof WCN2TemperatureAlarm)
+                type = 0;
+            if (alarm instanceof WCN2HumidityAlarm)
+                type = 1;
+            if (alarm instanceof WCN2PresenceAlarm)
+                type = 2;
+
+            this.thresholdTypes.add(type);
+            this.thresholdValues.add(alarm.getThreshold());
+            this.thresholdOperators.add(alarm.getOperator().ordinal());
+        }
+    }
+
+    private void startSelectNameFragment()
+    {
+        SelectNameFragment fragment = new SelectNameFragment();
+        Bundle arguments = new Bundle();
+        arguments.putString(EXTRA_MODE, this.mode);
+        arguments.putString(EXTRA_NAME, this.name);
+        arguments.putString(EXTRA_ORIGINAL_NAME, this.originalName);
+        fragment.setArguments(arguments);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment, fragment)
+                .commit();
+    }
+
+    private void startSelectThresholdsFragment()
+    {
+        SelectThresholdsFragment fragment = new SelectThresholdsFragment();
+        Bundle arguments = new Bundle();
+        arguments.putString(EXTRA_MODE, this.mode);
+        arguments.putIntegerArrayList(EXTRA_TYPES, this.thresholdTypes);
+        arguments.putIntegerArrayList(EXTRA_OPERATORS, this.thresholdOperators);
+        arguments.putSerializable(EXTRA_VALUES, this.thresholdValues);
+        fragment.setArguments(arguments);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment, fragment)
+                .commit();
+    }
+
+    private void startSelectSensorsFragment()
+    {
+        SelectSensorsFragment fragment = new SelectSensorsFragment();
+        Bundle arguments = new Bundle();
+        arguments.putString(EXTRA_MODE, this.mode);
+        ArrayList<String> macAddresses = new ArrayList<>();
+        ArrayList<Byte> ids = new ArrayList<>();
+        for (SensorData sensorData: this.selectedSensors)
+        {
+            macAddresses.add(sensorData.getMacAddress());
+            ids.add(sensorData.getSensorID());
+        }
+        arguments.putStringArrayList(EXTRA_MAC_ADDRESSES, macAddresses);
+        arguments.putSerializable(EXTRA_IDS, ids);
+        fragment.setArguments(arguments);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment, fragment)
+                .commit();
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle state)
     {
         super.onSaveInstanceState(state);
 
+        state.putString(EXTRA_ORIGINAL_NAME, this.originalName);
         state.putString(EXTRA_NAME, this.name);
         state.putIntegerArrayList(EXTRA_TYPES, this.thresholdTypes);
         state.putIntegerArrayList(EXTRA_OPERATORS, this.thresholdOperators);
@@ -104,17 +213,18 @@ public class CreateAlarmActivity extends AppCompatActivity
         loadSavedInstanceState(intent.getExtras());
 
         Bundle extras = intent.getExtras();
-        if (null != extras && null != extras.get(EXTRA_SENDER))
+        String sender;
+        if (null != extras && null != (sender = extras.getString(EXTRA_SENDER)))
         {
-            if (extras.get(EXTRA_SENDER).equals(SelectNameFragment.class.getSimpleName()))
+            if (sender.equals(SelectNameFragment.class.getSimpleName()))
             {
                 handleSelectedName(extras);
             }
-            else if (extras.get(EXTRA_SENDER).equals(SelectThresholdsFragment.class.getSimpleName()))
+            else if (sender.equals(SelectThresholdsFragment.class.getSimpleName()))
             {
                 handleSelectedThresholds(extras);
             }
-            else if (extras.get(EXTRA_SENDER).equals(SelectSensorsFragment.class.getSimpleName()))
+            else if (sender.equals(SelectSensorsFragment.class.getSimpleName()))
             {
                 handleSelectedSensors(extras);
             }
@@ -125,10 +235,7 @@ public class CreateAlarmActivity extends AppCompatActivity
     {
         this.name = extras.getString(EXTRA_NAME);
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment, new SelectThresholdsFragment())
-                .commit();
-        findViewById(R.id.fragment).invalidate();
+        startSelectThresholdsFragment();
     }
 
     private void handleSelectedThresholds(Bundle extras)
@@ -137,9 +244,7 @@ public class CreateAlarmActivity extends AppCompatActivity
         this.thresholdOperators = (ArrayList<Integer>)extras.get(EXTRA_OPERATORS);
         this.thresholdValues = (ArrayList<Float>)extras.get(EXTRA_VALUES);
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment, new SelectSensorsFragment())
-                .commit();
+        startSelectSensorsFragment();
     }
 
     private void handleSelectedSensors(Bundle extras)
@@ -154,7 +259,10 @@ public class CreateAlarmActivity extends AppCompatActivity
         }
 
         WCN2Alarm alarm = createAlarm();
-        AlarmStorage.getInstance(this).saveAlarm(alarm);
+        AlarmStorage alarmStorage = AlarmStorage.getInstance(this);
+        if (null != this.originalName && !this.originalName.equals(this.name))
+            alarmStorage.deleteAlarm(this.originalName);
+        alarmStorage.saveAlarm(alarm);
         returnToMainActivity();
     }
 

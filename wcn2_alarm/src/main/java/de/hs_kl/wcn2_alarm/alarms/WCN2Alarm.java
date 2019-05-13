@@ -103,7 +103,7 @@ public abstract class WCN2Alarm implements ScanResultListener
         this.operator = operator;
     }
 
-    public Collection<SensorData> getSensorData()
+    public List<SensorData> getSensorData()
     {
         return this.sensors;
     }
@@ -139,9 +139,9 @@ public abstract class WCN2Alarm implements ScanResultListener
         case 0:
             return new WCN2TemperatureAlarm(name, operator, value, sensorData);
         case 1:
-            return new WCN2TemperatureAlarm(name, operator, value, sensorData);
+            return new WCN2HumidityAlarm(name, operator, value, sensorData);
         case 2:
-            return new WCN2TemperatureAlarm(name, operator, value, sensorData);
+            return new WCN2PresenceAlarm(name, operator, value, sensorData);
         }
 
         return null;

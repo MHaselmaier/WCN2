@@ -89,6 +89,13 @@ public class SelectSensorsFragment extends Fragment implements ScanResultListene
         this.label = view.findViewById(R.id.label);
         this.noSensorsFoundView = view.findViewById(R.id.no_sensors_found);
 
+        Bundle arguments = getArguments();
+        if (null != arguments && CreateAlarmActivity.MODE_EDIT.equals(
+                arguments.getString(CreateAlarmActivity.EXTRA_MODE)))
+        {
+            loadDataFromArguments();
+        }
+
         return view;
     }
 
@@ -103,6 +110,25 @@ public class SelectSensorsFragment extends Fragment implements ScanResultListene
         ArrayList<String> macAddresses = getSelectedMacAddresses();
         ArrayList<Byte> ids = getSelectedIDs();
         sendMacAddressesToActivity(macAddresses, ids);
+    }
+
+    private void loadDataFromArguments()
+    {
+        Bundle args = getArguments();
+
+        ArrayList<String> macAddresses = args.getStringArrayList(
+                                                CreateAlarmActivity.EXTRA_MAC_ADDRESSES);
+        ArrayList<Byte> ids = (ArrayList<Byte>)args.getSerializable(CreateAlarmActivity.EXTRA_IDS);
+
+        for (int i = 0; ids.size() > i; ++i)
+        {
+            SensorData sensorData = new SensorData(ids.get(i), "null", macAddresses.get(i));
+            this.foundSensors.add(sensorData);
+            FoundSensorView view = new FoundSensorView(getActivity(), sensorData);
+            view.setSelected(true);
+            this.foundSensorsViews.add(view);
+            this.foundSensorsContainer.addView(view.getRoot());
+        }
     }
 
     private ArrayList<String> getSelectedMacAddresses()

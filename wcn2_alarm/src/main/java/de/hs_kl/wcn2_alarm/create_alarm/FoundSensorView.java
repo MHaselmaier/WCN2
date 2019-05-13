@@ -45,6 +45,11 @@ public class FoundSensorView
                 sensorData.getTimestamp()));
     }
 
+    public void setSelected(boolean selected)
+    {
+        this.selected.setChecked(selected);
+    }
+
     public boolean isSelected()
     {
         return this.selected.isChecked();

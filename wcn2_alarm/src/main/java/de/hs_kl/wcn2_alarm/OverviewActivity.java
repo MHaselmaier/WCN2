@@ -29,9 +29,15 @@ public class OverviewActivity extends WCN2Activity
         this.alarms = findViewById(R.id.alarms);
 
         ImageButton addAlarm = findViewById(R.id.add_alarm);
+        addAlarm.setOnClickListener((v) -> createAlarm());
+    }
+
+    private void createAlarm()
+    {
         Intent intent = new Intent(getBaseContext(), CreateAlarmActivity.class);
+        intent.putExtra(CreateAlarmActivity.EXTRA_MODE, CreateAlarmActivity.MODE_CREATE);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        addAlarm.setOnClickListener((v) -> startActivity(intent));
+        startActivity(intent);
     }
 
     @Override

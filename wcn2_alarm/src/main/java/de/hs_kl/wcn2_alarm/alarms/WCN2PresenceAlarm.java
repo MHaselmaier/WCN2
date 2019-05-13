@@ -6,10 +6,10 @@ import de.hs_kl.wcn2_sensors.SensorData;
 
 public class WCN2PresenceAlarm extends WCN2Alarm
 {
-    private long timeThreshold;
+    private float timeThreshold;
 
     public WCN2PresenceAlarm(String name, Operator operator,
-                                long timeThreshold, List<SensorData> sensors)
+                                float timeThreshold, List<SensorData> sensors)
     {
         super(name, operator, sensors);
 
@@ -59,6 +59,6 @@ public class WCN2PresenceAlarm extends WCN2Alarm
     @Override
     public int hashCode()
     {
-        return (int) (this.timeThreshold ^ (this.timeThreshold >>> 32));
+        return (+0.0f != this.timeThreshold ? Float.floatToIntBits(this.timeThreshold) : 0);
     }
 }

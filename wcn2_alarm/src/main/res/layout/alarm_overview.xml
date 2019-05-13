@@ -27,6 +27,19 @@
             android:textSize="24sp"
             tools:text="ProximityAlarm" />
 
+        <ImageButton
+            android:id="@+id/edit_alarm"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_edit"
+            android:tint="@color/colorPrimaryDark"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </LinearLayout>
 
     <LinearLayout

@@ -1,8 +1,10 @@
 package de.hs_kl.wcn2_alarm;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
@@ -12,12 +14,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.hs_kl.wcn2_alarm.alarms.WCN2Alarm;
+import de.hs_kl.wcn2_alarm.create_alarm.CreateAlarmActivity;
 import de.hs_kl.wcn2_sensors.SensorData;
 
 public class WCN2AlarmView extends LinearLayout
 {
     private Context context;
-    private  WCN2Alarm alarm;
+    private WCN2Alarm alarm;
 
     private LinearLayout connectedSensors;
 
@@ -46,6 +49,9 @@ public class WCN2AlarmView extends LinearLayout
         TextView alarmName = findViewById(R.id.name);
         alarmName.setText(this.alarm.getName());
 
+        ImageButton editAlarm = findViewById(R.id.edit_alarm);
+        editAlarm.setOnClickListener((v) -> editAlarm());
+
         View toggleConnectedSensors = findViewById(R.id.toggle_connected_sensors);
         toggleConnectedSensors.setOnClickListener((v) -> {
             ImageView arrow = v.findViewById(R.id.arrow);
@@ -72,6 +78,15 @@ public class WCN2AlarmView extends LinearLayout
             addSensorDataView(sensorData);
         }
         updateView();
+    }
+
+    private void editAlarm()
+    {
+        Intent intent = new Intent(this.context, CreateAlarmActivity.class);
+        intent.putExtra(CreateAlarmActivity.EXTRA_MODE, CreateAlarmActivity.MODE_EDIT);
+        intent.putExtra(CreateAlarmActivity.EXTRA_NAME, this.alarm.getName());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        this.context.startActivity(intent);
     }
 
     private void addSensorDataView(SensorData sensorData)

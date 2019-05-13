@@ -41,9 +41,18 @@ public class SelectThresholdsFragment extends Fragment
         this.thresholds = view.findViewById(R.id.thresholds);
 
         ImageButton addThreshold = view.findViewById(R.id.add_threshold);
-        addThreshold.setOnClickListener((v) -> createAlarmThreshold(inflater));
+        addThreshold.setOnClickListener((v) -> createAlarmThreshold(inflater, 0, 0, Float.NaN));
 
-        createAlarmThreshold(inflater);
+        Bundle arguments = getArguments();
+        if (null != arguments && CreateAlarmActivity.MODE_EDIT.equals(
+                arguments.getString(CreateAlarmActivity.EXTRA_MODE)))
+        {
+            loadDataFromArguments(inflater);
+        }
+        else
+        {
+            createAlarmThreshold(inflater, 0, 0, Float.NaN);
+        }
 
         Button next = view.findViewById(R.id.next);
         next.setOnClickListener((v) -> handleOnNextClicked());
@@ -51,7 +60,25 @@ public class SelectThresholdsFragment extends Fragment
         return view;
     }
 
-    private void createAlarmThreshold(LayoutInflater inflater)
+    private void loadDataFromArguments(LayoutInflater inflater)
+    {
+        Bundle args = getArguments();
+
+        List<Integer> thresholdTypes = args.getIntegerArrayList(CreateAlarmActivity.EXTRA_TYPES);
+        List<Integer> thresholdOperators = args.getIntegerArrayList(
+                                                    CreateAlarmActivity.EXTRA_OPERATORS);
+        List<Float> thresholdValues = (ArrayList<Float>)args.getSerializable(
+                                                    CreateAlarmActivity.EXTRA_VALUES);
+
+        for (int i = 0; thresholdTypes.size() > i; ++i)
+        {
+            createAlarmThreshold(inflater, thresholdTypes.get(i), thresholdOperators.get(i),
+                    thresholdValues.get(i));
+        }
+    }
+
+    private void createAlarmThreshold(LayoutInflater inflater, int thresholdType,
+                                      int thresholdOperator, float thresholdValue)
     {
         View threshold = inflater.inflate(R.layout.alarm_threshold, this.thresholds, false);
 
@@ -70,8 +97,14 @@ public class SelectThresholdsFragment extends Fragment
             public void onNothingSelected(AdapterView<?> parent)
             {}
         });
+        type.setSelection(thresholdType);
+
+        Spinner operator = threshold.findViewById(R.id.operator);
+        operator.setSelection(thresholdOperator);
 
         EditText input = threshold.findViewById(R.id.threshold);
+        if (!Float.isNaN(thresholdValue))
+            input.append(Float.toString(thresholdValue));
         input.requestFocus();
 
         this.thresholds.addView(threshold);

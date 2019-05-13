@@ -11,12 +11,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.zip.CheckedOutputStream;
+
 import de.hs_kl.wcn2_alarm.AlarmStorage;
 import de.hs_kl.wcn2_alarm.R;
 
 public class SelectNameFragment extends Fragment
 {
     private EditText name;
+    private String originalName;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -31,6 +34,14 @@ public class SelectNameFragment extends Fragment
         View view = inflater.inflate(R.layout.select_name, container, false);
 
         this.name = view.findViewById(R.id.name);
+
+        Bundle arguments = getArguments();
+        if (null != arguments && CreateAlarmActivity.MODE_EDIT.equals(
+                arguments.getString(CreateAlarmActivity.EXTRA_MODE)))
+        {
+            this.name.append(arguments.getString(CreateAlarmActivity.EXTRA_NAME, ""));
+            this.originalName = arguments.getString(CreateAlarmActivity.EXTRA_ORIGINAL_NAME);
+        }
 
         Button next = view.findViewById(R.id.next);
         next.setOnClickListener((v) -> handleOnNextClicked());
@@ -47,10 +58,14 @@ public class SelectNameFragment extends Fragment
             return;
         }
 
-        if (AlarmStorage.getInstance(getContext()).isSaved(enteredName))
+        if (getArguments().getString(CreateAlarmActivity.EXTRA_MODE)
+            .equals(CreateAlarmActivity.MODE_CREATE) || !enteredName.equals(this.originalName))
         {
-            Toast.makeText(getContext(), R.string.name_already_used, Toast.LENGTH_LONG).show();
-            return;
+            if (AlarmStorage.getInstance(getContext()).isSaved(enteredName))
+            {
+                Toast.makeText(getContext(), R.string.name_already_used, Toast.LENGTH_LONG).show();
+                return;
+            }
         }
 
         Intent intent = new Intent(getActivity().getBaseContext(), CreateAlarmActivity.class);
