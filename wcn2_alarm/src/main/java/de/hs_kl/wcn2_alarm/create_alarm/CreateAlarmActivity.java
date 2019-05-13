@@ -3,6 +3,7 @@ package de.hs_kl.wcn2_alarm.create_alarm;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,9 +50,15 @@ public class CreateAlarmActivity extends AppCompatActivity
         loadSavedInstanceState(getIntent().getExtras());
         loadSavedInstanceState(savedInstanceState);
 
+        TextView title = findViewById(R.id.title);
         if (this.mode.equals(MODE_EDIT))
         {
+            title.setText(R.string.edit_alarm);
             loadCurrentAlarmValues();
+        }
+        else if(this.mode.equals(MODE_CREATE))
+        {
+            title.setText(R.string.create_alarm);
         }
 
         startSelectNameFragment();
