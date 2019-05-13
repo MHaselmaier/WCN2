@@ -28,13 +28,14 @@
             tools:text="ProximityAlarm" />
 
         <ImageButton
-            android:id="@+id/edit_alarm"
+            android:id="@+id/more"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center_horizontal|center_vertical"
             android:background="@android:color/transparent"
+            android:contentDescription="@string/more"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_edit"
+            android:src="@drawable/ic_more"
             android:tint="@color/colorPrimaryDark"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

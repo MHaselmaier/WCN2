@@ -7,8 +7,9 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import de.hs_kl.wcn2_alarm.alarms.WCN2Alarm;
 import de.hs_kl.wcn2_alarm.create_alarm.CreateAlarmActivity;
@@ -17,8 +18,10 @@ import de.hs_kl.wcn2_sensors.WCN2Activity;
 public class OverviewActivity extends WCN2Activity
 {
     private LinearLayout alarms;
-    private List<WCN2AlarmView> alarmViews = new ArrayList<>();
+    private Map<String, WCN2AlarmView> alarmViews = new HashMap<>();
     private Handler uiUpdater = new Handler();
+
+    private AlarmStorage alarmStorage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -30,6 +33,8 @@ public class OverviewActivity extends WCN2Activity
 
         ImageButton addAlarm = findViewById(R.id.add_alarm);
         addAlarm.setOnClickListener((v) -> createAlarm());
+
+        this.alarmStorage = AlarmStorage.getInstance(this);
     }
 
     private void createAlarm()
@@ -46,29 +51,65 @@ public class OverviewActivity extends WCN2Activity
         super.onResume();
 
         this.alarms.removeAllViews();
-        WCN2Alarm[] alarms = AlarmStorage.getInstance(this).getAlarms();
-        for (WCN2Alarm alarm: alarms)
-        {
-            WCN2AlarmView alarmView = new WCN2AlarmView(this, alarm);
-            this.alarmViews.add(alarmView);
-            this.alarms.addView(alarmView);
-        }
-        if (0 == alarms.length)
-        {
-            TextView noAlarms = new TextView(this);
-            noAlarms.setText(R.string.no_alarms_defined);
-            this.alarms.addView(noAlarms);
-        }
-
         this.uiUpdater.post(this::updateUI);
     }
 
     private void updateUI()
     {
-        for (WCN2AlarmView alarmView: this.alarmViews)
+        WCN2Alarm[] alarms = this.alarmStorage.getAlarms();
+        if (0 == alarms.length)
+        {
+            TextView noAlarms = new TextView(this);
+            noAlarms.setText(R.string.no_alarms_defined);
+            this.alarms.addView(noAlarms);
+            this.uiUpdater.postDelayed(this::updateUI, 1000);
+            return;
+        }
+
+        addNewAlarms(alarms);
+        removeDeletedAlarms(alarms);
+
+        for (WCN2AlarmView alarmView: this.alarmViews.values())
             alarmView.updateView();
 
         this.uiUpdater.postDelayed(this::updateUI, 1000);
+    }
+
+    private void addNewAlarms(WCN2Alarm[] alarms)
+    {
+        for (WCN2Alarm alarm: alarms)
+        {
+            if (this.alarmViews.containsKey(alarm.getName()))
+                continue;
+
+            WCN2AlarmView alarmView = new WCN2AlarmView(this, alarm);
+            this.alarmViews.put(alarm.getName(), alarmView);
+            this.alarms.addView(alarmView);
+        }
+    }
+
+    private void removeDeletedAlarms(WCN2Alarm[] alarms)
+    {
+        Iterator<String> iterator = this.alarmViews.keySet().iterator();
+
+        while (iterator.hasNext())
+        {
+            String alarmView = iterator.next();
+            boolean wasDeleted = true;
+            for (WCN2Alarm alarm: alarms)
+            {
+                if (alarm.getName().equals(alarmView))
+                {
+                    wasDeleted = false;
+                    break;
+                }
+            }
+            if (wasDeleted)
+            {
+                this.alarms.removeView(this.alarmViews.get(alarmView));
+                iterator.remove();
+            }
+        }
     }
 
     @Override

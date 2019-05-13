@@ -5,6 +5,10 @@
     <string name="add_alarm">Add Alarm</string>
     <string name="no_alarms_defined">No Alarms defined</string>
 
+    <string name="more">More</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+
     <string name="toggle_sensors">Toggle Sensors</string>
     <string name="connected_sensors">Connected Sensors</string>
 
