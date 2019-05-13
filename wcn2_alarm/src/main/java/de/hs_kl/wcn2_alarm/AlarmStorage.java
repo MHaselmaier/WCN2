@@ -14,6 +14,7 @@ import de.hs_kl.wcn2_alarm.alarms.WCN2HumidityAlarm;
 import de.hs_kl.wcn2_alarm.alarms.WCN2PresenceAlarm;
 import de.hs_kl.wcn2_alarm.alarms.WCN2TemperatureAlarm;
 import de.hs_kl.wcn2_sensors.SensorData;
+import de.hs_kl.wcn2_sensors.WCN2Scanner;
 
 import static de.hs_kl.wcn2_alarm.alarms.WCN2Alarm.Operator;
 
@@ -84,18 +85,16 @@ public class AlarmStorage
 
     public synchronized void saveAlarm(WCN2Alarm alarm)
     {
-        int position = this.cachedData.size();
-        if (this.cachedData.contains(alarm))
+        int position = this.alarms.getInt(alarm.getName() + ":position", -1);
+        if (-1 != position)
         {
-            position = this.cachedData.indexOf(alarm);
             deleteAlarm(alarm);
-            if (this.cachedData.size() <= position)
-                this.cachedData.add(alarm);
-            else
-                this.cachedData.add(position, alarm);
+            this.cachedData.add(position, alarm);
+            moveAlarmsDown(position);
         }
         else
         {
+            position = this.cachedData.size();
             this.cachedData.add(alarm);
         }
 
@@ -176,13 +175,11 @@ public class AlarmStorage
 
     public synchronized void deleteAlarm(String alarm)
     {
-        for (WCN2Alarm a: this.cachedData)
+        int position = this.alarms.getInt(alarm + ":position", -1);
+        if (-1 != position)
         {
-            if (a.getName().equals(alarm))
-            {
-                this.cachedData.remove(a);
-                break;
-            }
+            WCN2Scanner.unregisterScanResultListener(this.cachedData.remove(position));
+            moveAlarmsUp(position);
         }
 
         SharedPreferences.Editor editor = this.alarms.edit();
@@ -223,6 +220,34 @@ public class AlarmStorage
         }
         editor.remove(name + ":macAddresses");
 
+        editor.apply();
+    }
+
+    private void moveAlarmsUp(int position)
+    {
+        SharedPreferences.Editor editor = this.alarms.edit();
+        for (WCN2Alarm alarm: this.cachedData)
+        {
+            int currentPosition = this.alarms.getInt(alarm.getName() + ":position", -1);
+            if (-1 == currentPosition || currentPosition <= position)
+                continue;
+
+            editor.putInt(alarm.getName() + ":position", currentPosition - 1);
+        }
+        editor.apply();
+    }
+
+    private void moveAlarmsDown(int position)
+    {
+        SharedPreferences.Editor editor = this.alarms.edit();
+        for (WCN2Alarm alarm: this.cachedData)
+        {
+            int currentPosition = this.alarms.getInt(alarm.getName() + ":position", -1);
+            if (-1 == currentPosition || currentPosition < position)
+                continue;
+
+            editor.putInt(alarm.getName() + ":position", currentPosition + 1);
+        }
         editor.apply();
     }
 
