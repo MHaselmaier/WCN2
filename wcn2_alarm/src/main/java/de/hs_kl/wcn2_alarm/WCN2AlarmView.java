@@ -23,6 +23,7 @@ public class WCN2AlarmView extends LinearLayout
 
     private LinearLayout connectedSensors;
 
+    private Map<String, View> rootViews = new HashMap<>();
     private Map<String, ImageView> batteryLevelViews = new HashMap<>();
     private Map<String, ImageView> signalStrengthViews = new HashMap<>();
     private Map<String, TextView> temperatureViews = new HashMap<>();
@@ -83,6 +84,7 @@ public class WCN2AlarmView extends LinearLayout
     private void addSensorDataView(SensorData sensorData)
     {
         View sensorView = inflate(this.context, R.layout.connected_sensor, null);
+        this.rootViews.put(sensorData.getMacAddress(), sensorView);
 
         ImageView signalStrength = sensorView.findViewById(R.id.signal_strength);
         this.signalStrengthViews.put(sensorData.getMacAddress(), signalStrength);

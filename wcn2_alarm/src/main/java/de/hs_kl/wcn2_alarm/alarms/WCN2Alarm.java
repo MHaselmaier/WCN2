@@ -3,7 +3,6 @@ package de.hs_kl.wcn2_alarm.alarms;
 import android.bluetooth.le.ScanFilter;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import de.hs_kl.wcn2_sensors.ScanResultListener;
@@ -64,8 +63,6 @@ public abstract class WCN2Alarm implements ScanResultListener
         this.name = name;
         this.operator = operator;
         this.sensors = sensors;
-
-        WCN2Scanner.registerScanResultListener(this);
     }
 
     public String getName()

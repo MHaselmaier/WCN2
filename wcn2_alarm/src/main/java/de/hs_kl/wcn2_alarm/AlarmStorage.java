@@ -88,7 +88,11 @@ public class AlarmStorage
         if (this.cachedData.contains(alarm))
         {
             position = this.cachedData.indexOf(alarm);
-            this.cachedData.set(position, alarm);
+            deleteAlarm(alarm);
+            if (this.cachedData.size() <= position)
+                this.cachedData.add(alarm);
+            else
+                this.cachedData.add(position, alarm);
         }
         else
         {

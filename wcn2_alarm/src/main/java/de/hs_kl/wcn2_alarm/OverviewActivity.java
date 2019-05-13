@@ -3,9 +3,9 @@ package de.hs_kl.wcn2_alarm;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,6 +19,7 @@ public class OverviewActivity extends WCN2Activity
 {
     private LinearLayout alarms;
     private Map<String, WCN2AlarmView> alarmViews = new HashMap<>();
+    private View noAlarmsDefined;
     private Handler uiUpdater = new Handler();
 
     private AlarmStorage alarmStorage;
@@ -30,6 +31,7 @@ public class OverviewActivity extends WCN2Activity
         setContentView(R.layout.activity_overview);
 
         this.alarms = findViewById(R.id.alarms);
+        this.noAlarmsDefined = findViewById(R.id.no_alarms_defined);
 
         ImageButton addAlarm = findViewById(R.id.add_alarm);
         addAlarm.setOnClickListener((v) -> createAlarm());
@@ -50,21 +52,13 @@ public class OverviewActivity extends WCN2Activity
     {
         super.onResume();
 
-        this.alarms.removeAllViews();
         this.uiUpdater.post(this::updateUI);
     }
 
     private void updateUI()
     {
         WCN2Alarm[] alarms = this.alarmStorage.getAlarms();
-        if (0 == alarms.length)
-        {
-            TextView noAlarms = new TextView(this);
-            noAlarms.setText(R.string.no_alarms_defined);
-            this.alarms.addView(noAlarms);
-            this.uiUpdater.postDelayed(this::updateUI, 1000);
-            return;
-        }
+        this.noAlarmsDefined.setVisibility(0 == alarms.length ? View.VISIBLE : View.GONE);
 
         addNewAlarms(alarms);
         removeDeletedAlarms(alarms);
@@ -85,6 +79,7 @@ public class OverviewActivity extends WCN2Activity
             WCN2AlarmView alarmView = new WCN2AlarmView(this, alarm);
             this.alarmViews.put(alarm.getName(), alarmView);
             this.alarms.addView(alarmView);
+            this.alarms.invalidate();
         }
     }
 
