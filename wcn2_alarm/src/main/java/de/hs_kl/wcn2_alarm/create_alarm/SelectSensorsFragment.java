@@ -64,7 +64,7 @@ public class SelectSensorsFragment extends Fragment implements ScanResultListene
             FoundSensorView view = new FoundSensorView(getActivity(), sensorData);
             handler.post(() -> {
                 this.foundSensorsViews.set(position, view);
-                this.foundSensorsContainer.addView(view.getRoot());
+                this.foundSensorsContainer.addView(view);
                 updateFoundSensorsViews();
             });
         }).start();
@@ -127,7 +127,7 @@ public class SelectSensorsFragment extends Fragment implements ScanResultListene
             FoundSensorView view = new FoundSensorView(getActivity(), sensorData);
             view.setSelected(true);
             this.foundSensorsViews.add(view);
-            this.foundSensorsContainer.addView(view.getRoot());
+            this.foundSensorsContainer.addView(view);
         }
     }
 

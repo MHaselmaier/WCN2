@@ -6,16 +6,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import de.hs_kl.wcn2_alarm.R;
 import de.hs_kl.wcn2_sensors.SensorData;
 import de.hs_kl.wcn2_sensors.util.LastSeenSinceUtil;
 
-public class FoundSensorView
+public class FoundSensorView extends LinearLayout
 {
     private Context context;
-    private View root;
     private ImageView batteryLevel;
     private ImageView signalStrength;
     private TextView lastSeen;
@@ -23,14 +23,16 @@ public class FoundSensorView
 
     public FoundSensorView(Context context, SensorData sensorData)
     {
-        this.context = context;
-        this.root = LayoutInflater.from(context).inflate(R.layout.sensor_list_item, null);
-        this.batteryLevel = this.root.findViewById(R.id.battery_level);
-        this.signalStrength = this.root.findViewById(R.id.signal_strength);
-        this.lastSeen = this.root.findViewById(R.id.last_seen);
-        this.selected = this.root.findViewById(R.id.selected);
+        super(context);
+        inflate(context, R.layout.sensor_list_item, this);
 
-        TextView sensorID = this.root.findViewById(R.id.sensor_id);
+        this.context = context;
+        this.batteryLevel = findViewById(R.id.battery_level);
+        this.signalStrength = findViewById(R.id.signal_strength);
+        this.lastSeen = findViewById(R.id.last_seen);
+        this.selected = findViewById(R.id.selected);
+
+        TextView sensorID = findViewById(R.id.sensor_id);
         sensorID.setText(this.context.getString(R.string.sensor_id, sensorData.getSensorID()));
 
         update(sensorData);
@@ -53,10 +55,5 @@ public class FoundSensorView
     public boolean isSelected()
     {
         return this.selected.isChecked();
-    }
-
-    public View getRoot()
-    {
-        return this.root;
     }
 }

@@ -1,19 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical">
 
-    <CheckBox
-        android:id="@+id/selected"
+    <LinearLayout
+        android:id="@+id/info_indicators"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="5dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="3dp">
+
+        <ImageView
+            android:id="@+id/battery_level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/batterylevel"
+            android:scaleType="fitXY"
+            android:tint="@color/colorPrimaryDark"
+            app:srcCompat="@drawable/ic_battery_almost_empty" />
+
+        <ImageView
+            android:id="@+id/signal_strength"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/signalstrength"
+            android:scaleType="fitXY"
+            android:tint="@color/colorPrimaryDark"
+            app:srcCompat="@drawable/ic_signal_0" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -21,20 +38,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/info_indicators"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/sensor_id"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             tools:text="WCN1" />
 
         <TextView
@@ -46,40 +57,10 @@
 
     </LinearLayout>
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/info_indicators"
+    <CheckBox
+        android:id="@+id/selected"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:padding="3dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp" />
 
-        <ImageView
-            android:id="@+id/battery_level"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/batterylevel"
-            android:scaleType="fitXY"
-            android:tint="@color/colorPrimaryDark"
-            app:layout_constraintBottom_toTopOf="@id/signal_strength"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_battery_almost_empty" />
-
-        <ImageView
-            android:id="@+id/signal_strength"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/signalstrength"
-            android:scaleType="fitXY"
-            android:tint="@color/colorPrimaryDark"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/battery_level"
-            app:srcCompat="@drawable/ic_signal_0" />
-    </android.support.constraint.ConstraintLayout>
-
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
