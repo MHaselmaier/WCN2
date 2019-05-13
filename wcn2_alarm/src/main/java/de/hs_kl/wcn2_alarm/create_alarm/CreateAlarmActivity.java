@@ -176,6 +176,8 @@ public class CreateAlarmActivity extends AppCompatActivity
             newAlarm = new WCN2CompoundAlarm(this.name, alarms);
         }
 
+        newAlarm.setActivated(true);
+
         return newAlarm;
     }
 

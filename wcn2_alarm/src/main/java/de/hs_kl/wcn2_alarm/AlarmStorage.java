@@ -48,6 +48,7 @@ public class AlarmStorage
                     List<SensorData> sensorData = loadSensorData(name + ":" + n);
                     WCN2Alarm alarm = WCN2Alarm.createAlarm(name + ":" + n, type, operator,
                             value, sensorData);
+                    alarm.setActivated(this.alarms.getBoolean(name + ":activated", false));
                     allAlarms.add(alarm);
                 }
                 this.cachedData.set(position, new WCN2CompoundAlarm(name, allAlarms));
@@ -58,6 +59,7 @@ public class AlarmStorage
                 float value = this.alarms.getFloat(name + ":value", Float.NaN);
                 List<SensorData> sensorData = loadSensorData(name);
                 WCN2Alarm alarm = WCN2Alarm.createAlarm(name, type, operator, value, sensorData);
+                alarm.setActivated(this.alarms.getBoolean(name + ":activated", false));
                 this.cachedData.set(position, alarm);
             }
         }
@@ -80,11 +82,18 @@ public class AlarmStorage
         return this.cachedData.toArray(new WCN2Alarm[0]);
     }
 
-    public void saveAlarm(WCN2Alarm alarm)
+    public synchronized void saveAlarm(WCN2Alarm alarm)
     {
-        if (this.cachedData.contains(alarm)) return;
-
-        this.cachedData.add(alarm);
+        int position = this.cachedData.size();
+        if (this.cachedData.contains(alarm))
+        {
+            position = this.cachedData.indexOf(alarm);
+            this.cachedData.set(position, alarm);
+        }
+        else
+        {
+            this.cachedData.add(alarm);
+        }
 
         SharedPreferences.Editor editor = this.alarms.edit();
 
@@ -92,7 +101,7 @@ public class AlarmStorage
         Set<String> names = this.alarms.getStringSet("names", new HashSet<>());
         names.add(name);
         editor.putStringSet("names", names);
-        editor.putInt(name + ":position", this.cachedData.size() - 1);
+        editor.putInt(name + ":position", position);
 
         if (alarm instanceof WCN2CompoundAlarm)
         {
@@ -102,6 +111,7 @@ public class AlarmStorage
                 editor.remove(name + ":" + containedName + ":type");
                 editor.remove(name + ":" + containedName + ":operator");
                 editor.remove(name + ":" + containedName + ":value");
+                editor.remove(name + ":" + containedName + ":activated");
                 deleteSensorData(name + ":" + containedName);
             }
             containedNames.clear();
@@ -133,6 +143,7 @@ public class AlarmStorage
         editor.putInt(name + ":type", type);
         editor.putInt(name + ":operator", alarm.getOperator().ordinal());
         editor.putFloat(name + ":value", alarm.getThreshold());
+        editor.putBoolean(name + ":activated", alarm.isActivated());
         saveSensorData(alarm);
     }
 
@@ -154,7 +165,7 @@ public class AlarmStorage
         editor.apply();
     }
 
-    public void deleteAlarm(WCN2Alarm alarm)
+    public synchronized void deleteAlarm(WCN2Alarm alarm)
     {
         if (!this.cachedData.remove(alarm)) return;
 
@@ -163,12 +174,14 @@ public class AlarmStorage
         editor.remove(alarm.getName() + ":position");
         editor.remove(alarm.getName() + ":operator");
         editor.remove(alarm.getName() + ":value");
+        editor.remove(alarm.getName() + ":activated");
 
         for (String name: this.alarms.getStringSet(alarm.getName() + ":names", new HashSet<>()))
         {
             editor.remove(alarm.getName() + ":" + name + ":type");
             editor.remove(alarm.getName() + ":" + name + ":operator");
             editor.remove(alarm.getName() + ":" + name + ":value");
+            editor.remove(alarm.getName() + ":" + name + ":activated");
             deleteSensorData(alarm.getName() + ":" + name);
         }
 
