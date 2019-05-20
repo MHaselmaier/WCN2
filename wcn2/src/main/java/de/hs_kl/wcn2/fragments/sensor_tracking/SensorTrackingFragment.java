@@ -243,7 +243,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
             int trackedTime = (int)(System.currentTimeMillis() - this.trackingStartTime) / 1000;
             int seconds = trackedTime % 60;
             int minutes = trackedTime / 60;
-            this.measurementTime.setText(getResources().getString(R.string.time, minutes, seconds));
+            this.measurementTime.setText(getString(R.string.time, minutes, seconds));
             this.measurementButton.setText(R.string.measurement_button_stop);
         }
         else

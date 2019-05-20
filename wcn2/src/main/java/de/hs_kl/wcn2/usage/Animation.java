@@ -1,43 +1,37 @@
 package de.hs_kl.wcn2.usage;
 
 import android.os.Handler;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
 
-class Animation
+abstract class Animation
 {
     private Handler handler = new Handler();
-    private Runnable initialize;
-    private int descriptionResourceID;
     private int currentStep = 0;
     private List<Step> steps = new ArrayList<>();
 
-    Animation(Runnable initialize, int descriptionResourceID)
-    {
-        this.initialize = initialize;
-        this.descriptionResourceID = descriptionResourceID;
-    }
+    abstract View getRootView();
+    abstract protected void initialize();
+    abstract String getDescription();
 
-    int getDescriptionResourceID()
+    protected void addStep(Runnable step, int delay)
     {
-        return this.descriptionResourceID;
-    }
-
-    void addStep(Step step)
-    {
-        this.steps.add(step);
+        this.steps.add(new Step(step, delay));
     }
 
     void start()
     {
         stop();
-        this.handler.post(this.initialize);
+        this.handler.post(this::initialize);
         step();
     }
 
     private void step()
     {
+        if (this.steps.isEmpty()) return;
+
         Step currentStep = this.steps.get(this.currentStep++);
         this.handler.postDelayed(currentStep.runnable, currentStep.delay);
 
@@ -53,17 +47,17 @@ class Animation
         this.currentStep = 0;
     }
 
-    static class Step
+    private class Step
     {
         private Runnable runnable;
         private int delay;
 
-        Step(final Animation animation, final Runnable runnable, int delay)
+        Step(Runnable runnable, int delay)
         {
             this.runnable = () ->
             {
                 runnable.run();
-                animation.step();
+                step();
             };
             this.delay = delay;
         }
