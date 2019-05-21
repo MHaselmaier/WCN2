@@ -9,7 +9,7 @@ import de.hs_kl.wcn2_sensors.ScanResultListener;
 import de.hs_kl.wcn2_sensors.SensorData;
 import de.hs_kl.wcn2_sensors.WCN2Scanner;
 
-public abstract class WCN2Alarm implements ScanResultListener
+public class WCN2Alarm implements ScanResultListener
 {
     @Override
     public List<ScanFilter> getScanFilter()
@@ -48,20 +48,15 @@ public abstract class WCN2Alarm implements ScanResultListener
         }
     }
 
-    public enum Operator
-    {
-        GREATER, EQUAL, LESS
-    }
+    private List<SensorData> sensors;
+    private String name;
+    private List<Threshold> thresholds;
+    private boolean activated;
 
-    protected List<SensorData> sensors;
-    protected String name;
-    protected boolean activated;
-    protected Operator operator;
-
-    public WCN2Alarm(String name, Operator operator, List<SensorData> sensors)
+    public WCN2Alarm(String name, List<Threshold> thresholds, List<SensorData> sensors)
     {
         this.name = name;
-        this.operator = operator;
+        this.thresholds = thresholds;
         this.sensors = sensors;
     }
 
@@ -90,57 +85,50 @@ public abstract class WCN2Alarm implements ScanResultListener
         return this.activated;
     }
 
-    public Operator getOperator()
-    {
-        return this.operator;
-    }
-
-    public void setOperator(Operator operator)
-    {
-        this.operator = operator;
-    }
-
     public List<SensorData> getSensorData()
     {
         return this.sensors;
     }
 
-    public abstract boolean isTriggered();
-    public abstract float getThreshold();
+    public boolean isTriggered()
+    {
+        for (SensorData sensorData: this.sensors)
+        {
+            for (Threshold threshold: this.thresholds)
+            {
+                if (threshold.isTriggered(sensorData))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public List<Threshold> getThresholds()
+    {
+        return this.thresholds;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof WCN2Alarm)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
         WCN2Alarm alarm = (WCN2Alarm) o;
 
+        if (activated != alarm.activated) return false;
         if (sensors != null ? !sensors.equals(alarm.sensors) : alarm.sensors != null) return false;
         if (name != null ? !name.equals(alarm.name) : alarm.name != null) return false;
-        return operator == alarm.operator;
+        return thresholds != null ? thresholds.equals(alarm.thresholds) : alarm.thresholds == null;
     }
 
     @Override
     public int hashCode() {
         int result = sensors != null ? sensors.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (operator != null ? operator.hashCode() : 0);
+        result = 31 * result + (thresholds != null ? thresholds.hashCode() : 0);
+        result = 31 * result + (activated ? 1 : 0);
         return result;
-    }
-
-    public static WCN2Alarm createAlarm(String name, int type, Operator operator,
-                                        float value, List<SensorData> sensorData)
-    {
-        switch (type)
-        {
-        case 0:
-            return new WCN2TemperatureAlarm(name, operator, value, sensorData);
-        case 1:
-            return new WCN2HumidityAlarm(name, operator, value, sensorData);
-        case 2:
-            return new WCN2PresenceAlarm(name, operator, value, sensorData);
-        }
-
-        return null;
     }
 }

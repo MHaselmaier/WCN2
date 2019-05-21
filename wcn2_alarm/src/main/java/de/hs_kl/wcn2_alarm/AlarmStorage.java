@@ -8,15 +8,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import de.hs_kl.wcn2_alarm.alarms.Operator;
+import de.hs_kl.wcn2_alarm.alarms.Threshold;
+import de.hs_kl.wcn2_alarm.alarms.Type;
 import de.hs_kl.wcn2_alarm.alarms.WCN2Alarm;
-import de.hs_kl.wcn2_alarm.alarms.WCN2CompoundAlarm;
-import de.hs_kl.wcn2_alarm.alarms.WCN2HumidityAlarm;
-import de.hs_kl.wcn2_alarm.alarms.WCN2PresenceAlarm;
-import de.hs_kl.wcn2_alarm.alarms.WCN2TemperatureAlarm;
 import de.hs_kl.wcn2_sensors.SensorData;
 import de.hs_kl.wcn2_sensors.WCN2Scanner;
-
-import static de.hs_kl.wcn2_alarm.alarms.WCN2Alarm.Operator;
 
 public class AlarmStorage
 {
@@ -36,34 +33,37 @@ public class AlarmStorage
             this.cachedData.add(null);
         for (String name: names)
         {
-            int type = this.alarms.getInt(name + ":type", -1);
             int position = this.alarms.getInt(name + ":position", -1);
-            if (type == 3)
-            {
-                List<WCN2Alarm> allAlarms = new ArrayList<>();
-                for (String n: this.alarms.getStringSet(name + ":names", new HashSet<>()))
-                {
-                    type = this.alarms.getInt(name + ":" + n + ":type", -1);
-                    Operator operator = Operator.values()[this.alarms.getInt(name + ":" + n + ":operator", -1)];
-                    float value = this.alarms.getFloat(name + ":" + n + ":value", Float.NaN);
-                    List<SensorData> sensorData = loadSensorData(name + ":" + n);
-                    WCN2Alarm alarm = WCN2Alarm.createAlarm(name + ":" + n, type, operator,
-                            value, sensorData);
-                    alarm.setActivated(this.alarms.getBoolean(name + ":activated", false));
-                    allAlarms.add(alarm);
-                }
-                this.cachedData.set(position, new WCN2CompoundAlarm(name, allAlarms));
-            }
-            else
-            {
-                Operator operator = Operator.values()[this.alarms.getInt(name + ":operator", -1)];
-                float value = this.alarms.getFloat(name + ":value", Float.NaN);
-                List<SensorData> sensorData = loadSensorData(name);
-                WCN2Alarm alarm = WCN2Alarm.createAlarm(name, type, operator, value, sensorData);
-                alarm.setActivated(this.alarms.getBoolean(name + ":activated", false));
-                this.cachedData.set(position, alarm);
-            }
+            List<Threshold> thresholds = loadThresholds(name);
+            List<SensorData> sensorData = loadSensorData(name);
+
+            WCN2Alarm alarm = new WCN2Alarm(name, thresholds, sensorData);
+            alarm.setActivated(this.alarms.getBoolean(name + ":activated", false));
+            this.cachedData.set(position, alarm);
         }
+    }
+
+    private List<Threshold> loadThresholds(String name)
+    {
+        List<Threshold> thresholds = new ArrayList<>();
+
+        int amtThresholds = this.alarms.getInt(name + ":amtThresholds", 0);
+        for (int i = 0; amtThresholds > i; ++i)
+        {
+            int typeOrdinal = this.alarms.getInt(name + ":threshold" + i + ":type", -1);
+            Type type = null;
+            if (0 <= typeOrdinal)
+                type = Type.values()[typeOrdinal];
+            float value = this.alarms.getFloat(name + ":threshold" + i + ":value", Float.NaN);
+            int operatorOrdinal = this.alarms.getInt(name + ":threshold" + i + ":operator", -1);
+            Operator operator = null;
+            if (0 <= operatorOrdinal)
+                operator = Operator.values()[operatorOrdinal];
+
+            thresholds.add(new de.hs_kl.wcn2_alarm.alarms.Threshold(type, value, operator));
+        }
+
+        return thresholds;
     }
 
     private List<SensorData> loadSensorData(String name)
@@ -104,50 +104,37 @@ public class AlarmStorage
         Set<String> names = this.alarms.getStringSet("names", new HashSet<>());
         names.add(name);
         editor.putStringSet("names", names);
+
         editor.putInt(name + ":position", position);
-
-        if (alarm instanceof WCN2CompoundAlarm)
-        {
-            Set<String> containedNames = this.alarms.getStringSet(name + ":names", new HashSet<>());
-            for (String containedName: containedNames)
-            {
-                editor.remove(name + ":" + containedName + ":type");
-                editor.remove(name + ":" + containedName + ":operator");
-                editor.remove(name + ":" + containedName + ":value");
-                editor.remove(name + ":" + containedName + ":activated");
-                deleteSensorData(name + ":" + containedName);
-            }
-            containedNames.clear();
-            for (WCN2Alarm a: ((WCN2CompoundAlarm)alarm).getAlarms())
-            {
-                saveAlarm(editor, a, name + ":" + a.getName());
-                containedNames.add(a.getName());
-            }
-            editor.putStringSet(name + ":names", containedNames);
-        }
-
-        saveAlarm(editor, alarm, name);
+        editor.putBoolean(name + ":activated", alarm.isActivated());
+        saveThresholds(editor, alarm);
+        saveSensorData(alarm);
 
         editor.apply();
     }
 
-    private void saveAlarm(SharedPreferences.Editor editor, WCN2Alarm alarm, String name)
+    private void saveThresholds(SharedPreferences.Editor editor, WCN2Alarm alarm)
     {
-        int type = -1;
-        if (alarm instanceof WCN2TemperatureAlarm)
-            type = 0;
-        if (alarm instanceof WCN2HumidityAlarm)
-            type = 1;
-        if (alarm instanceof WCN2PresenceAlarm)
-            type = 2;
-        if (alarm instanceof WCN2CompoundAlarm)
-            type = 3;
+        List<Threshold> thresholds = alarm.getThresholds();
+        int amtThresholds = this.alarms.getInt(alarm.getName() + ":amtThresholds", 0);
 
-        editor.putInt(name + ":type", type);
-        editor.putInt(name + ":operator", alarm.getOperator().ordinal());
-        editor.putFloat(name + ":value", alarm.getThreshold());
-        editor.putBoolean(name + ":activated", alarm.isActivated());
-        saveSensorData(alarm);
+        for (int i = thresholds.size(); amtThresholds > i; ++i)
+        {
+            editor.remove(alarm.getName() + ":threshold" + i + ":type");
+            editor.remove(alarm.getName() + ":threshold" + i + ":value");
+            editor.remove(alarm.getName() + ":threshold" + i + ":operator");
+        }
+
+        editor.putInt(alarm.getName() + ":amtThresholds", thresholds.size());
+        for (int i = 0; thresholds.size() > i; ++i)
+        {
+            editor.putInt(alarm.getName() + ":threshold" + i + ":type",
+                    thresholds.get(i).getType().ordinal());
+            editor.putFloat(alarm.getName() + ":threshold" + i + ":value",
+                    thresholds.get(i).getValue());
+            editor.putInt(alarm.getName() + ":threshold" + i + ":operator",
+                    thresholds.get(i).getOperator().ordinal());
+        }
     }
 
     private void saveSensorData(WCN2Alarm alarm)
@@ -183,21 +170,9 @@ public class AlarmStorage
         }
 
         SharedPreferences.Editor editor = this.alarms.edit();
-        editor.remove(alarm + ":type");
         editor.remove(alarm + ":position");
-        editor.remove(alarm + ":operator");
-        editor.remove(alarm + ":value");
         editor.remove(alarm + ":activated");
-
-        for (String name: this.alarms.getStringSet(alarm + ":names", new HashSet<>()))
-        {
-            editor.remove(alarm + ":" + name + ":type");
-            editor.remove(alarm + ":" + name + ":operator");
-            editor.remove(alarm + ":" + name + ":value");
-            editor.remove(alarm + ":" + name + ":activated");
-            deleteSensorData(alarm + ":" + name);
-        }
-
+        deleteThresholds(editor, alarm);
         deleteSensorData(alarm);
 
         Set<String> names = this.alarms.getStringSet("names", new HashSet<>());
@@ -207,6 +182,18 @@ public class AlarmStorage
         }
 
         editor.apply();
+    }
+
+    private void deleteThresholds(SharedPreferences.Editor editor, String name)
+    {
+        int amtThresholds = this.alarms.getInt(name + ":amtThresholds", 0);
+        for (int i = 0; amtThresholds > i; ++i)
+        {
+            editor.remove(name + ":threshold" + i + ":type");
+            editor.remove(name + ":threshold" + i + ":value");
+            editor.remove(name + ":threshold" + i + ":operator");
+        }
+        editor.remove(name + ":amtThresholds");
     }
 
     private void deleteSensorData(String name)

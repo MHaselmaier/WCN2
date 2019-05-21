@@ -11,8 +11,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.zip.CheckedOutputStream;
-
 import de.hs_kl.wcn2_alarm.AlarmStorage;
 import de.hs_kl.wcn2_alarm.R;
 

@@ -2,8 +2,6 @@ package de.hs_kl.wcn2_alarm.create_alarm;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;

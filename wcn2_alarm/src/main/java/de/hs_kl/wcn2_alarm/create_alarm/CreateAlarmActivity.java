@@ -11,11 +11,10 @@ import java.util.List;
 import de.hs_kl.wcn2_alarm.AlarmStorage;
 import de.hs_kl.wcn2_alarm.OverviewActivity;
 import de.hs_kl.wcn2_alarm.R;
+import de.hs_kl.wcn2_alarm.alarms.Operator;
+import de.hs_kl.wcn2_alarm.alarms.Threshold;
+import de.hs_kl.wcn2_alarm.alarms.Type;
 import de.hs_kl.wcn2_alarm.alarms.WCN2Alarm;
-import de.hs_kl.wcn2_alarm.alarms.WCN2CompoundAlarm;
-import de.hs_kl.wcn2_alarm.alarms.WCN2HumidityAlarm;
-import de.hs_kl.wcn2_alarm.alarms.WCN2PresenceAlarm;
-import de.hs_kl.wcn2_alarm.alarms.WCN2TemperatureAlarm;
 import de.hs_kl.wcn2_sensors.SensorData;
 
 public class CreateAlarmActivity extends AppCompatActivity
@@ -36,10 +35,8 @@ public class CreateAlarmActivity extends AppCompatActivity
 
     private String mode = MODE_CREATE;
     private String name;
-    private ArrayList<Integer> thresholdTypes;
-    private ArrayList<Integer> thresholdOperators;
-    private ArrayList<Float> thresholdValues;
-    private ArrayList<SensorData> selectedSensors = new ArrayList<>();
+    private List<Threshold> thresholds = new ArrayList<>();
+    private List<SensorData> selectedSensors = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -72,14 +69,18 @@ public class CreateAlarmActivity extends AppCompatActivity
         this.originalName = savedInstanceState.getString(EXTRA_ORIGINAL_NAME, this.originalName);
 
         this.name = savedInstanceState.getString(EXTRA_NAME, this.name);
-        ArrayList<Integer> intList;
-        if (null != (intList = savedInstanceState.getIntegerArrayList(EXTRA_TYPES)))
-            this.thresholdTypes = intList;
-        if (null != (intList = savedInstanceState.getIntegerArrayList(EXTRA_OPERATORS)))
-            this.thresholdOperators = intList;
-        ArrayList<Float> floatList;
-        if (null != (floatList = (ArrayList<Float>)savedInstanceState.getSerializable(EXTRA_VALUES)))
-            this.thresholdValues = floatList;
+        List<Integer> types = savedInstanceState.getIntegerArrayList(EXTRA_TYPES);
+        List<Float> values = (ArrayList<Float>)savedInstanceState.getSerializable(EXTRA_VALUES);
+        List<Integer> operators = savedInstanceState.getIntegerArrayList(EXTRA_OPERATORS);
+        if (null != types && null != values && null != operators)
+        {
+            this.thresholds = new ArrayList<>();
+            for (int i = 0; types.size() > i; ++i)
+            {
+                this.thresholds.add(new Threshold(Type.values()[types.get(i)], values.get(i),
+                                                  Operator.values()[operators.get(i)]));
+            }
+        }
         List<String> macAddresses = (ArrayList<String>)savedInstanceState.get(EXTRA_MAC_ADDRESSES);
         List<Byte> ids = (ArrayList<Byte>)savedInstanceState.get(EXTRA_IDS);
         if (null != ids && null != macAddresses)
@@ -107,35 +108,7 @@ public class CreateAlarmActivity extends AppCompatActivity
 
         this.originalName = this.name;
         this.selectedSensors = new ArrayList<>(currentAlarm.getSensorData());
-
-        List<WCN2Alarm> allAlarms = new ArrayList<>();
-        if (currentAlarm instanceof WCN2CompoundAlarm)
-        {
-            WCN2CompoundAlarm compoundAlarm = (WCN2CompoundAlarm)currentAlarm;
-            allAlarms.addAll(compoundAlarm.getAlarms());
-        }
-        else
-        {
-            allAlarms.add(currentAlarm);
-        }
-
-        this.thresholdTypes = new ArrayList<>();
-        this.thresholdValues = new ArrayList<>();
-        this.thresholdOperators = new ArrayList<>();
-        for (WCN2Alarm alarm: allAlarms)
-        {
-            int type = -1;
-            if (alarm instanceof WCN2TemperatureAlarm)
-                type = 0;
-            if (alarm instanceof WCN2HumidityAlarm)
-                type = 1;
-            if (alarm instanceof WCN2PresenceAlarm)
-                type = 2;
-
-            this.thresholdTypes.add(type);
-            this.thresholdValues.add(alarm.getThreshold());
-            this.thresholdOperators.add(alarm.getOperator().ordinal());
-        }
+        this.thresholds = new ArrayList<>(currentAlarm.getThresholds());
     }
 
     private void startSelectNameFragment()
@@ -156,9 +129,18 @@ public class CreateAlarmActivity extends AppCompatActivity
         SelectThresholdsFragment fragment = new SelectThresholdsFragment();
         Bundle arguments = new Bundle();
         arguments.putString(EXTRA_MODE, this.mode);
-        arguments.putIntegerArrayList(EXTRA_TYPES, this.thresholdTypes);
-        arguments.putIntegerArrayList(EXTRA_OPERATORS, this.thresholdOperators);
-        arguments.putSerializable(EXTRA_VALUES, this.thresholdValues);
+        ArrayList<Integer> types = new ArrayList<>();
+        ArrayList<Float> values = new ArrayList<>();
+        ArrayList<Integer> operators = new ArrayList<>();
+        for (Threshold threshold: this.thresholds)
+        {
+            types.add(threshold.getType().ordinal());
+            values.add(threshold.getValue());
+            operators.add(threshold.getOperator().ordinal());
+        }
+        arguments.putIntegerArrayList(EXTRA_TYPES, types);
+        arguments.putSerializable(EXTRA_VALUES, values);
+        arguments.putIntegerArrayList(EXTRA_OPERATORS, operators);
         fragment.setArguments(arguments);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment, fragment)
@@ -192,9 +174,18 @@ public class CreateAlarmActivity extends AppCompatActivity
 
         state.putString(EXTRA_ORIGINAL_NAME, this.originalName);
         state.putString(EXTRA_NAME, this.name);
-        state.putIntegerArrayList(EXTRA_TYPES, this.thresholdTypes);
-        state.putIntegerArrayList(EXTRA_OPERATORS, this.thresholdOperators);
-        state.putSerializable(EXTRA_VALUES, this.thresholdValues);
+        ArrayList<Integer> types = new ArrayList<>();
+        ArrayList<Float> values = new ArrayList<>();
+        ArrayList<Integer> operators = new ArrayList<>();
+        for (Threshold threshold: this.thresholds)
+        {
+            types.add(threshold.getType().ordinal());
+            values.add(threshold.getValue());
+            operators.add(threshold.getOperator().ordinal());
+        }
+        state.putIntegerArrayList(EXTRA_TYPES, types);
+        state.putSerializable(EXTRA_VALUES, values);
+        state.putIntegerArrayList(EXTRA_OPERATORS, operators);
         ArrayList<String> macAddresses = new ArrayList<>();
         ArrayList<Byte> ids = new ArrayList<>();
         for (SensorData sensorData: this.selectedSensors)
@@ -247,9 +238,19 @@ public class CreateAlarmActivity extends AppCompatActivity
 
     private void handleSelectedThresholds(Bundle extras)
     {
-        this.thresholdTypes = (ArrayList<Integer>)extras.get(EXTRA_TYPES);
-        this.thresholdOperators = (ArrayList<Integer>)extras.get(EXTRA_OPERATORS);
-        this.thresholdValues = (ArrayList<Float>)extras.get(EXTRA_VALUES);
+        List<Integer> types = (ArrayList<Integer>)extras.get(EXTRA_TYPES);
+        List<Float> values = (ArrayList<Float>)extras.get(EXTRA_VALUES);
+        List<Integer> operators = (ArrayList<Integer>)extras.get(EXTRA_OPERATORS);
+
+        this.thresholds = new ArrayList<>();
+        if (null != types && null != values && null != operators)
+        {
+            for (int i = 0; types.size() > i; ++i)
+            {
+                this.thresholds.add(new Threshold(Type.values()[types.get(i)], values.get(i),
+                                                  Operator.values()[operators.get(i)]));
+            }
+        }
 
         startSelectSensorsFragment();
     }
@@ -275,25 +276,9 @@ public class CreateAlarmActivity extends AppCompatActivity
 
     private WCN2Alarm createAlarm()
     {
-        List<WCN2Alarm> alarms = new ArrayList<>();
-        for (int i = 0; this.thresholdTypes.size() > i; ++i)
-        {
-            WCN2Alarm.Operator operator = WCN2Alarm.Operator.values()[this.thresholdOperators.get(i)];
-            String name = this.name + (this.thresholdTypes.size() > 1 ? i : "");
-            WCN2Alarm alarm = WCN2Alarm.createAlarm(name, this.thresholdTypes.get(i), operator,
-                    this.thresholdValues.get(i), this.selectedSensors);
-            alarms.add(alarm);
-        }
-
-        WCN2Alarm newAlarm = alarms.get(0);
-        if (1 < alarms.size())
-        {
-            newAlarm = new WCN2CompoundAlarm(this.name, alarms);
-        }
-
-        newAlarm.setActivated(true);
-
-        return newAlarm;
+        WCN2Alarm alarm = new WCN2Alarm(this.name, this.thresholds, this.selectedSensors);
+        alarm.setActivated(true);
+        return alarm;
     }
 
     private void returnToMainActivity()
