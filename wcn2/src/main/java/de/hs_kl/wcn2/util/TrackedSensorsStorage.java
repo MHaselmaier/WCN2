@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.hs_kl.wcn2_sensors.SensorData;
+import de.hs_kl.wcn2_sensors.WCN2SensorData;
 
 public class TrackedSensorsStorage
 {
@@ -16,7 +16,7 @@ public class TrackedSensorsStorage
 
     private SharedPreferences sensorIDs;
     private SharedPreferences mnemonics;
-    private Map<String, SensorData> cachedData;
+    private Map<String, WCN2SensorData> cachedData;
 
     private TrackedSensorsStorage(Context context)
     {
@@ -36,23 +36,23 @@ public class TrackedSensorsStorage
             String macAddress = savedIDs.get(i).getKey();
             byte sensorID = ((Integer)savedIDs.get(i).getValue()).byteValue();
             String mnemonic = (String)savedMnemonics.get(i).getValue();
-            SensorData sensorData = new SensorData(sensorID, mnemonic, macAddress);
+            WCN2SensorData sensorData = new WCN2SensorData(sensorID, mnemonic, macAddress);
             this.cachedData.put(macAddress, sensorData);
         }
     }
 
-    public List<SensorData> getTrackedSensors()
+    public List<WCN2SensorData> getTrackedSensors()
     {
         return new ArrayList<>(this.cachedData.values());
     }
 
     public String getMnemonic(String macAddress)
     {
-        SensorData sensorData = this.cachedData.get(macAddress);
+        WCN2SensorData sensorData = this.cachedData.get(macAddress);
         return (null == sensorData ? "null" : sensorData.getMnemonic());
     }
 
-    public void trackSensor(SensorData sensorData)
+    public void trackSensor(WCN2SensorData sensorData)
     {
         this.cachedData.put(sensorData.getMacAddress(), sensorData);
 
@@ -65,7 +65,7 @@ public class TrackedSensorsStorage
         editor.apply();
     }
 
-    public void untrackSensor(SensorData sensorData)
+    public void untrackSensor(WCN2SensorData sensorData)
     {
         this.cachedData.remove(sensorData.getMacAddress());
 
@@ -78,7 +78,7 @@ public class TrackedSensorsStorage
         editor.apply();
     }
 
-    public boolean isTracked(SensorData sensorData)
+    public boolean isTracked(WCN2SensorData sensorData)
     {
         return this.cachedData.containsKey(sensorData.getMacAddress());
     }

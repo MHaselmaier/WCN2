@@ -4,9 +4,9 @@ import android.bluetooth.le.ScanFilter;
 
 import java.util.List;
 
-public interface ScanResultListener
+public interface WCN2SensorDataListener
 {
     List<ScanFilter> getScanFilter();
 
-    void onScanResult(SensorData result);
+    void onScanResult(WCN2SensorData result);
 }

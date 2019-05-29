@@ -5,17 +5,17 @@ import android.bluetooth.le.ScanFilter;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hs_kl.wcn2_sensors.ScanResultListener;
-import de.hs_kl.wcn2_sensors.SensorData;
 import de.hs_kl.wcn2_sensors.WCN2Scanner;
+import de.hs_kl.wcn2_sensors.WCN2SensorData;
+import de.hs_kl.wcn2_sensors.WCN2SensorDataListener;
 
-public class WCN2Alarm implements ScanResultListener
+public class WCN2Alarm implements WCN2SensorDataListener
 {
     @Override
     public List<ScanFilter> getScanFilter()
     {
         List<ScanFilter> scanFilters = new ArrayList<>();
-        for (SensorData sensorData: this.sensors)
+        for (WCN2SensorData sensorData: this.sensors)
         {
             ScanFilter.Builder builder = new ScanFilter.Builder();
             builder.setDeviceAddress(sensorData.getMacAddress());
@@ -35,7 +35,7 @@ public class WCN2Alarm implements ScanResultListener
     }
 
     @Override
-    public void onScanResult(SensorData result)
+    public void onScanResult(WCN2SensorData result)
     {
         for (int i = 0; this.sensors.size() > i; ++i)
         {
@@ -48,12 +48,12 @@ public class WCN2Alarm implements ScanResultListener
         }
     }
 
-    private List<SensorData> sensors;
+    private List<WCN2SensorData> sensors;
     private String name;
     private List<Threshold> thresholds;
     private boolean activated;
 
-    public WCN2Alarm(String name, List<Threshold> thresholds, List<SensorData> sensors)
+    public WCN2Alarm(String name, List<Threshold> thresholds, List<WCN2SensorData> sensors)
     {
         this.name = name;
         this.thresholds = thresholds;
@@ -85,14 +85,16 @@ public class WCN2Alarm implements ScanResultListener
         return this.activated;
     }
 
-    public List<SensorData> getSensorData()
+    public List<WCN2SensorData> getSensorData()
     {
         return this.sensors;
     }
 
     public boolean isTriggered()
     {
-        for (SensorData sensorData: this.sensors)
+        if (!this.activated) return false;
+
+        for (WCN2SensorData sensorData: this.sensors)
         {
             for (Threshold threshold: this.thresholds)
             {

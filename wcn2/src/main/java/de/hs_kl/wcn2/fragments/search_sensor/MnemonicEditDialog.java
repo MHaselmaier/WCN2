@@ -10,12 +10,12 @@ import android.view.WindowManager;
 import android.widget.EditText;
 
 import de.hs_kl.wcn2.R;
-import de.hs_kl.wcn2_sensors.SensorData;
 import de.hs_kl.wcn2.util.TrackedSensorsStorage;
+import de.hs_kl.wcn2_sensors.WCN2SensorData;
 
 class MnemonicEditDialog
 {
-    static Dialog buildMnemonicEditDialog(final Context context, final SensorData sensorData)
+    static Dialog buildMnemonicEditDialog(final Context context, final WCN2SensorData sensorData)
     {
         final TrackedSensorsStorage trackedSensors = TrackedSensorsStorage.getInstance(context);
 

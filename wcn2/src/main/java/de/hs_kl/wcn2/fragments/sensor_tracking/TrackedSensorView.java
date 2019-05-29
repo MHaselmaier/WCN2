@@ -7,7 +7,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import de.hs_kl.wcn2.R;
-import de.hs_kl.wcn2_sensors.SensorData;
+import de.hs_kl.wcn2_sensors.WCN2SensorData;
 import de.hs_kl.wcn2_sensors.util.LastSeenSinceUtil;
 
 class TrackedSensorView extends LinearLayout
@@ -22,7 +22,7 @@ class TrackedSensorView extends LinearLayout
     private ImageView batteryLevel;
     private ImageView signalStrength;
 
-    TrackedSensorView(Context context, SensorData sensorData)
+    TrackedSensorView(Context context, WCN2SensorData sensorData)
     {
         super(context);
 
@@ -41,7 +41,7 @@ class TrackedSensorView extends LinearLayout
         updateView(sensorData);
     }
 
-    void updateView(SensorData sensorData)
+    void updateView(WCN2SensorData sensorData)
     {
         if (sensorData.isTimedOut() || sensorData.isBatteryLow())
         {

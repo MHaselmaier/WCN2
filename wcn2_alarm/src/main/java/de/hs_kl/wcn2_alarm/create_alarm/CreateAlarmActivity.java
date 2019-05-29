@@ -15,7 +15,7 @@ import de.hs_kl.wcn2_alarm.alarms.Operator;
 import de.hs_kl.wcn2_alarm.alarms.Threshold;
 import de.hs_kl.wcn2_alarm.alarms.Type;
 import de.hs_kl.wcn2_alarm.alarms.WCN2Alarm;
-import de.hs_kl.wcn2_sensors.SensorData;
+import de.hs_kl.wcn2_sensors.WCN2SensorData;
 
 public class CreateAlarmActivity extends AppCompatActivity
 {
@@ -36,7 +36,7 @@ public class CreateAlarmActivity extends AppCompatActivity
     private String mode = MODE_CREATE;
     private String name;
     private List<Threshold> thresholds = new ArrayList<>();
-    private List<SensorData> selectedSensors = new ArrayList<>();
+    private List<WCN2SensorData> selectedSensors = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -88,7 +88,7 @@ public class CreateAlarmActivity extends AppCompatActivity
             this.selectedSensors = new ArrayList<>();
             for (int i = 0; ids.size() > i; ++i)
             {
-                this.selectedSensors.add(new SensorData(ids.get(i), "null", macAddresses.get(i)));
+                this.selectedSensors.add(new WCN2SensorData(ids.get(i), "null", macAddresses.get(i)));
             }
         }
     }
@@ -154,7 +154,7 @@ public class CreateAlarmActivity extends AppCompatActivity
         arguments.putString(EXTRA_MODE, this.mode);
         ArrayList<String> macAddresses = new ArrayList<>();
         ArrayList<Byte> ids = new ArrayList<>();
-        for (SensorData sensorData: this.selectedSensors)
+        for (WCN2SensorData sensorData: this.selectedSensors)
         {
             macAddresses.add(sensorData.getMacAddress());
             ids.add(sensorData.getSensorID());
@@ -188,7 +188,7 @@ public class CreateAlarmActivity extends AppCompatActivity
         state.putIntegerArrayList(EXTRA_OPERATORS, operators);
         ArrayList<String> macAddresses = new ArrayList<>();
         ArrayList<Byte> ids = new ArrayList<>();
-        for (SensorData sensorData: this.selectedSensors)
+        for (WCN2SensorData sensorData: this.selectedSensors)
         {
             macAddresses.add(sensorData.getMacAddress());
             ids.add(sensorData.getSensorID());
@@ -263,7 +263,7 @@ public class CreateAlarmActivity extends AppCompatActivity
         this.selectedSensors = new ArrayList<>();
         for (int i = 0; ids.size() > i; ++i)
         {
-            this.selectedSensors.add(new SensorData(ids.get(i), "null", macAddresses.get(i)));
+            this.selectedSensors.add(new WCN2SensorData(ids.get(i), "null", macAddresses.get(i)));
         }
 
         WCN2Alarm alarm = createAlarm();

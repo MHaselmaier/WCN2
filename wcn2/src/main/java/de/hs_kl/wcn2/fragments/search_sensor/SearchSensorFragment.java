@@ -15,19 +15,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hs_kl.wcn2.R;
-import de.hs_kl.wcn2_sensors.SensorData;
 import de.hs_kl.wcn2_sensors.WCN2Scanner;
-import de.hs_kl.wcn2_sensors.ScanResultListener;
 import de.hs_kl.wcn2.util.Constants;
 import de.hs_kl.wcn2.util.TrackedSensorsStorage;
+import de.hs_kl.wcn2_sensors.WCN2SensorData;
+import de.hs_kl.wcn2_sensors.WCN2SensorDataListener;
 
-public class SearchSensorFragment extends Fragment implements ScanResultListener
+public class SearchSensorFragment extends Fragment implements WCN2SensorDataListener
 {
     private Handler uiUpdater = new Handler();
     private TrackedSensorsStorage trackedSensorsStorage;
     private LinearLayout foundSensorsContainer;
     private View emptyListItem;
-    private List<SensorData> foundSensors = new ArrayList<>();
+    private List<WCN2SensorData> foundSensors = new ArrayList<>();
     private List<FoundSensorView> foundSensorsViews = new ArrayList<>();
 
     @Override
@@ -37,7 +37,7 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
     }
 
     @Override
-    public void onScanResult(SensorData result)
+    public void onScanResult(WCN2SensorData result)
     {
         result.setMnemonic(this.trackedSensorsStorage.getMnemonic(result.getMacAddress()));
         for (int i = 0; this.foundSensors.size() > i; ++i)
@@ -52,7 +52,7 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
         addSensor(result);
     }
 
-    private void addSensor(SensorData sensorData)
+    private void addSensor(WCN2SensorData sensorData)
     {
         int position = this.foundSensors.size();
         this.foundSensors.add(sensorData);
@@ -100,7 +100,7 @@ public class SearchSensorFragment extends Fragment implements ScanResultListener
 
         this.foundSensors.clear();
         this.foundSensorsViews.clear();
-        for (SensorData sensorData: this.trackedSensorsStorage.getTrackedSensors())
+        for (WCN2SensorData sensorData: this.trackedSensorsStorage.getTrackedSensors())
         {
             addSensor(sensorData);
         }

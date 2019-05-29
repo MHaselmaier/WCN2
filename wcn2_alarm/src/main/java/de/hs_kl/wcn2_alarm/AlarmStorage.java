@@ -12,8 +12,8 @@ import de.hs_kl.wcn2_alarm.alarms.Operator;
 import de.hs_kl.wcn2_alarm.alarms.Threshold;
 import de.hs_kl.wcn2_alarm.alarms.Type;
 import de.hs_kl.wcn2_alarm.alarms.WCN2Alarm;
-import de.hs_kl.wcn2_sensors.SensorData;
 import de.hs_kl.wcn2_sensors.WCN2Scanner;
+import de.hs_kl.wcn2_sensors.WCN2SensorData;
 
 public class AlarmStorage
 {
@@ -35,7 +35,7 @@ public class AlarmStorage
         {
             int position = this.alarms.getInt(name + ":position", -1);
             List<Threshold> thresholds = loadThresholds(name);
-            List<SensorData> sensorData = loadSensorData(name);
+            List<WCN2SensorData> sensorData = loadSensorData(name);
 
             WCN2Alarm alarm = new WCN2Alarm(name, thresholds, sensorData);
             alarm.setActivated(this.alarms.getBoolean(name + ":activated", false));
@@ -66,14 +66,14 @@ public class AlarmStorage
         return thresholds;
     }
 
-    private List<SensorData> loadSensorData(String name)
+    private List<WCN2SensorData> loadSensorData(String name)
     {
-        List<SensorData> sensorData = new ArrayList<>();
+        List<WCN2SensorData> sensorData = new ArrayList<>();
         Set<String> addresses = this.sensorData.getStringSet(name + ":macAddresses", new HashSet<>());
         for (String address: addresses)
         {
             byte id = (byte)this.sensorData.getInt(name + ":" + address, 0);
-            sensorData.add(new SensorData(id, "null", address));
+            sensorData.add(new WCN2SensorData(id, "null", address));
         }
         return sensorData;
     }
@@ -145,7 +145,7 @@ public class AlarmStorage
 
         String name = alarm.getName();
         Set<String> addresses = new HashSet<>();
-        for (SensorData sensorData: alarm.getSensorData())
+        for (WCN2SensorData sensorData: alarm.getSensorData())
         {
             addresses.add(sensorData.getMacAddress());
             editor.putInt(name + ":" + sensorData.getMacAddress(), sensorData.getSensorID());

@@ -20,13 +20,13 @@ import java.util.List;
 
 import de.hs_kl.wcn2.OverviewActivity;
 import de.hs_kl.wcn2_sensors.WCN2Scanner;
-import de.hs_kl.wcn2_sensors.ScanResultListener;
-import de.hs_kl.wcn2_sensors.SensorData;
 import de.hs_kl.wcn2.util.Constants;
 import de.hs_kl.wcn2.util.TrackedSensorsStorage;
 import de.hs_kl.wcn2.util.WCN2Notifications;
+import de.hs_kl.wcn2_sensors.WCN2SensorData;
+import de.hs_kl.wcn2_sensors.WCN2SensorDataListener;
 
-public class MeasurementService extends Service implements ScanResultListener
+public class MeasurementService extends Service implements WCN2SensorDataListener
 {
     public static final String ACTION_START = "de.hs_kl.wcn2.fragments.sensor_tracking.MeasurementService.START";
     public static final String ACTION_STOP = "de.hs_kl.wcn2.fragments.sensor_tracking.MeasurementService.STOP";
@@ -38,7 +38,7 @@ public class MeasurementService extends Service implements ScanResultListener
     private PowerManager.WakeLock wakeLock;
 
     private  TrackedSensorsStorage trackedSensorsStorage;
-    private List<SensorData> trackedSensors = new ArrayList<>();
+    private List<WCN2SensorData> trackedSensors = new ArrayList<>();
     private Handler handler = new Handler();
     private Runnable checkSensorDataContinuity = () ->
     {
@@ -46,7 +46,7 @@ public class MeasurementService extends Service implements ScanResultListener
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         for (int i = this.trackedSensors.size() - 1; 0 <= i; --i)
         {
-          SensorData sensorData = this.trackedSensors.get(i);
+            WCN2SensorData sensorData = this.trackedSensors.get(i);
           if (!TrackedSensorsStorage.getInstance(context).isTracked(sensorData))
           {
               this.trackedSensors.remove(sensorData);
@@ -186,7 +186,7 @@ public class MeasurementService extends Service implements ScanResultListener
     {
         Context context = getBaseContext();
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        for (SensorData sensorData: this.trackedSensors)
+        for (WCN2SensorData sensorData: this.trackedSensors)
         {
             notificationManager.cancel(sensorData.getSensorID() << 1);
             notificationManager.cancel(sensorData.getSensorID() << 1 + 1);
@@ -213,7 +213,7 @@ public class MeasurementService extends Service implements ScanResultListener
     {
         TrackedSensorsStorage trackedSensors = TrackedSensorsStorage.getInstance(getBaseContext());
         List<ScanFilter> scanFilters = new ArrayList<>();
-        for (SensorData sensorData: trackedSensors.getTrackedSensors())
+        for (WCN2SensorData sensorData: trackedSensors.getTrackedSensors())
         {
             ScanFilter.Builder builder = new ScanFilter.Builder();
             builder.setDeviceAddress(sensorData.getMacAddress());
@@ -223,7 +223,7 @@ public class MeasurementService extends Service implements ScanResultListener
     }
 
     @Override
-    public void onScanResult(SensorData result)
+    public void onScanResult(WCN2SensorData result)
     {
         result.setMnemonic(this.trackedSensorsStorage.getMnemonic(result.getMacAddress()));
         this.measurement.addData(result, MeasurementService.action);
@@ -231,7 +231,7 @@ public class MeasurementService extends Service implements ScanResultListener
         updateLastTrackedSensorData(result);
     }
 
-    private void updateLastTrackedSensorData(SensorData result)
+    private void updateLastTrackedSensorData(WCN2SensorData result)
     {
         for (int i = 0; this.trackedSensors.size() > i; ++i)
         {

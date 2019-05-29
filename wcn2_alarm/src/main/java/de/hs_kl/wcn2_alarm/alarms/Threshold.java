@@ -1,6 +1,6 @@
 package de.hs_kl.wcn2_alarm.alarms;
 
-import de.hs_kl.wcn2_sensors.SensorData;
+import de.hs_kl.wcn2_sensors.WCN2SensorData;
 
 public class Threshold
 {
@@ -15,7 +15,7 @@ public class Threshold
         this.operator = operator;
     }
 
-    public boolean isTriggered(SensorData sensorData)
+    public boolean isTriggered(WCN2SensorData sensorData)
     {
         float sensorValue = getCorrespondingSensorValue(sensorData);
 
@@ -32,7 +32,7 @@ public class Threshold
         return false;
     }
 
-    private float getCorrespondingSensorValue(SensorData sensorData)
+    private float getCorrespondingSensorValue(WCN2SensorData sensorData)
     {
         switch (this.type)
         {

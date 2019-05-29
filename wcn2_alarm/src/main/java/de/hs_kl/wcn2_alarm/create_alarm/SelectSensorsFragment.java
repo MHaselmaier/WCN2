@@ -17,13 +17,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hs_kl.wcn2_alarm.R;
-import de.hs_kl.wcn2_sensors.ScanResultListener;
-import de.hs_kl.wcn2_sensors.SensorData;
 import de.hs_kl.wcn2_sensors.WCN2Scanner;
+import de.hs_kl.wcn2_sensors.WCN2SensorData;
+import de.hs_kl.wcn2_sensors.WCN2SensorDataListener;
 
-public class SelectSensorsFragment extends Fragment implements ScanResultListener
+public class SelectSensorsFragment extends Fragment implements WCN2SensorDataListener
 {
-    private List<SensorData> foundSensors = new ArrayList<>();
+    private List<WCN2SensorData> foundSensors = new ArrayList<>();
     private List<FoundSensorView> foundSensorsViews = new ArrayList<>();
 
     private LinearLayout foundSensorsContainer;
@@ -39,7 +39,7 @@ public class SelectSensorsFragment extends Fragment implements ScanResultListene
     }
 
     @Override
-    public void onScanResult(SensorData result)
+    public void onScanResult(WCN2SensorData result)
     {
         for (int i = 0; this.foundSensors.size() > i; ++i)
         {
@@ -53,7 +53,7 @@ public class SelectSensorsFragment extends Fragment implements ScanResultListene
         foundSensor(result);
     }
 
-    private void foundSensor(SensorData sensorData)
+    private void foundSensor(WCN2SensorData sensorData)
     {
         int position = this.foundSensors.size();
         this.foundSensors.add(sensorData);
@@ -122,7 +122,7 @@ public class SelectSensorsFragment extends Fragment implements ScanResultListene
 
         for (int i = 0; ids.size() > i; ++i)
         {
-            SensorData sensorData = new SensorData(ids.get(i), "null", macAddresses.get(i));
+            WCN2SensorData sensorData = new WCN2SensorData(ids.get(i), "null", macAddresses.get(i));
             this.foundSensors.add(sensorData);
             FoundSensorView view = new FoundSensorView(getActivity(), sensorData);
             view.setSelected(true);

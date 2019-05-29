@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hs_kl.wcn2.R;
-import de.hs_kl.wcn2_sensors.SensorData;
 import de.hs_kl.wcn2.util.TrackedSensorsStorage;
+import de.hs_kl.wcn2_sensors.WCN2SensorData;
 
 public class TrackedSensorsOverview extends CardView
 {
@@ -22,7 +22,7 @@ public class TrackedSensorsOverview extends CardView
     private TrackedSensorsStorage trackedSensorsStorage;
     private LinearLayout container;
     private View emptyListItem;
-    private List<SensorData> trackedSensors = new ArrayList<>();
+    private List<WCN2SensorData> trackedSensors = new ArrayList<>();
     private List<TrackedSensorView> trackedSensorViews = new ArrayList<>();
 
     public TrackedSensorsOverview(@NonNull Context context)
@@ -48,7 +48,7 @@ public class TrackedSensorsOverview extends CardView
         label.setText(R.string.no_sensors_tracked);
     }
 
-    void addSensor(SensorData sensorData)
+    void addSensor(WCN2SensorData sensorData)
     {
         for (int i = 0; this.trackedSensors.size() > i; ++i)
         {
@@ -110,10 +110,10 @@ public class TrackedSensorsOverview extends CardView
 
     private void addNewlyTrackedSensors()
     {
-        for (SensorData sensorData: this.trackedSensorsStorage.getTrackedSensors())
+        for (WCN2SensorData sensorData: this.trackedSensorsStorage.getTrackedSensors())
         {
             boolean alreadyExists = false;
-            for (SensorData alreadyTrackedSensor: this.trackedSensors)
+            for (WCN2SensorData alreadyTrackedSensor: this.trackedSensors)
             {
                 if (alreadyTrackedSensor.getMacAddress().equals(sensorData.getMacAddress()))
                 {

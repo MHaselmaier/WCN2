@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.hs_kl.wcn2_alarm.alarms.WCN2Alarm;
-import de.hs_kl.wcn2_sensors.SensorData;
+import de.hs_kl.wcn2_sensors.WCN2SensorData;
 
 public class WCN2AlarmView extends LinearLayout
 {
@@ -73,14 +73,14 @@ public class WCN2AlarmView extends LinearLayout
             }
         });
 
-        for (SensorData sensorData: this.alarm.getSensorData())
+        for (WCN2SensorData sensorData: this.alarm.getSensorData())
         {
             addSensorDataView(sensorData);
         }
         updateView();
     }
 
-    private void addSensorDataView(SensorData sensorData)
+    private void addSensorDataView(WCN2SensorData sensorData)
     {
         View sensorView = inflate(this.context, R.layout.connected_sensor, null);
 
@@ -115,7 +115,7 @@ public class WCN2AlarmView extends LinearLayout
             setBackgroundResource(0);
         }
 
-        for (SensorData sensorData: this.alarm.getSensorData())
+        for (WCN2SensorData sensorData: this.alarm.getSensorData())
         {
             if (!this.batteryLevelViews.containsKey(sensorData.getMacAddress()))
                 addSensorDataView(sensorData);

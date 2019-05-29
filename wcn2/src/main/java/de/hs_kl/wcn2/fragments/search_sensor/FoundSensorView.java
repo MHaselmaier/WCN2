@@ -9,7 +9,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import de.hs_kl.wcn2.R;
-import de.hs_kl.wcn2_sensors.SensorData;
+import de.hs_kl.wcn2_sensors.WCN2SensorData;
 import de.hs_kl.wcn2_sensors.util.LastSeenSinceUtil;
 import de.hs_kl.wcn2.util.TrackedSensorsStorage;
 
@@ -23,7 +23,7 @@ class FoundSensorView extends ConstraintLayout
     private ImageView batteryLevel;
     private ImageView signalStrength;
 
-    FoundSensorView(Context context, SensorData sensorData)
+    FoundSensorView(Context context, WCN2SensorData sensorData)
     {
         super(context);
         inflate(context, R.layout.sensor_list_item, this);
@@ -52,7 +52,7 @@ class FoundSensorView extends ConstraintLayout
         this.signalStrength = findViewById(R.id.signal_strength);
     }
 
-    void updateView(SensorData sensorData)
+    void updateView(WCN2SensorData sensorData)
     {
         this.lastSeen.setText(LastSeenSinceUtil.getTimeSinceString(this.context,
                 sensorData.getTimestamp()));

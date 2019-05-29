@@ -1,6 +1,5 @@
 package de.hs_kl.wcn2.usage;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;

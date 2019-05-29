@@ -14,11 +14,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import de.hs_kl.wcn2_sensors.util.Constants;
+
 public class WCN2Scanner
 {
     private static boolean scanning = false;
     private static BluetoothLeScanner bleScanner;
-    private static Set<ScanResultListener> scanResultListeners = new HashSet<>();
+    private static Set<WCN2SensorDataListener> sensorDataListeners = new HashSet<>();
 
     private static long lastScanStarted = 0;
 
@@ -45,18 +47,18 @@ public class WCN2Scanner
 
         private void dispatchScanResult(ScanResult result)
         {
-            for (ScanResultListener listener: WCN2Scanner.scanResultListeners)
+            for (WCN2SensorDataListener listener: WCN2Scanner.sensorDataListeners)
             {
                 if (0 == listener.getScanFilter().size())
                 {
-                    listener.onScanResult(new SensorData(result));
+                    listener.onScanResult(new WCN2SensorData(result));
                     continue;
                 }
                 for (ScanFilter scanFilter: listener.getScanFilter())
                 {
                     if (scanFilter.matches(result))
                     {
-                        listener.onScanResult(new SensorData(result));
+                        listener.onScanResult(new WCN2SensorData(result));
                         break;
                     }
                 }
@@ -97,27 +99,27 @@ public class WCN2Scanner
     {
         stopScan();
         WCN2Scanner.bleScanner = bleScanner;
-        if (0 < WCN2Scanner.scanResultListeners.size())
+        if (0 < WCN2Scanner.sensorDataListeners.size())
         {
             startScan();
         }
     }
 
-    public static void registerScanResultListener(ScanResultListener scanResultlistener)
+    public static void registerScanResultListener(WCN2SensorDataListener sensorDataListener)
     {
-        WCN2Scanner.scanResultListeners.add(scanResultlistener);
+        WCN2Scanner.sensorDataListeners.add(sensorDataListener);
 
-        if (1 == WCN2Scanner.scanResultListeners.size())
+        if (1 == WCN2Scanner.sensorDataListeners.size())
         {
             startScan();
         }
     }
 
-    public static void unregisterScanResultListener(ScanResultListener scanResultListener)
+    public static void unregisterScanResultListener(WCN2SensorDataListener sensorDataListener)
     {
-        WCN2Scanner.scanResultListeners.remove(scanResultListener);
+        WCN2Scanner.sensorDataListeners.remove(sensorDataListener);
 
-        if (0 == WCN2Scanner.scanResultListeners.size())
+        if (0 == WCN2Scanner.sensorDataListeners.size())
         {
             // Keep scanning if last scan was started lass then 35 seconds ago.
             // Android denies scanning if it is started too many times in 30 seconds.
@@ -125,7 +127,7 @@ public class WCN2Scanner
             // too many times in 30 seconds and no results would be received.
             Handler handler = new Handler();
             handler.postDelayed(() -> {
-                if (0 == WCN2Scanner.scanResultListeners.size())
+                if (0 == WCN2Scanner.sensorDataListeners.size())
                 {
                     WCN2Scanner.stopScan();
                 }

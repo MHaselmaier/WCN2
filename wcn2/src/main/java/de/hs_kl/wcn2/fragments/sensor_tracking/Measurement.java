@@ -12,9 +12,9 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import de.hs_kl.wcn2.R;
-import de.hs_kl.wcn2_sensors.SensorData;
 import de.hs_kl.wcn2.util.Constants;
 import de.hs_kl.wcn2.util.TrackedSensorsStorage;
+import de.hs_kl.wcn2_sensors.WCN2SensorData;
 
 class Measurement
 {
@@ -26,8 +26,8 @@ class Measurement
     private int averageRate;
     private PrintWriter writer;
 
-    private SortedMap<Byte, SensorData> sensors = new TreeMap<>();
-    private SortedMap<Long, SortedMap<Byte, SensorData>> data = new TreeMap<>();
+    private SortedMap<Byte, WCN2SensorData> sensors = new TreeMap<>();
+    private SortedMap<Long, SortedMap<Byte, WCN2SensorData>> data = new TreeMap<>();
     private SortedMap<Long, String> actions = new TreeMap<>();
     private final long startTimestamp;
     private long lastWrittenTimestamp;
@@ -50,13 +50,13 @@ class Measurement
 
     private void initializeSensorMap()
     {
-        for (SensorData sensor: TrackedSensorsStorage.getInstance(this.context).getTrackedSensors())
+        for (WCN2SensorData sensor: TrackedSensorsStorage.getInstance(this.context).getTrackedSensors())
         {
             this.sensors.put(sensor.getSensorID(), sensor);
         }
     }
 
-    synchronized void addData(SensorData sensorData, String action)
+    synchronized void addData(WCN2SensorData sensorData, String action)
     {
         this.actions.put(sensorData.getTimestamp() / 1000, action);
 
@@ -88,7 +88,7 @@ class Measurement
             float relativeTimeInMinutes = (timestamp - this.startTimestamp) / 60f;
             this.writer.format("%.2f", relativeTimeInMinutes);
 
-            SortedMap<Byte, SensorData> currentTimestampData = this.data.get(timestamp);
+            SortedMap<Byte, WCN2SensorData> currentTimestampData = this.data.get(timestamp);
             for (byte sensorID : this.sensors.keySet())
             {
                 if (!currentTimestampData.containsKey(sensorID))
@@ -97,7 +97,7 @@ class Measurement
                     continue;
                 }
 
-                SensorData sensorData = currentTimestampData.get(sensorID);
+                WCN2SensorData sensorData = currentTimestampData.get(sensorID);
                 this.writer.format("\t%.1f\t%.1f", sensorData.getTemperature(),
                         sensorData.getRelativeHumidity());
             }
@@ -108,7 +108,7 @@ class Measurement
         this.lastWrittenTimestamp = newTimestamp;
     }
 
-    private void handleNewSensor(SensorData sensorData)
+    private void handleNewSensor(WCN2SensorData sensorData)
     {
         this.sensors.put(sensorData.getSensorID(), sensorData);
         this.writer = openWriter(this.writer, this.filename, this.context);
@@ -123,7 +123,7 @@ class Measurement
         writer.write(this.header + "\n\n");
 
         writer.write("Sensor ID\tMAC Address\tMnemonic\n");
-        for (SensorData sensorData: this.sensors.values())
+        for (WCN2SensorData sensorData: this.sensors.values())
         {
             writer.format("%d\t%s\t%s\n", sensorData.getSensorID(), sensorData.getMacAddress(),
                     sensorData.getMnemonic());
@@ -176,7 +176,7 @@ class Measurement
                     action = this.actions.get(t);
                     if (!this.data.get(t).containsKey(sensorID)) continue;
 
-                    SensorData sensorData = this.data.get(t).get(sensorID);
+                    WCN2SensorData sensorData = this.data.get(t).get(sensorID);
                     ++count;
                     if (1 == count)
                     {

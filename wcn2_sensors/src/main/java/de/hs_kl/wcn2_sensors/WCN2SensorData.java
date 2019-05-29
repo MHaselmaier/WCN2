@@ -5,7 +5,9 @@ import android.bluetooth.le.ScanResult;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 
-public class SensorData
+import de.hs_kl.wcn2_sensors.util.Constants;
+
+public class WCN2SensorData
 {
     private String mnemonic;
     private String macAddress;
@@ -17,7 +19,7 @@ public class SensorData
     private float relativeHumidity;
     private float batteryVoltage;
 
-    public SensorData(ScanResult result)
+    public WCN2SensorData(ScanResult result)
     {
         this.macAddress = result.getDevice().getAddress();
         this.timestamp = (System.currentTimeMillis() - android.os.SystemClock.elapsedRealtime())
@@ -39,7 +41,7 @@ public class SensorData
         }
     }
 
-    public SensorData(byte sensorID, String mnemonic, String macAddress)
+    public WCN2SensorData(byte sensorID, String mnemonic, String macAddress)
     {
         this.sensorID = sensorID;
         this.mnemonic = mnemonic;
@@ -203,7 +205,7 @@ public class SensorData
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SensorData that = (SensorData) o;
+        WCN2SensorData that = (WCN2SensorData) o;
 
         return macAddress != null ? macAddress.equals(that.macAddress) : that.macAddress == null;
     }

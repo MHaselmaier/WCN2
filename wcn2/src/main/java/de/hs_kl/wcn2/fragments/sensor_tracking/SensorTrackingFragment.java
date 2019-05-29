@@ -24,12 +24,12 @@ import java.util.List;
 import de.hs_kl.wcn2.OverviewActivity;
 import de.hs_kl.wcn2_sensors.WCN2Scanner;
 import de.hs_kl.wcn2.R;
-import de.hs_kl.wcn2_sensors.ScanResultListener;
-import de.hs_kl.wcn2_sensors.SensorData;
 import de.hs_kl.wcn2.util.Constants;
 import de.hs_kl.wcn2.util.TrackedSensorsStorage;
+import de.hs_kl.wcn2_sensors.WCN2SensorData;
+import de.hs_kl.wcn2_sensors.WCN2SensorDataListener;
 
-public class SensorTrackingFragment extends Fragment implements ScanResultListener
+public class SensorTrackingFragment extends Fragment implements WCN2SensorDataListener
 {
     private boolean tracking = false;
     private long trackingStartTime;
@@ -48,7 +48,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     public List<ScanFilter> getScanFilter()
     {
         List<ScanFilter> scanFilters = new ArrayList<>();
-        for (SensorData sensorData: this.trackedSensorsStorage.getTrackedSensors())
+        for (WCN2SensorData sensorData: this.trackedSensorsStorage.getTrackedSensors())
         {
             ScanFilter.Builder builder = new ScanFilter.Builder();
             builder.setDeviceAddress(sensorData.getMacAddress());
@@ -68,7 +68,7 @@ public class SensorTrackingFragment extends Fragment implements ScanResultListen
     }
 
     @Override
-    public void onScanResult(SensorData result)
+    public void onScanResult(WCN2SensorData result)
     {
         result.setMnemonic(this.trackedSensorsStorage.getMnemonic(result.getMacAddress()));
         this.trackedSensorsOverview.addSensor(result);

@@ -20,6 +20,8 @@ import android.widget.Toast;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import de.hs_kl.wcn2_sensors.util.Constants;
+
 public class WCN2Activity extends AppCompatActivity
 {
     private BluetoothAdapter btAdapter;

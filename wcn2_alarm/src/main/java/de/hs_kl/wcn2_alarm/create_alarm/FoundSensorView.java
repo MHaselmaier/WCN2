@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import de.hs_kl.wcn2_alarm.R;
-import de.hs_kl.wcn2_sensors.SensorData;
+import de.hs_kl.wcn2_sensors.WCN2SensorData;
 import de.hs_kl.wcn2_sensors.util.LastSeenSinceUtil;
 
 public class FoundSensorView extends LinearLayout
@@ -19,7 +19,7 @@ public class FoundSensorView extends LinearLayout
     private TextView lastSeen;
     private CheckBox selected;
 
-    public FoundSensorView(Context context, SensorData sensorData)
+    public FoundSensorView(Context context, WCN2SensorData sensorData)
     {
         super(context);
         inflate(context, R.layout.sensor_list_item, this);
@@ -36,7 +36,7 @@ public class FoundSensorView extends LinearLayout
         update(sensorData);
     }
 
-    public void update(SensorData sensorData)
+    public void update(WCN2SensorData sensorData)
     {
         Resources resources = this.context.getResources();
         this.batteryLevel.setImageDrawable(sensorData.getBatteryLevelDrawable(resources));

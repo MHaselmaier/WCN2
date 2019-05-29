@@ -11,18 +11,22 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import de.hs_kl.wcn2_alarm.alarm_triggered_service.AlarmTriggeredService;
+import de.hs_kl.wcn2_alarm.alarm_triggered_service.AlarmTriggeredWatchdog;
 import de.hs_kl.wcn2_alarm.alarms.WCN2Alarm;
 import de.hs_kl.wcn2_alarm.create_alarm.CreateAlarmActivity;
 import de.hs_kl.wcn2_sensors.WCN2Activity;
 
 public class OverviewActivity extends WCN2Activity
 {
+    public static boolean isVisible;
     private LinearLayout alarms;
     private Map<String, WCN2AlarmView> alarmViews = new HashMap<>();
     private View noAlarmsDefined;
     private Handler uiUpdater = new Handler();
 
     private AlarmStorage alarmStorage;
+    private boolean hasActivatedAlarms;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -37,6 +41,9 @@ public class OverviewActivity extends WCN2Activity
         addAlarm.setOnClickListener((v) -> createAlarm());
 
         this.alarmStorage = AlarmStorage.getInstance(this);
+
+        Intent intent = new Intent(this, AlarmTriggeredService.class);
+        startService(intent);
     }
 
     private void createAlarm()
@@ -53,6 +60,7 @@ public class OverviewActivity extends WCN2Activity
         super.onResume();
 
         this.uiUpdater.post(this::updateUI);
+        OverviewActivity.isVisible = true;
     }
 
     private void updateUI()
@@ -65,6 +73,8 @@ public class OverviewActivity extends WCN2Activity
 
         for (WCN2AlarmView alarmView: this.alarmViews.values())
             alarmView.updateView();
+
+        checkForActivatedAlarms(alarms);
 
         this.uiUpdater.postDelayed(this::updateUI, 1000);
     }
@@ -107,11 +117,32 @@ public class OverviewActivity extends WCN2Activity
         }
     }
 
+    private void checkForActivatedAlarms(WCN2Alarm[] alarms)
+    {
+        boolean hasActivatedAlarms = false;
+        for (WCN2Alarm alarm: alarms)
+        {
+            hasActivatedAlarms |= alarm.isActivated();
+        }
+
+        if (this.hasActivatedAlarms && !hasActivatedAlarms)
+        {
+            AlarmTriggeredWatchdog.disable(getApplicationContext());
+        }
+        if (!this.hasActivatedAlarms && hasActivatedAlarms)
+        {
+            AlarmTriggeredWatchdog.enable(getApplicationContext());
+        }
+
+        this.hasActivatedAlarms = hasActivatedAlarms;
+    }
+
     @Override
     public void onPause()
     {
         super.onPause();
 
         this.uiUpdater.removeCallbacksAndMessages(null);
+        OverviewActivity.isVisible = false;
     }
 }

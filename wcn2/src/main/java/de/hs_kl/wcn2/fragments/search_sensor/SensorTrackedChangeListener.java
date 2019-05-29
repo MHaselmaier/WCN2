@@ -8,8 +8,8 @@ import android.widget.ImageView;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import de.hs_kl.wcn2.R;
-import de.hs_kl.wcn2_sensors.SensorData;
 import de.hs_kl.wcn2.util.TrackedSensorsStorage;
+import de.hs_kl.wcn2_sensors.WCN2SensorData;
 
 class SensorTrackedChangeListener implements CompoundButton.OnCheckedChangeListener
 {
@@ -29,12 +29,12 @@ class SensorTrackedChangeListener implements CompoundButton.OnCheckedChangeListe
         }).start();
     }
 
-    private SensorData sensorData;
+    private WCN2SensorData sensorData;
     private ImageView mnemonicEdit;
 
     private TrackedSensorsStorage trackedSensors;
 
-    SensorTrackedChangeListener(Context context, SensorData sensorData, ImageView mnemonicEdit)
+    SensorTrackedChangeListener(Context context, WCN2SensorData sensorData, ImageView mnemonicEdit)
     {
         this.sensorData = sensorData;
         this.mnemonicEdit = mnemonicEdit;
