@@ -68,8 +68,9 @@ public class WCN2Activity extends AppCompatActivity
     {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return;
 
-        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_FINE_LOCATION},
+        ActivityCompat.requestPermissions(this, new String[] {
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION},
                 Constants.REQUEST_LOCATION_PERMISSION);
     }
 
@@ -81,10 +82,13 @@ public class WCN2Activity extends AppCompatActivity
         {
             for (int i = 0; permissions.length > i; ++i)
             {
-                if ((Manifest.permission.ACCESS_FINE_LOCATION.equals(permissions[i]) && PackageManager.PERMISSION_DENIED == grantResults[i]) ||
-                    (Manifest.permission.ACCESS_COARSE_LOCATION.equals(permissions[i]) && PackageManager.PERMISSION_DENIED == grantResults[i]))
+                if ((Manifest.permission.ACCESS_FINE_LOCATION.equals(permissions[i]) &&
+                        PackageManager.PERMISSION_DENIED == grantResults[i]) ||
+                    (Manifest.permission.ACCESS_COARSE_LOCATION.equals(permissions[i]) &&
+                            PackageManager.PERMISSION_DENIED == grantResults[i]))
                 {
-                    Toast.makeText(this, R.string.denied_permission_location, Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.denied_permission_location, Toast.LENGTH_LONG)
+                         .show();
                     finish();
                 }
             }
@@ -119,15 +123,9 @@ public class WCN2Activity extends AppCompatActivity
 
     private void ensureLocationIsEnabled()
     {
-        try
-        {
-            if (Settings.Secure.LOCATION_MODE_OFF != Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE))
-            {
-                WCN2Scanner.setBluetoothLeScanner(this.btAdapter.getBluetoothLeScanner());
-                return;
-            }
-        }
-        catch (Exception e) {}
+        LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        if (null != lm && lm.isLocationEnabled())
+            return;
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         dialogBuilder.setMessage(R.string.enable_location);
@@ -175,25 +173,24 @@ public class WCN2Activity extends AppCompatActivity
         if (RESULT_OK == resultCode)
         {
             WCN2Scanner.setBluetoothLeScanner(this.btAdapter.getBluetoothLeScanner());
+            return;
         }
-        else
-        {
-            Toast.makeText(this, R.string.bt_was_not_enabled, Toast.LENGTH_LONG).show();
-            finish();
-        }
+
+        Toast.makeText(this, R.string.bt_was_not_enabled, Toast.LENGTH_LONG).show();
+        finish();
     }
 
     private void handleLocationEnableRequest()
     {
-        try {
-            if (0 == Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE)) {
-                Toast.makeText(this, R.string.denied_permission_location, Toast.LENGTH_LONG).show();
-                finish();
-                return;
-            }
+        LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        if (null != lm && lm.isLocationEnabled())
+        {
             WCN2Scanner.setBluetoothLeScanner(this.btAdapter.getBluetoothLeScanner());
+            return;
         }
-        catch(Exception e) {}
+
+        Toast.makeText(this, R.string.denied_permission_location, Toast.LENGTH_LONG).show();
+        finish();
     }
 
     @Override
