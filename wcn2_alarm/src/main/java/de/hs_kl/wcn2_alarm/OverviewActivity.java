@@ -19,7 +19,7 @@ import de.hs_kl.wcn2_sensors.WCN2Activity;
 
 public class OverviewActivity extends WCN2Activity
 {
-    public static boolean isVisible;
+    public static volatile boolean isVisible;
     private LinearLayout alarms;
     private Map<String, WCN2AlarmView> alarmViews = new HashMap<>();
     private View noAlarmsDefined;
@@ -29,7 +29,7 @@ public class OverviewActivity extends WCN2Activity
     private boolean hasActivatedAlarms;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);

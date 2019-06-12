@@ -21,30 +21,16 @@ public class WCN2Alarm implements WCN2SensorDataListener
             builder.setDeviceAddress(sensorData.getMacAddress());
             scanFilters.add(builder.build());
         }
-
-        if (0 == scanFilters.size())
-        {
-            // If no sensors are tracked, no filters will be set.
-            // This results in showing all found sensors.
-            // Therefor add a dummy filter, so no sensor will be accepted:
-            ScanFilter.Builder builder = new ScanFilter.Builder();
-            builder.setDeviceAddress("00:00:00:00:00:00");
-            scanFilters.add(builder.build());
-        }
         return scanFilters;
     }
 
     @Override
     public void onScanResult(WCN2SensorData result)
     {
-        for (int i = 0; this.sensors.size() > i; ++i)
+        int index = this.sensors.indexOf(result);
+        if (-1 != index)
         {
-            int index = this.sensors.indexOf(result);
-            if (-1 != index)
-            {
-                this.sensors.set(index, result);
-                return;
-            }
+            this.sensors.set(index, result);
         }
     }
 
