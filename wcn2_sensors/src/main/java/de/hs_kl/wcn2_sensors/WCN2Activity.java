@@ -24,18 +24,11 @@ import de.hs_kl.wcn2_sensors.util.Constants;
 
 public class WCN2Activity extends AppCompatActivity
 {
-    private BluetoothAdapter btAdapter;
     private BroadcastReceiver btAdapterChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent)
         {
-            int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
-            if (BluetoothAdapter.STATE_OFF == state)
-            {
-                WCN2Scanner.setBluetoothLeScanner(null);
-                Intent enableBluetoothIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBluetoothIntent, Constants.REQUEST_ENABLE_BT);
-            }
+            ensureBluetoothIsEnabled();
         }
     };
 
@@ -48,7 +41,7 @@ public class WCN2Activity extends AppCompatActivity
     };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
@@ -56,7 +49,6 @@ public class WCN2Activity extends AppCompatActivity
 
         registerReceiver(this.btAdapterChangeReceiver,
                 new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
-        setupBluetoothAdapter();
         ensureBluetoothIsEnabled();
 
         registerReceiver(this.locationModeChangeReceiver,
@@ -99,26 +91,21 @@ public class WCN2Activity extends AppCompatActivity
         }
     }
 
-    private void setupBluetoothAdapter()
-    {
-        BluetoothManager btManager = (BluetoothManager)getSystemService(Context.BLUETOOTH_SERVICE);
-        if (null != btManager)
-        {
-            this.btAdapter = btManager.getAdapter();
-        }
-    }
-
     private void ensureBluetoothIsEnabled()
     {
-        if (this.btAdapter.isEnabled())
-        {
-            WCN2Scanner.setBluetoothLeScanner(this.btAdapter.getBluetoothLeScanner());
-        }
-        else
+        BluetoothManager btManager = (BluetoothManager)getSystemService(Context.BLUETOOTH_SERVICE);
+        if (null == btManager) return;
+
+        BluetoothAdapter btAdapter = btManager.getAdapter();
+        if (null == btAdapter) return;
+
+        if (!btAdapter.isEnabled())
         {
             Intent enableBluetoothIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBluetoothIntent, Constants.REQUEST_ENABLE_BT);
         }
+
+        updateBLEScanner();
     }
 
     private void ensureLocationIsEnabled()
@@ -151,8 +138,27 @@ public class WCN2Activity extends AppCompatActivity
         dialogBuilder.show();
     }
 
+    private void updateBLEScanner()
+    {
+        BluetoothManager btManager = (BluetoothManager)getSystemService(Context.BLUETOOTH_SERVICE);
+        if (null == btManager)
+        {
+            WCN2Scanner.setBluetoothLeScanner(null);
+            return;
+        }
+
+        BluetoothAdapter btAdapter = btManager.getAdapter();
+        if (null == btAdapter)
+        {
+            WCN2Scanner.setBluetoothLeScanner(null);
+            return;
+        }
+
+        WCN2Scanner.setBluetoothLeScanner(btAdapter.getBluetoothLeScanner());
+    }
+
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent)
+    public void onActivityResult(int requestCode, int resultCode, Intent intent)
     {
         if (Constants.REQUEST_ENABLE_BT == requestCode)
         {
@@ -172,7 +178,7 @@ public class WCN2Activity extends AppCompatActivity
     {
         if (RESULT_OK == resultCode)
         {
-            WCN2Scanner.setBluetoothLeScanner(this.btAdapter.getBluetoothLeScanner());
+            updateBLEScanner();
             return;
         }
 
@@ -185,7 +191,7 @@ public class WCN2Activity extends AppCompatActivity
         LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         if (null != lm && lm.isLocationEnabled())
         {
-            WCN2Scanner.setBluetoothLeScanner(this.btAdapter.getBluetoothLeScanner());
+            updateBLEScanner();
             return;
         }
 

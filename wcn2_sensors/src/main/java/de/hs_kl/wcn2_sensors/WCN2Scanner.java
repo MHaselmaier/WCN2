@@ -33,7 +33,7 @@ public class WCN2Scanner
 
             for (ScanResult result: results)
             {
-                dispatchScanResult(result);
+                WCN2Scanner.dispatchScanResult(result);
             }
         }
 
@@ -42,27 +42,7 @@ public class WCN2Scanner
         {
             super.onScanResult(callbackType, result);
 
-            dispatchScanResult(result);
-        }
-
-        private void dispatchScanResult(ScanResult result)
-        {
-            for (WCN2SensorDataListener listener: WCN2Scanner.sensorDataListeners)
-            {
-                if (0 == listener.getScanFilter().size())
-                {
-                    listener.onScanResult(new WCN2SensorData(result));
-                    continue;
-                }
-                for (ScanFilter scanFilter: listener.getScanFilter())
-                {
-                    if (scanFilter.matches(result))
-                    {
-                        listener.onScanResult(new WCN2SensorData(result));
-                        break;
-                    }
-                }
-            }
+            WCN2Scanner.dispatchScanResult(result);
         }
 
         @Override
@@ -71,29 +51,49 @@ public class WCN2Scanner
             super.onScanFailed(errorCode);
             switch(errorCode)
             {
-                case SCAN_FAILED_ALREADY_STARTED:
-                    Log.e(WCN2Scanner.class.getSimpleName(),
-                            "Failed to start scanning: already scanning!");
-                    break;
-                case SCAN_FAILED_APPLICATION_REGISTRATION_FAILED:
-                    Log.e(WCN2Scanner.class.getSimpleName(),
-                            "Failed to start scanning: app cannot be registered!");
-                    break;
-                case SCAN_FAILED_FEATURE_UNSUPPORTED:
-                    Log.e(WCN2Scanner.class.getSimpleName(),
-                            "Failed to start scanning: power optimized scan not supported!");
-                    break;
-                case SCAN_FAILED_INTERNAL_ERROR:
-                    Log.e(WCN2Scanner.class.getSimpleName(),
-                            "Failed to start scanning: internal error!");
-                    break;
-                default:
-                    Log.e(WCN2Scanner.class.getSimpleName(),
-                            "Failed to start scanning!");
-                    break;
+            case SCAN_FAILED_ALREADY_STARTED:
+                Log.e(WCN2Scanner.class.getSimpleName(),
+                        "Failed to start scanning: already scanning!");
+                break;
+            case SCAN_FAILED_APPLICATION_REGISTRATION_FAILED:
+                Log.e(WCN2Scanner.class.getSimpleName(),
+                        "Failed to start scanning: app cannot be registered!");
+                break;
+            case SCAN_FAILED_FEATURE_UNSUPPORTED:
+                Log.e(WCN2Scanner.class.getSimpleName(),
+                        "Failed to start scanning: power optimized scan not supported!");
+                break;
+            case SCAN_FAILED_INTERNAL_ERROR:
+                Log.e(WCN2Scanner.class.getSimpleName(),
+                        "Failed to start scanning: internal error!");
+                break;
+            default:
+                Log.e(WCN2Scanner.class.getSimpleName(),
+                        "Failed to start scanning!");
+                break;
             }
         }
     };
+
+    private static void dispatchScanResult(ScanResult result)
+    {
+        for (WCN2SensorDataListener listener: WCN2Scanner.sensorDataListeners)
+        {
+            if (0 == listener.getScanFilter().size())
+            {
+                listener.onScanResult(new WCN2SensorData(result));
+                continue;
+            }
+            for (ScanFilter scanFilter: listener.getScanFilter())
+            {
+                if (scanFilter.matches(result))
+                {
+                    listener.onScanResult(new WCN2SensorData(result));
+                    break;
+                }
+            }
+        }
+    }
 
     public static void setBluetoothLeScanner(BluetoothLeScanner bleScanner)
     {
@@ -121,7 +121,7 @@ public class WCN2Scanner
 
         if (0 == WCN2Scanner.sensorDataListeners.size())
         {
-            // Keep scanning if last scan was started lass then 35 seconds ago.
+            // Keep scanning if last scan was started lass then 60 seconds ago.
             // Android denies scanning if it is started too many times in 30 seconds.
             // If a new ScanResultListener registers to early, the scan could be started
             // too many times in 30 seconds and no results would be received.
@@ -131,7 +131,7 @@ public class WCN2Scanner
                 {
                     WCN2Scanner.stopScan();
                 }
-            }, Math.max(35, System.currentTimeMillis() - WCN2Scanner.lastScanStarted));
+            }, Math.min(60, System.currentTimeMillis() - WCN2Scanner.lastScanStarted));
         }
     }
 

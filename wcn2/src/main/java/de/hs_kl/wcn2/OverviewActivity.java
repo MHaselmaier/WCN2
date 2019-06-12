@@ -33,7 +33,7 @@ public class OverviewActivity extends WCN2Activity implements
     private NavigationView navigationView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 

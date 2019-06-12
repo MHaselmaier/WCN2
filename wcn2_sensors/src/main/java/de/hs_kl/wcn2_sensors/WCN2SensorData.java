@@ -185,20 +185,6 @@ public class WCN2SensorData
         return (Constants.SENSOR_DATA_TIMEOUT < System.currentTimeMillis() - this.timestamp);
     }
 
-    public String toString()
-    {
-        return "SensorData:\n" +
-                "\tMnemonic: " + this.mnemonic + "\n" +
-                "\tMAC-Address: " + this.macAddress + "\n" +
-                "\tTimestamp: " + this.timestamp + "\n" +
-                "\tRSSI: " + this.rssi + "dBm\n" +
-                "\tSoftwareID: " + this.softwareID + "\n" +
-                "\tSensorID: " + this.sensorID + "\n" +
-                "\tTemperature: " + this.temperature + "°C\n" +
-                "\tRelative Humidity: " + this.relativeHumidity + "%\n" +
-                "\tBattery Voltage: " + this.batteryVoltage + "V\n";
-    }
-
     @Override
     public boolean equals(Object o)
     {
