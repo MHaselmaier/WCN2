@@ -2,6 +2,7 @@ package de.hs_kl.wcn2_alarm;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -34,10 +35,11 @@ public class AlarmStorage
         for (String name: names)
         {
             int position = this.alarms.getInt(name + ":position", -1);
+            Uri sound = Uri.parse(this.alarms.getString(name + ":sound", null));
             List<Threshold> thresholds = loadThresholds(name);
             List<WCN2SensorData> sensorData = loadSensorData(name);
 
-            WCN2Alarm alarm = new WCN2Alarm(name, thresholds, sensorData);
+            WCN2Alarm alarm = new WCN2Alarm(name, sound, thresholds, sensorData);
             alarm.setActivated(this.alarms.getBoolean(name + ":activated", false));
             this.cachedData.set(position, alarm);
         }
@@ -106,6 +108,7 @@ public class AlarmStorage
         editor.putStringSet("names", names);
 
         editor.putInt(name + ":position", position);
+        editor.putString(name + ":sound", alarm.getSound().toString());
         editor.putBoolean(name + ":activated", alarm.isActivated());
         saveThresholds(editor, alarm);
         saveSensorData(alarm);
@@ -171,6 +174,7 @@ public class AlarmStorage
 
         SharedPreferences.Editor editor = this.alarms.edit();
         editor.remove(alarm + ":position");
+        editor.remove(alarm + ":sound");
         editor.remove(alarm + ":activated");
         deleteThresholds(editor, alarm);
         deleteSensorData(alarm);

@@ -41,9 +41,10 @@ public class WCN2Alarm implements WCN2SensorDataListener
     private List<Threshold> thresholds;
     private boolean activated;
 
-    public WCN2Alarm(String name, List<Threshold> thresholds, List<WCN2SensorData> sensors)
+    public WCN2Alarm(String name, Uri sound, List<Threshold> thresholds, List<WCN2SensorData> sensors)
     {
         this.name = name;
+        this.sound = sound;
         this.thresholds = thresholds;
         this.sensors = sensors;
     }
@@ -115,6 +116,7 @@ public class WCN2Alarm implements WCN2SensorDataListener
         if (activated != alarm.activated) return false;
         if (sensors != null ? !sensors.equals(alarm.sensors) : alarm.sensors != null) return false;
         if (name != null ? !name.equals(alarm.name) : alarm.name != null) return false;
+        if (sound != null ? !sound.equals(alarm.sound) : alarm.sound != null) return false;
         return thresholds != null ? thresholds.equals(alarm.thresholds) : alarm.thresholds == null;
     }
 
@@ -122,6 +124,7 @@ public class WCN2Alarm implements WCN2SensorDataListener
     public int hashCode() {
         int result = sensors != null ? sensors.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (sound != null ? sound.hashCode() : 0);
         result = 31 * result + (thresholds != null ? thresholds.hashCode() : 0);
         result = 31 * result + (activated ? 1 : 0);
         return result;

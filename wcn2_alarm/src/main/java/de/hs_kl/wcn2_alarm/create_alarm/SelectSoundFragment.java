@@ -73,6 +73,8 @@ public class SelectSoundFragment extends Fragment
                 this.mediaPlayer = MediaPlayer.create(getContext(), sound.getValue());
                 this.mediaPlayer.setLooping(false);
                 this.mediaPlayer.start();
+
+                this.sound = sound.getValue();
             });
             this.sounds.addView(button);
         }

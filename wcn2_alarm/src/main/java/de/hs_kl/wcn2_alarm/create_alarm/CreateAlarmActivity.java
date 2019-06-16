@@ -307,7 +307,7 @@ public class CreateAlarmActivity extends AppCompatActivity
 
     private WCN2Alarm createAlarm()
     {
-        WCN2Alarm alarm = new WCN2Alarm(this.name, this.thresholds, this.selectedSensors);
+        WCN2Alarm alarm = new WCN2Alarm(this.name, this.sound, this.thresholds, this.selectedSensors);
         alarm.setActivated(true);
         return alarm;
     }
