@@ -1,6 +1,7 @@
 package de.hs_kl.wcn2_alarm.create_alarm;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ public class CreateAlarmActivity extends AppCompatActivity
     public static final String MODE_CREATE = "create";
     public static final String MODE_EDIT = "edit";
     public static final String EXTRA_NAME = "name";
+    public static final String EXTRA_SOUND = "sound";
     public static final String EXTRA_TYPES = "types";
     public static final String EXTRA_OPERATORS = "operators";
     public static final String EXTRA_VALUES = "values";
@@ -35,6 +37,7 @@ public class CreateAlarmActivity extends AppCompatActivity
 
     private String mode = MODE_CREATE;
     private String name;
+    private Uri sound;
     private List<Threshold> thresholds = new ArrayList<>();
     private List<WCN2SensorData> selectedSensors = new ArrayList<>();
 
@@ -69,6 +72,9 @@ public class CreateAlarmActivity extends AppCompatActivity
         this.originalName = savedInstanceState.getString(EXTRA_ORIGINAL_NAME, this.originalName);
 
         this.name = savedInstanceState.getString(EXTRA_NAME, this.name);
+        Uri savedSound = savedInstanceState.getParcelable(EXTRA_SOUND);
+        if (null != savedSound)
+            this.sound = savedSound;
         List<Integer> types = savedInstanceState.getIntegerArrayList(EXTRA_TYPES);
         List<Float> values = (ArrayList<Float>)savedInstanceState.getSerializable(EXTRA_VALUES);
         List<Integer> operators = savedInstanceState.getIntegerArrayList(EXTRA_OPERATORS);
@@ -107,6 +113,7 @@ public class CreateAlarmActivity extends AppCompatActivity
         if (null == currentAlarm) return;
 
         this.originalName = this.name;
+        this.sound = currentAlarm.getSound();
         this.selectedSensors = new ArrayList<>(currentAlarm.getSensorData());
         this.thresholds = new ArrayList<>(currentAlarm.getThresholds());
     }
@@ -118,6 +125,18 @@ public class CreateAlarmActivity extends AppCompatActivity
         arguments.putString(EXTRA_MODE, this.mode);
         arguments.putString(EXTRA_NAME, this.name);
         arguments.putString(EXTRA_ORIGINAL_NAME, this.originalName);
+        fragment.setArguments(arguments);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment, fragment)
+                .commit();
+    }
+
+    private void startSelectSoundFragment()
+    {
+        SelectSoundFragment fragment = new SelectSoundFragment();
+        Bundle arguments = new Bundle();
+        arguments.putString(EXTRA_MODE, this.mode);
+        arguments.putParcelable(EXTRA_SOUND, this.sound);
         fragment.setArguments(arguments);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment, fragment)
@@ -174,6 +193,7 @@ public class CreateAlarmActivity extends AppCompatActivity
 
         state.putString(EXTRA_ORIGINAL_NAME, this.originalName);
         state.putString(EXTRA_NAME, this.name);
+        state.putParcelable(EXTRA_SOUND, this.sound);
         ArrayList<Integer> types = new ArrayList<>();
         ArrayList<Float> values = new ArrayList<>();
         ArrayList<Integer> operators = new ArrayList<>();
@@ -218,6 +238,10 @@ public class CreateAlarmActivity extends AppCompatActivity
             {
                 handleSelectedName(extras);
             }
+            else if (sender.equals(SelectSoundFragment.class.getSimpleName()))
+            {
+                handleSelectedSound(extras);
+            }
             else if (sender.equals(SelectThresholdsFragment.class.getSimpleName()))
             {
                 handleSelectedThresholds(extras);
@@ -232,6 +256,13 @@ public class CreateAlarmActivity extends AppCompatActivity
     private void handleSelectedName(Bundle extras)
     {
         this.name = extras.getString(EXTRA_NAME);
+
+        startSelectSoundFragment();
+    }
+
+    private void handleSelectedSound(Bundle extras)
+    {
+        this.sound = extras.getParcelable(EXTRA_SOUND);
 
         startSelectThresholdsFragment();
     }

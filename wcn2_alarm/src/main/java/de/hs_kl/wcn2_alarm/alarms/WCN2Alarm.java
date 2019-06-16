@@ -1,6 +1,7 @@
 package de.hs_kl.wcn2_alarm.alarms;
 
 import android.bluetooth.le.ScanFilter;
+import android.net.Uri;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,7 @@ public class WCN2Alarm implements WCN2SensorDataListener
 
     private List<WCN2SensorData> sensors;
     private String name;
+    private Uri sound;
     private List<Threshold> thresholds;
     private boolean activated;
 
@@ -49,6 +51,11 @@ public class WCN2Alarm implements WCN2SensorDataListener
     public String getName()
     {
         return this.name;
+    }
+
+    public Uri getSound()
+    {
+        return this.sound;
     }
 
     public void setActivated(boolean activated)

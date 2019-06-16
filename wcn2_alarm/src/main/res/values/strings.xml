@@ -17,18 +17,21 @@
 
     <string name="enter_name">Please enter a name:</string>
     <string name="name">Name</string>
-    <string name="select_thresholds">Select Thresholds</string>
+    <string name="select_sound">Select Alarmtone</string>
     <string name="no_name_provided">A name must be provided!</string>
     <string name="name_already_used">This name is already in use!</string>
 
-    <string name="select_sensors_label">Select the sensors that trigger the alarm:</string>
-    <string name="save">Save</string>
-    <string name="no_sensor_selected">Select at least one sensor!</string>
+    <string name="choose_sound">Select an alarmtone:</string>
+    <string name="select_thresholds">Select Thresholds</string>
 
     <string name="define_thresholds">Define the thresholds that trigger the alarm:</string>
     <string name="add_threshold">Add Threshold</string>
     <string name="select_sensors">Select Sensors</string>
     <string name="no_thresholds_defined">No Thresholds defined!</string>
+
+    <string name="select_sensors_label">Select the sensors that trigger the alarm:</string>
+    <string name="save">Save</string>
+    <string name="no_sensor_selected">Select at least one sensor!</string>
 
     <string-array name="types">
         <item>Temperature</item>
