@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.hs_kl.wcn2_sensors.util.Constants;
 
-public class WCN2Activity extends AppCompatActivity
+public abstract class WCN2Activity extends AppCompatActivity
 {
     private BroadcastReceiver btAdapterChangeReceiver = new BroadcastReceiver() {
         @Override
