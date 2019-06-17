@@ -33,7 +33,7 @@ public class WCN2AlarmMenu extends PopupMenu implements PopupMenu.OnMenuItemClic
             Intent intent = new Intent(this.context, CreateAlarmActivity.class);
             intent.putExtra(CreateAlarmActivity.EXTRA_MODE, CreateAlarmActivity.MODE_EDIT);
             intent.putExtra(CreateAlarmActivity.EXTRA_NAME, this.alarm);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             this.context.startActivity(intent);
             return true;
         case R.id.delete:

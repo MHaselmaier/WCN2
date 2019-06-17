@@ -13,10 +13,9 @@ import de.hs_kl.wcn2_alarm.OverviewActivity;
 import de.hs_kl.wcn2_alarm.R;
 import de.hs_kl.wcn2_alarm.alarms.WCN2Alarm;
 
-class AlarmNotifications
+public class AlarmNotifications
 {
     private final static String SERVICE_CHANNEL_ID = "AlarmTriggerService";
-    private final static String ALARM_CHANNEL_ID = "Alarms";
 
     private final static int LIGHTS_COLOR = 0xFFFF0000;
     private final static long[] VIBRATION_PATTERN = {0, 500};
@@ -29,12 +28,12 @@ class AlarmNotifications
                     "This channel is used to indicate to the user, that his alarms are monitored.", false, false);
     }
 
-    static void createAlarmNotificationChannel(Context context)
+    public static void createAlarmNotificationChannel(Context context, String alarm)
     {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             createNotificationChannel(context, NotificationManager.IMPORTANCE_HIGH,
-                    AlarmNotifications.ALARM_CHANNEL_ID, "Alarms",
-                    "This channel is used to notify the user when alarms are triggered", true, true);
+                    alarm, alarm,
+                    "This channel is used to notify the user when the " + alarm + " alarm is triggered", true, true);
     }
 
     private static void createNotificationChannel(Context context, int importance, String id,
@@ -84,12 +83,13 @@ class AlarmNotifications
 
     static Notification createAlarmNotification(Context context, WCN2Alarm alarm)
     {
+        createAlarmNotificationChannel(context, alarm.getName());
+
         Intent i = new Intent(context, OverviewActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, i, 0);
 
-        Notification.Builder builder = createNotificationBuilder(context,
-                AlarmNotifications.ALARM_CHANNEL_ID);
+        Notification.Builder builder = createNotificationBuilder(context, alarm.getName());
         builder.setContentTitle(alarm.getName() + " triggered!")
                 .setSmallIcon(R.drawable.ic_add)
                 .setContentText(alarm.getName() + " was triggered!")
@@ -100,6 +100,10 @@ class AlarmNotifications
         {
             builder.setLights(AlarmNotifications.LIGHTS_COLOR, 500, 500);
             builder.setVibrate(AlarmNotifications.VIBRATION_PATTERN);
+            if (null != alarm.getSound())
+            {
+                builder.setSound(alarm.getSound());
+            }
         }
 
         Notification notification = builder.build();

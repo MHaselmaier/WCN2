@@ -35,7 +35,7 @@ public class AlarmStorage
         for (String name: names)
         {
             int position = this.alarms.getInt(name + ":position", -1);
-            Uri sound = Uri.parse(this.alarms.getString(name + ":sound", null));
+            Uri sound = Uri.parse(this.alarms.getString(name + ":sound", ""));
             List<Threshold> thresholds = loadThresholds(name);
             List<WCN2SensorData> sensorData = loadSensorData(name);
 
@@ -108,7 +108,8 @@ public class AlarmStorage
         editor.putStringSet("names", names);
 
         editor.putInt(name + ":position", position);
-        editor.putString(name + ":sound", alarm.getSound().toString());
+        if (null != alarm.getSound())
+            editor.putString(name + ":sound", alarm.getSound().toString());
         editor.putBoolean(name + ":activated", alarm.isActivated());
         saveThresholds(editor, alarm);
         saveSensorData(alarm);

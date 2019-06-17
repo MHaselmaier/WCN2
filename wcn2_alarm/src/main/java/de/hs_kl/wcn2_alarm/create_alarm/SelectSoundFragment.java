@@ -5,7 +5,9 @@ import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -19,10 +21,12 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import de.hs_kl.wcn2_alarm.R;
+import de.hs_kl.wcn2_alarm.alarm_triggered_service.AlarmNotifications;
 
 public class SelectSoundFragment extends Fragment
 {
     private RadioGroup sounds;
+    private String name;
     private Uri sound;
 
     private MediaPlayer mediaPlayer = new MediaPlayer();
@@ -42,14 +46,43 @@ public class SelectSoundFragment extends Fragment
 
         this.sounds = view.findViewById(R.id.sounds);
 
-        showSounds();
-
         Bundle arguments = getArguments();
-        if (null != arguments && CreateAlarmActivity.MODE_EDIT.equals(
-                arguments.getString(CreateAlarmActivity.EXTRA_MODE)))
+        if (null != arguments)
         {
-            this.sound = arguments.getParcelable(CreateAlarmActivity.EXTRA_SOUND);
-            selectSound(this.sound);
+            this.name = arguments.getString(CreateAlarmActivity.EXTRA_NAME);
+
+            if (CreateAlarmActivity.MODE_EDIT.equals(
+                    arguments.getString(CreateAlarmActivity.EXTRA_MODE)))
+            {
+                this.sound = arguments.getParcelable(CreateAlarmActivity.EXTRA_SOUND);
+            }
+        }
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
+        {
+            view.findViewById(R.id.open_settings).setVisibility(View.GONE);
+
+            showSounds();
+            if (null != this.sound)
+            {
+                selectSound(this.sound);
+            }
+        }
+        else
+        {
+            view.findViewById(R.id.sounds_scrollview).setVisibility(View.GONE);
+
+            Button settings = view.findViewById(R.id.settings);
+            settings.setOnClickListener((v) ->
+            {
+                AlarmNotifications.createAlarmNotificationChannel(getContext(), this.name);
+
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
+                intent.putExtra(Settings.EXTRA_APP_PACKAGE, getContext().getPackageName());
+                intent.putExtra(Settings.EXTRA_CHANNEL_ID, this.name);
+                startActivityForResult(intent, 1234);
+            });
         }
 
         Button next = view.findViewById(R.id.next);

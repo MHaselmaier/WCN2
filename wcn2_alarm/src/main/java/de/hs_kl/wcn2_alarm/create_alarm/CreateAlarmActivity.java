@@ -136,6 +136,7 @@ public class CreateAlarmActivity extends AppCompatActivity
         SelectSoundFragment fragment = new SelectSoundFragment();
         Bundle arguments = new Bundle();
         arguments.putString(EXTRA_MODE, this.mode);
+        arguments.putString(EXTRA_NAME, this.name);
         arguments.putParcelable(EXTRA_SOUND, this.sound);
         fragment.setArguments(arguments);
         getSupportFragmentManager().beginTransaction()

@@ -50,7 +50,7 @@ public class OverviewActivity extends WCN2Activity
     {
         Intent intent = new Intent(getBaseContext(), CreateAlarmActivity.class);
         intent.putExtra(CreateAlarmActivity.EXTRA_MODE, CreateAlarmActivity.MODE_CREATE);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
     }
 

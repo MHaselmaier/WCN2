@@ -69,7 +69,6 @@ public class AlarmTriggeredService extends Service
         setupWCN2Scanner();
 
         AlarmNotifications.createServiceNotificationChannel(this);
-        AlarmNotifications.createAlarmNotificationChannel(this);
     }
 
     private void setupWCN2Scanner()
