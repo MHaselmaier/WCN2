@@ -22,6 +22,8 @@
     <string name="name_already_used">This name is already in use!</string>
 
     <string name="choose_sound">Select an alarmtone:</string>
+    <string name="sound_settings_explanation">Alarmtone has to be set in settings.</string>
+    <string name="go_to_settings">Go to settings</string>
     <string name="select_thresholds">Select Thresholds</string>
 
     <string name="define_thresholds">Define the thresholds that trigger the alarm:</string>

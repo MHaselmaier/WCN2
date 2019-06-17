@@ -23,6 +23,8 @@
     <string name="name_already_used">Der Name wird bereits verwendet!</string>
 
     <string name="choose_sound">Wähle einen Alarmton:</string>
+    <string name="sound_settings_explanation">Der Alarmton muss in den Einstellungen gewählt werden.</string>
+    <string name="go_to_settings">Einstellungen öffnen</string>
     <string name="select_thresholds">Wähle Thresholds</string>
 
     <string name="define_thresholds">Definiere Thresholds, die den Alarm auslösen:</string>
