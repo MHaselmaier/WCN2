@@ -36,6 +36,15 @@
     <string name="save">Speichern</string>
     <string name="no_sensor_selected">Wähle mindestens einen Sensor!</string>
 
+    <string name="alarm_trigger_service">Alarm Trigger Service</string>
+    <string name="alarm_trigger_service_description">Dieser Kanal wird verwendet, um dem Benutzer anzuzeigen, dass seine Alarme überwacht werden.</string>
+    <string name="alarm_trigger_service_content">Deine Alarme werden überwacht!</string>
+
+    <string name="alarm_group_channel">Alarme</string>
+    <string name="alarm_channel_description">Dieser Kanal wird verwendet, um dem Benutzer anzuzeigen, dass der %s Alarm ausgelöst wurde.</string>
+    <string name="alarm_triggered">%s ausgelöst!</string>
+    <string name="alarm_triggered_content">%s wurde ausgelöst!</string>
+
     <string-array name="types">
         <item>Temperatur</item>
         <item>Feuchtigkeit</item>

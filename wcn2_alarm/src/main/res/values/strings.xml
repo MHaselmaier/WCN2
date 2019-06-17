@@ -35,6 +35,15 @@
     <string name="save">Save</string>
     <string name="no_sensor_selected">Select at least one sensor!</string>
 
+    <string name="alarm_trigger_service">Alarm Trigger Service</string>
+    <string name="alarm_trigger_service_description">This channel is used to indicate to the user, that his alarms are monitored.</string>
+    <string name="alarm_trigger_service_content">Your alarms are monitored!</string>
+
+    <string name="alarm_group_channel">Alarms</string>
+    <string name="alarm_channel_description">This channel is used to notify the user when the %s alarm is triggered.</string>
+    <string name="alarm_triggered">%s triggered!</string>
+    <string name="alarm_triggered_content">%s was triggered!</string>
+
     <string-array name="types">
         <item>Temperature</item>
         <item>Humidity</item>

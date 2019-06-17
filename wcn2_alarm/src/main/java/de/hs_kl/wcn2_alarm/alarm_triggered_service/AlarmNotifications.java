@@ -26,10 +26,14 @@ public class AlarmNotifications
     {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return;
 
-        createNotificationChannel(context, NotificationManager.IMPORTANCE_LOW,
-            AlarmNotifications.SERVICE_CHANNEL_ID, "AlarmTriggerService",
-                "This channel is used to indicate to the user, that his alarms are monitored.", null,
-                false, false);
+        createNotificationChannel(context,
+                NotificationManager.IMPORTANCE_LOW,
+                AlarmNotifications.SERVICE_CHANNEL_ID,
+                context.getString(R.string.alarm_trigger_service),
+                context.getString(R.string.alarm_trigger_service_description),
+                null,
+                false,
+                false);
     }
 
     public static void createAlarmNotificationChannel(Context context, String alarm)
@@ -37,10 +41,14 @@ public class AlarmNotifications
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return;
 
         createAlarmNotificationGroup(context);
-        createNotificationChannel(context, NotificationManager.IMPORTANCE_HIGH,
-                alarm, alarm,
-                    "This channel is used to notify the user when the " + alarm + " alarm is triggered",
-                AlarmNotifications.ALARM_CHANNEL_GROUP_ID, true, true);
+        createNotificationChannel(context,
+                NotificationManager.IMPORTANCE_HIGH,
+                alarm,
+                alarm,
+                context.getString(R.string.alarm_channel_description, alarm),
+                AlarmNotifications.ALARM_CHANNEL_GROUP_ID,
+                true,
+                true);
     }
 
     private static void createAlarmNotificationGroup(Context context)
@@ -52,7 +60,8 @@ public class AlarmNotifications
         if (null == manager) return;
 
         manager.createNotificationChannelGroup(new NotificationChannelGroup(
-                AlarmNotifications.ALARM_CHANNEL_GROUP_ID, "Alarms"));
+                AlarmNotifications.ALARM_CHANNEL_GROUP_ID,
+                context.getString(R.string.alarm_group_channel)));
     }
 
     private static void createNotificationChannel(Context context, int importance, String id,
@@ -92,8 +101,8 @@ public class AlarmNotifications
                 AlarmNotifications.SERVICE_CHANNEL_ID);
         builder.setOngoing(true)
                .setOnlyAlertOnce(true)
-               .setContentTitle("Test")
-               .setContentText("Test")
+               .setContentTitle(context.getString(R.string.alarm_trigger_service))
+               .setContentText(context.getString(R.string.alarm_trigger_service_content))
                .setContentIntent(pendingIntent)
                .setSmallIcon(R.drawable.ic_more);
         return builder.build();
@@ -108,9 +117,9 @@ public class AlarmNotifications
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, i, 0);
 
         Notification.Builder builder = createNotificationBuilder(context, alarm.getName());
-        builder.setContentTitle(alarm.getName() + " triggered!")
+        builder.setContentTitle(context.getString(R.string.alarm_triggered, alarm.getName()))
                 .setSmallIcon(R.drawable.ic_add)
-                .setContentText(alarm.getName() + " was triggered!")
+                .setContentText(context.getString(R.string.alarm_triggered_content, alarm.getName()))
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .setOnlyAlertOnce(true);
@@ -131,13 +140,15 @@ public class AlarmNotifications
 
     private static Notification.Builder createNotificationBuilder(Context context, String id)
     {
+        Notification.Builder builder;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
         {
-            return new Notification.Builder(context);
+            builder = new Notification.Builder(context);
         }
         else
         {
-            return new Notification.Builder(context, id);
+            builder = new Notification.Builder(context, id);
         }
+        return builder;
     }
 }
