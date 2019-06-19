@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import de.hs_kl.wcn2.R;
@@ -76,13 +78,15 @@ public class ManageMeasurementsFragment extends Fragment
             disableSelectionMode();
             return true;
         case R.id.delete:
+            List<File> toDelete = new LinkedList<>();
             for (int i = this.measurements.size() - 1; 0 <= i; --i)
             {
                 if (this.measurementViews.get(i).isChecked())
                 {
-                    deleteMeasurement(this.measurements.get(i));
+                    toDelete.add(this.measurements.get(i));
                 }
             }
+            deleteMeasurement(toDelete.toArray(new File[0]));
             disableSelectionMode();
             return true;
         case R.id.cancel:
@@ -180,22 +184,39 @@ public class ManageMeasurementsFragment extends Fragment
         this.emptyListItem.setVisibility(this.measurements.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
-    public void deleteMeasurement(File measurement)
+    public void deleteMeasurement(File... measurements)
     {
-        if (!measurement.delete())
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+        dialogBuilder.setMessage(getString(R.string.sure_to_delete));
+        dialogBuilder.setPositiveButton(getString(R.string.delete), (dialog, w) ->
         {
-            Toast.makeText(getActivity(), R.string.delete_failed, Toast.LENGTH_LONG).show();
-            return;
-        }
+            boolean allDeleted = true;
+            for (File measurement: measurements)
+            {
+                if (!measurement.delete())
+                {
+                    allDeleted = false;
+                    continue;
+                }
 
-        Toast.makeText(getActivity(), R.string.deleted, Toast.LENGTH_LONG).show();
-
-        int index = this.measurements.indexOf(measurement);
-        if (0 <= index)
-        {
-            this.measurements.remove(index);
-            this.measurementsContainer.removeView(this.measurementViews.remove(index));
-        }
+                int index = this.measurements.indexOf(measurement);
+                if (0 <= index) {
+                    this.measurements.remove(index);
+                    this.measurementsContainer.removeView(this.measurementViews.remove(index));
+                }
+            }
+            if (allDeleted)
+            {
+                Toast.makeText(getActivity(), R.string.deleted, Toast.LENGTH_LONG).show();
+            }
+            else
+            {
+                Toast.makeText(getActivity(), R.string.delete_failed, Toast.LENGTH_LONG).show();
+            }
+        });
+        dialogBuilder.setNegativeButton(getString(R.string.cancel),
+                (dialog, w) -> dialog.dismiss());
+        dialogBuilder.create().show();
     }
 
     public void shareMeasurements(File[] measurements)

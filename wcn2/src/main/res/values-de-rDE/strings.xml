@@ -46,9 +46,10 @@
     <string name="more">Mehr</string>
     <string name="open">Öffnen</string>
     <string name="share">Teilen</string>
+    <string name="sure_to_delete">Die ausgewählten Messungen löschen?</string>
     <string name="delete">Löschen</string>
     <string name="deleted">Wurde gelöscht</string>
-    <string name="delete_failed">Löschen fehlgeschlagen</string>
+    <string name="delete_failed">Nicht alle Dateien konnten gelöscht werden</string>
 
     <string name="add">Hinzufügen</string>
     <string name="remove">Entfernen</string>
