@@ -9,6 +9,9 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 
+    <string name="sure_to_delete">Delete the %s alarm?</string>
+    <string name="cancel">Cancel</string>
+
     <string name="toggle_sensors">Toggle Sensors</string>
     <string name="connected_sensors">Connected Sensors</string>
 

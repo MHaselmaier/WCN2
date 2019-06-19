@@ -2,6 +2,7 @@ package de.hs_kl.wcn2_alarm;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
@@ -37,10 +38,21 @@ public class WCN2AlarmMenu extends PopupMenu implements PopupMenu.OnMenuItemClic
             this.context.startActivity(intent);
             return true;
         case R.id.delete:
-            AlarmStorage.getInstance(this.context).deleteAlarm(this.alarm);
+            showDeleteDialog();
             return true;
         }
 
         return false;
+    }
+
+    private void showDeleteDialog()
+    {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this.context);
+        dialogBuilder.setMessage(this.context.getString(R.string.sure_to_delete, this.alarm));
+        dialogBuilder.setPositiveButton(this.context.getString(R.string.delete),
+                (dialog, w) -> AlarmStorage.getInstance(this.context).deleteAlarm(this.alarm));
+        dialogBuilder.setNegativeButton(this.context.getString(R.string.cancel),
+                (dialog, w) -> dialog.dismiss());
+        dialogBuilder.create().show();
     }
 }
