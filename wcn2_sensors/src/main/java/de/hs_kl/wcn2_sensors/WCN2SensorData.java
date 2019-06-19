@@ -19,7 +19,7 @@ public class WCN2SensorData
     private float relativeHumidity;
     private float batteryVoltage;
 
-    public WCN2SensorData(ScanResult result)
+    WCN2SensorData(ScanResult result)
     {
         this.macAddress = result.getDevice().getAddress();
         this.timestamp = (System.currentTimeMillis() - android.os.SystemClock.elapsedRealtime())

@@ -190,7 +190,7 @@ public class SelectSensorsFragment extends Fragment implements WCN2SensorDataLis
     {
         super.onResume();
 
-        WCN2Scanner.registerScanResultListener(this);
+        WCN2Scanner.registerSensorDataListener(this);
 
         this.handler.post(new Runnable() {
             @Override
@@ -221,7 +221,7 @@ public class SelectSensorsFragment extends Fragment implements WCN2SensorDataLis
     {
         super.onPause();
 
-        WCN2Scanner.unregisterScanResultListener(this);
+        WCN2Scanner.unregisterSensorDataListener(this);
 
         this.handler.removeCallbacksAndMessages(null);
     }

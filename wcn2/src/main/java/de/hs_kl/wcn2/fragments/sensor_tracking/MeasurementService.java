@@ -147,7 +147,7 @@ public class MeasurementService extends Service implements WCN2SensorDataListene
 
     private void onActionStart(Intent intent)
     {
-        WCN2Scanner.registerScanResultListener(this);
+        WCN2Scanner.registerSensorDataListener(this);
         String filename = intent.getStringExtra(Constants.MEASUREMENT_FILENAME);
         String header = intent.getStringExtra(Constants.MEASUREMENT_HEADER);
         int averageRate = intent.getIntExtra(Constants.MEASUREMENT_RATE, 1);
@@ -171,7 +171,7 @@ public class MeasurementService extends Service implements WCN2SensorDataListene
     private void onActionStop()
     {
         this.measurement.finish();
-        WCN2Scanner.unregisterScanResultListener(this);
+        WCN2Scanner.unregisterSensorDataListener(this);
         MeasurementService.action = "";
         MeasurementService.startTime = Long.MIN_VALUE;
 

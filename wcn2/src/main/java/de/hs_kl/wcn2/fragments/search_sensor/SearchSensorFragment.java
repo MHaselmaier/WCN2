@@ -96,7 +96,7 @@ public class SearchSensorFragment extends Fragment implements WCN2SensorDataList
     {
         super.onResume();
 
-        WCN2Scanner.registerScanResultListener(this);
+        WCN2Scanner.registerSensorDataListener(this);
 
         this.foundSensors.clear();
         this.foundSensorsViews.clear();
@@ -138,7 +138,7 @@ public class SearchSensorFragment extends Fragment implements WCN2SensorDataList
     {
         super.onPause();
 
-        WCN2Scanner.unregisterScanResultListener(this);
+        WCN2Scanner.unregisterSensorDataListener(this);
         this.uiUpdater.removeCallbacksAndMessages(null);
     }
 }

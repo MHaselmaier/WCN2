@@ -169,7 +169,7 @@ public class AlarmStorage
         int position = this.alarms.getInt(alarm + ":position", -1);
         if (-1 != position)
         {
-            WCN2Scanner.unregisterScanResultListener(this.cachedData.remove(position));
+            WCN2Scanner.unregisterSensorDataListener(this.cachedData.remove(position));
             moveAlarmsUp(position);
         }
 

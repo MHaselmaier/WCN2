@@ -66,11 +66,11 @@ public class WCN2Alarm implements WCN2SensorDataListener
         this.activated = activated;
         if (this.activated)
         {
-            WCN2Scanner.registerScanResultListener(this);
+            WCN2Scanner.registerSensorDataListener(this);
         }
         else
         {
-            WCN2Scanner.unregisterScanResultListener(this);
+            WCN2Scanner.unregisterSensorDataListener(this);
         }
     }
 

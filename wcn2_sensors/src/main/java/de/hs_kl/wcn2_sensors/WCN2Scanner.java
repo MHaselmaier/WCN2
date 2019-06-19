@@ -77,18 +77,19 @@ public class WCN2Scanner
 
     private static void dispatchScanResult(ScanResult result)
     {
+        WCN2SensorData sensorData = new WCN2SensorData(result);
         for (WCN2SensorDataListener listener: WCN2Scanner.sensorDataListeners)
         {
             if (0 == listener.getScanFilter().size())
             {
-                listener.onScanResult(new WCN2SensorData(result));
+                listener.onScanResult(sensorData);
                 continue;
             }
             for (ScanFilter scanFilter: listener.getScanFilter())
             {
                 if (scanFilter.matches(result))
                 {
-                    listener.onScanResult(new WCN2SensorData(result));
+                    listener.onScanResult(sensorData);
                     break;
                 }
             }
@@ -105,7 +106,7 @@ public class WCN2Scanner
         }
     }
 
-    public static void registerScanResultListener(WCN2SensorDataListener sensorDataListener)
+    public static void registerSensorDataListener(WCN2SensorDataListener sensorDataListener)
     {
         WCN2Scanner.sensorDataListeners.add(sensorDataListener);
 
@@ -115,23 +116,13 @@ public class WCN2Scanner
         }
     }
 
-    public static void unregisterScanResultListener(WCN2SensorDataListener sensorDataListener)
+    public static void unregisterSensorDataListener(WCN2SensorDataListener sensorDataListener)
     {
         WCN2Scanner.sensorDataListeners.remove(sensorDataListener);
 
         if (0 == WCN2Scanner.sensorDataListeners.size())
         {
-            // Keep scanning if last scan was started lass then 60 seconds ago.
-            // Android denies scanning if it is started too many times in 30 seconds.
-            // If a new ScanResultListener registers to early, the scan could be started
-            // too many times in 30 seconds and no results would be received.
-            Handler handler = new Handler();
-            handler.postDelayed(() -> {
-                if (0 == WCN2Scanner.sensorDataListeners.size())
-                {
-                    WCN2Scanner.stopScan();
-                }
-            }, Math.min(60, System.currentTimeMillis() - WCN2Scanner.lastScanStarted));
+            WCN2Scanner.stopScan();
         }
     }
 
@@ -148,12 +139,22 @@ public class WCN2Scanner
     {
         if (null == WCN2Scanner.bleScanner || !WCN2Scanner.scanning) return;
 
-        WCN2Scanner.scanning = false;
-        try
-        {
-            WCN2Scanner.bleScanner.stopScan(WCN2Scanner.scanCallback);
-        }
-        catch(IllegalStateException e) {}
+        // Keep scanning if last scan was started lass then 60 seconds ago.
+        // Android denies scanning if it is started too many times in 30 seconds.
+        // If a new ScanResultListener registers to early, the scan could be started
+        // too many times in 30 seconds and no results would be received.
+        Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            if (0 == WCN2Scanner.sensorDataListeners.size())
+            {
+                WCN2Scanner.scanning = false;
+                try
+                {
+                    WCN2Scanner.bleScanner.stopScan(WCN2Scanner.scanCallback);
+                }
+                catch(IllegalStateException e) {}
+            }
+        }, Math.min(60, System.currentTimeMillis() - WCN2Scanner.lastScanStarted));
     }
 
     private static List<ScanFilter> getScanFilters()

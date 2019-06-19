@@ -191,7 +191,7 @@ public class SensorTrackingFragment extends Fragment implements WCN2SensorDataLi
     {
         super.onResume();
 
-        WCN2Scanner.registerScanResultListener(this);
+        WCN2Scanner.registerSensorDataListener(this);
 
         startUIUpdater();
     }
@@ -201,7 +201,7 @@ public class SensorTrackingFragment extends Fragment implements WCN2SensorDataLi
     {
         super.onPause();
 
-        WCN2Scanner.unregisterScanResultListener(this);
+        WCN2Scanner.unregisterSensorDataListener(this);
     }
 
     private void startUIUpdater()
