@@ -48,6 +48,10 @@
     <string name="alarm_triggered">%s ausgelöst!</string>
     <string name="alarm_triggered_content">%s wurde ausgelöst!</string>
 
+    <string name="battery_low">Sensor Batterie Schwach</string>
+    <string name="battery_low_description">Dieser Kanal wird verwendet, um dem Benutzer anzuzeigen, dass die Batterie eines Sensors fast leer ist.</string>
+    <string name="battery_low_content">Die Batterie des Sensors WCN%d ist fast leer.</string>
+
     <string-array name="types">
         <item>Temperatur</item>
         <item>Feuchtigkeit</item>

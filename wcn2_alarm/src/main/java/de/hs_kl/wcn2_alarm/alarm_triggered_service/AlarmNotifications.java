@@ -13,6 +13,7 @@ import android.os.Build;
 import de.hs_kl.wcn2_alarm.OverviewActivity;
 import de.hs_kl.wcn2_alarm.R;
 import de.hs_kl.wcn2_alarm.alarms.WCN2Alarm;
+import de.hs_kl.wcn2_sensors.WCN2SensorData;
 
 public class AlarmNotifications
 {
@@ -34,6 +35,20 @@ public class AlarmNotifications
                 null,
                 false,
                 false);
+    }
+
+    static void createBatteryLowNotificationChannel(Context context)
+    {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return;
+
+        createNotificationChannel(context,
+                NotificationManager.IMPORTANCE_HIGH,
+                context.getString(R.string.battery_low),
+                context.getString(R.string.battery_low),
+                context.getString(R.string.battery_low_description),
+                null,
+                true,
+                true);
     }
 
     public static void createAlarmNotificationChannel(Context context, String alarm)
@@ -136,6 +151,30 @@ public class AlarmNotifications
         Notification notification = builder.build();
         notification.flags |= Notification.FLAG_INSISTENT;
         return notification;
+    }
+
+    static Notification createBatteryLowNotification(Context context, WCN2SensorData sensorData)
+    {
+        Intent i = new Intent(context, OverviewActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, i, 0);
+
+        Notification.Builder builder = createNotificationBuilder(context,
+                sensorData.getMacAddress());
+        builder.setContentTitle(context.getString(R.string.battery_low))
+                .setSmallIcon(R.drawable.ic_down)
+                .setContentText(context.getString(R.string.battery_low_content,
+                        sensorData.getSensorID()))
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
+        {
+            builder.setLights(AlarmNotifications.LIGHTS_COLOR, 500, 500);
+            builder.setVibrate(AlarmNotifications.VIBRATION_PATTERN);
+        }
+
+        return builder.build();
     }
 
     private static Notification.Builder createNotificationBuilder(Context context, String id)

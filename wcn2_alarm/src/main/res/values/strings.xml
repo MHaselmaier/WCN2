@@ -47,6 +47,10 @@
     <string name="alarm_triggered">%s triggered!</string>
     <string name="alarm_triggered_content">%s was triggered!</string>
 
+    <string name="battery_low">Sensor Battery Low</string>
+    <string name="battery_low_description">This channel is used to indicate a low sensor battery to the user.</string>
+    <string name="battery_low_content">The battery of sensor WCN%d is almost empty.</string>
+
     <string-array name="types">
         <item>Temperature</item>
         <item>Humidity</item>

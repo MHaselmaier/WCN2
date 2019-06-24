@@ -17,6 +17,7 @@ import de.hs_kl.wcn2_alarm.AlarmStorage;
 import de.hs_kl.wcn2_alarm.OverviewActivity;
 import de.hs_kl.wcn2_alarm.alarms.WCN2Alarm;
 import de.hs_kl.wcn2_sensors.WCN2Scanner;
+import de.hs_kl.wcn2_sensors.WCN2SensorData;
 
 public class AlarmTriggeredService extends Service
 {
@@ -70,6 +71,7 @@ public class AlarmTriggeredService extends Service
         setupWCN2Scanner();
 
         AlarmNotifications.createServiceNotificationChannel(this);
+        AlarmNotifications.createBatteryLowNotificationChannel(this);
     }
 
     private void setupWCN2Scanner()
@@ -104,20 +106,20 @@ public class AlarmTriggeredService extends Service
 
     private void checkAlarms()
     {
-        boolean noActivatedAlarms = true;
+        boolean hasActivatedAlarms = false;
         for (WCN2Alarm alarm: AlarmStorage.getInstance(getApplicationContext()).getAlarms())
         {
-            if (alarm.isActivated())
-            {
-                noActivatedAlarms = false;
-            }
+            if (!alarm.isActivated()) continue;
+
+            hasActivatedAlarms = true;
             if (alarm.isTriggered())
             {
                 showNotificationForAlarm(alarm);
             }
+            checkForLowBattery(alarm);
         }
 
-        if (noActivatedAlarms)
+        if (!hasActivatedAlarms)
         {
             stopSelf();
         }
@@ -137,6 +139,22 @@ public class AlarmTriggeredService extends Service
             manager.notify(alarm.hashCode(), AlarmNotifications.createAlarmNotification(this, alarm));
         else
             manager.cancel(alarm.hashCode());
+    }
+
+    private void checkForLowBattery(WCN2Alarm alarm)
+    {
+        NotificationManager manager = (NotificationManager)getSystemService(
+                Activity.NOTIFICATION_SERVICE);
+        if (null == manager) return;
+
+        for (WCN2SensorData sensorData: alarm.getSensorData())
+        {
+            if (sensorData.isBatteryLow())
+            {
+                manager.notify(sensorData.hashCode(),
+                        AlarmNotifications.createBatteryLowNotification(this, sensorData));
+            }
+        }
     }
 
     @Override
