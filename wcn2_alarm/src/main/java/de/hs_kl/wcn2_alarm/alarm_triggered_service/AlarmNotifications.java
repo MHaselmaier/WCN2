@@ -19,6 +19,7 @@ public class AlarmNotifications
 {
     private final static String SERVICE_CHANNEL_ID = "AlarmTriggerService";
     private final static String ALARM_CHANNEL_GROUP_ID = "Alarms";
+    private final static String BATTERY_LOW_CHANNEL_ID = "BatterLow";
 
     private final static int LIGHTS_COLOR = 0xFFFF0000;
     private final static long[] VIBRATION_PATTERN = {0, 500};
@@ -43,7 +44,7 @@ public class AlarmNotifications
 
         createNotificationChannel(context,
                 NotificationManager.IMPORTANCE_HIGH,
-                context.getString(R.string.battery_low),
+                AlarmNotifications.BATTERY_LOW_CHANNEL_ID,
                 context.getString(R.string.battery_low),
                 context.getString(R.string.battery_low_description),
                 null,
@@ -160,7 +161,7 @@ public class AlarmNotifications
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, i, 0);
 
         Notification.Builder builder = createNotificationBuilder(context,
-                sensorData.getMacAddress());
+                AlarmNotifications.BATTERY_LOW_CHANNEL_ID);
         builder.setContentTitle(context.getString(R.string.battery_low))
                 .setSmallIcon(R.drawable.ic_down)
                 .setContentText(context.getString(R.string.battery_low_content,
