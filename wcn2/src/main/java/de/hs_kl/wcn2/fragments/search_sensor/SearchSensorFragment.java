@@ -100,6 +100,7 @@ public class SearchSensorFragment extends Fragment implements WCN2SensorDataList
 
         this.foundSensors.clear();
         this.foundSensorsViews.clear();
+        this.foundSensorsContainer.removeAllViews();
         for (WCN2SensorData sensorData: this.trackedSensorsStorage.getTrackedSensors())
         {
             addSensor(sensorData);
