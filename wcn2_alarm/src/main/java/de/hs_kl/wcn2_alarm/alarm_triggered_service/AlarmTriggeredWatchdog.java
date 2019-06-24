@@ -33,17 +33,16 @@ public class AlarmTriggeredWatchdog extends BroadcastReceiver
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         {
             context.startForegroundService(createStartServiceIntent(context));
-            alarmMgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 5000, 60000,
-                    PendingIntent.getForegroundService(context, 0,
-                            createStartServiceIntent(context), 0));
         }
         else
         {
             context.startService(createStartServiceIntent(context));
-            alarmMgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 5000, 60000,
-                    PendingIntent.getService(context, 0,
-                            createStartServiceIntent(context), 0));
         }
+
+        alarmMgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 5000,
+                AlarmManager.INTERVAL_FIFTEEN_MINUTES,
+                PendingIntent.getService(context, 0,
+                        createStartServiceIntent(context), 0));
     }
 
     public static void disable(Context context)
