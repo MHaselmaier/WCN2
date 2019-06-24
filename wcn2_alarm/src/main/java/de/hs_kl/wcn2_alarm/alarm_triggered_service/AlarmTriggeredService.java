@@ -52,7 +52,8 @@ public class AlarmTriggeredService extends Service
         if (OverviewActivity.isVisible) return;
 
         Intent intent = new Intent(this, OverviewActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 

@@ -3,6 +3,7 @@ package de.hs_kl.wcn2.fragments.sensor_tracking;
 import android.app.Notification;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.ScanFilter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,7 +13,6 @@ import android.location.LocationManager;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.provider.Settings;
 import android.support.v4.app.NotificationManagerCompat;
 
 import java.util.ArrayList;
@@ -81,40 +81,50 @@ public class MeasurementService extends Service implements WCN2SensorDataListene
         this.handler.postDelayed(MeasurementService.this.checkSensorDataContinuity, 1000);
     };
 
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver()
-    {
+    private BroadcastReceiver btAdapterChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent)
         {
-            if (OverviewActivity.isVisible) return;
-
-            try
+            BluetoothManager btManager = (BluetoothManager)getSystemService(Context.BLUETOOTH_SERVICE);
+            if (null != btManager)
             {
-                int bluetoothState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE,
-                        BluetoothAdapter.ERROR);
-                int locationMode = Settings.Secure.getInt(getContentResolver(),
-                        Settings.Secure.LOCATION_MODE);
-                if (BluetoothAdapter.STATE_OFF == bluetoothState ||
-                        Settings.Secure.LOCATION_MODE_OFF == locationMode)
-                {
-                    WCN2Scanner.setBluetoothLeScanner(null);
-                    intent = new Intent(MeasurementService.this, OverviewActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                            Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }
+                BluetoothAdapter btAdapter = btManager.getAdapter();
+                if (null != btAdapter && btAdapter.isEnabled()) return;
             }
-            catch (Exception e) {}
+
+            startActivityToEnableBluetoothAndLocationService();
         }
     };
+
+    private BroadcastReceiver locationModeChangeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+            LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+            if (null != lm && lm.isLocationEnabled())
+                return;
+
+            startActivityToEnableBluetoothAndLocationService();
+        }
+    };
+
+    private void startActivityToEnableBluetoothAndLocationService()
+    {
+        if (OverviewActivity.isVisible) return;
+
+        Intent intent = new Intent(this, OverviewActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
 
     @Override
     public void onCreate()
     {
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-        filter.addAction(LocationManager.MODE_CHANGED_ACTION);
-        registerReceiver(this.broadcastReceiver, filter);
+        registerReceiver(this.btAdapterChangeReceiver,
+                new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
+        registerReceiver(this.locationModeChangeReceiver,
+                new IntentFilter((LocationManager.MODE_CHANGED_ACTION)));
 
         this.trackedSensorsStorage = TrackedSensorsStorage.getInstance(getBaseContext());
 
@@ -160,7 +170,7 @@ public class MeasurementService extends Service implements WCN2SensorDataListene
 
         if (!this.wakeLock.isHeld())
         {
-            this.wakeLock.acquire();
+            this.wakeLock.acquire(Long.MAX_VALUE);
         }
 
         this.trackedSensors = TrackedSensorsStorage.getInstance(getBaseContext()).getTrackedSensors();
@@ -204,7 +214,8 @@ public class MeasurementService extends Service implements WCN2SensorDataListene
     {
         onActionStop();
 
-        unregisterReceiver(this.broadcastReceiver);
+        unregisterReceiver(this.btAdapterChangeReceiver);
+        unregisterReceiver(this.locationModeChangeReceiver);
         stopSelf();
     }
 
