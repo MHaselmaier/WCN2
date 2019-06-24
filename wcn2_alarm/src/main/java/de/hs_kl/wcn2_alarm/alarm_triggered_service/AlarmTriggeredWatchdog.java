@@ -14,6 +14,14 @@ public class AlarmTriggeredWatchdog extends BroadcastReceiver
     @Override
     public void onReceive(Context context, Intent intent)
     {
+        String action = intent.getAction();
+        if (null == action ||
+            (!intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED) &&
+             !intent.getAction().equals(Intent.ACTION_LOCKED_BOOT_COMPLETED) &&
+             !intent.getAction().equals("android.intent.action.QUICKBOOT_POWERON") &&
+             !intent.getAction().equals("com.htc.intent.action.QUICKBOOT_POWERON")))
+            return;
+
         context = context.getApplicationContext();
 
         if (0 == AlarmStorage.getInstance(context).getAlarms().length)
