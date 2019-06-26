@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WCN2 App</string>
+    <string name="app_name">WCN2 Measurement</string>
     <string name="denied_permission_write_external_storage">The app needs to access your file storage to save measurements.</string>
 
     <string name="drawer_open">Drawer open</string>
