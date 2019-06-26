@@ -16,6 +16,7 @@ import de.hs_kl.wcn2_alarm.alarm_triggered_service.AlarmTriggeredWatchdog;
 import de.hs_kl.wcn2_alarm.alarms.WCN2Alarm;
 import de.hs_kl.wcn2_alarm.create_alarm.CreateAlarmActivity;
 import de.hs_kl.wcn2_sensors.WCN2Activity;
+import de.hs_kl.wcn2_sensors.WCN2Scanner;
 
 public class OverviewActivity extends WCN2Activity
 {
@@ -59,8 +60,30 @@ public class OverviewActivity extends WCN2Activity
     {
         super.onResume();
 
+        resetAlarmViews();
+
         this.uiUpdater.post(this::updateUI);
         OverviewActivity.isVisible = true;
+    }
+
+    private void resetAlarmViews()
+    {
+        this.alarms.removeAllViews();
+
+        for (Map.Entry<String, WCN2AlarmView> entries: this.alarmViews.entrySet())
+        {
+            WCN2Scanner.unregisterSensorDataListener(entries.getValue().getAlarm());
+        }
+        this.alarmViews.clear();
+
+        for (WCN2Alarm alarm: this.alarmStorage.getAlarms())
+        {
+            WCN2AlarmView alarmView = new WCN2AlarmView(this, alarm);
+            if (alarm.isActivated())
+                WCN2Scanner.registerSensorDataListener(alarm);
+            this.alarmViews.put(alarm.getName(), alarmView);
+            this.alarms.addView(alarmView);
+        }
     }
 
     private void updateUI()
@@ -68,29 +91,13 @@ public class OverviewActivity extends WCN2Activity
         WCN2Alarm[] alarms = this.alarmStorage.getAlarms();
         this.noAlarmsDefined.setVisibility(0 == alarms.length ? View.VISIBLE : View.GONE);
 
-        addNewAlarms(alarms);
-        removeDeletedAlarms(alarms);
-
         for (WCN2AlarmView alarmView: this.alarmViews.values())
             alarmView.updateView();
 
+        removeDeletedAlarms(alarms);
         checkForActivatedAlarms(alarms);
 
         this.uiUpdater.postDelayed(this::updateUI, 1000);
-    }
-
-    private void addNewAlarms(WCN2Alarm[] alarms)
-    {
-        for (WCN2Alarm alarm: alarms)
-        {
-            if (this.alarmViews.containsKey(alarm.getName()))
-                continue;
-
-            WCN2AlarmView alarmView = new WCN2AlarmView(this, alarm);
-            this.alarmViews.put(alarm.getName(), alarmView);
-            this.alarms.addView(alarmView);
-            this.alarms.invalidate();
-        }
     }
 
     private void removeDeletedAlarms(WCN2Alarm[] alarms)
@@ -111,7 +118,9 @@ public class OverviewActivity extends WCN2Activity
             }
             if (wasDeleted)
             {
-                this.alarms.removeView(this.alarmViews.get(alarmView));
+                WCN2AlarmView view = this.alarmViews.get(alarmView);
+                this.alarms.removeView(view);
+                WCN2Scanner.unregisterSensorDataListener(view.getAlarm());
                 iterator.remove();
             }
         }

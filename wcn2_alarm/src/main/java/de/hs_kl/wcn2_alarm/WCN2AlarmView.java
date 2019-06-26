@@ -130,4 +130,9 @@ public class WCN2AlarmView extends LinearLayout
                     this.context.getString(R.string.humidity, sensorData.getRelativeHumidity()));
         }
     }
+
+    public WCN2Alarm getAlarm()
+    {
+        return this.alarm;
+    }
 }

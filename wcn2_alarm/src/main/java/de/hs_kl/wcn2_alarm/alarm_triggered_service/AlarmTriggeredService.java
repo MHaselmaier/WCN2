@@ -110,6 +110,7 @@ public class AlarmTriggeredService extends Service
         for (WCN2Alarm alarm: AlarmStorage.getInstance(getApplicationContext()).getAlarms())
         {
             if (!alarm.isActivated()) continue;
+            WCN2Scanner.registerSensorDataListener(alarm);
 
             hasActivatedAlarms = true;
             if (alarm.isTriggered())
