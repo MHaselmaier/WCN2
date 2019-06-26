@@ -40,8 +40,8 @@ public class Threshold
             return sensorData.getTemperature();
         case HUMIDITY:
             return sensorData.getRelativeHumidity();
-        case PRESENCE:
-            return sensorData.getTimestamp();
+        case ABSENCE:
+            return (System.currentTimeMillis() - sensorData.getTimestamp()) / 1000f;
         }
 
         return Float.NaN;

@@ -54,7 +54,7 @@
     <string-array name="types">
         <item>Temperature</item>
         <item>Humidity</item>
-        <item>Presence</item>
+        <item>Absence</item>
     </string-array>
 
     <string-array name="units">
