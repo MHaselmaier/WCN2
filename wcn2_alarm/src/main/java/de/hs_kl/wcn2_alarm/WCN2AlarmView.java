@@ -124,10 +124,17 @@ public class WCN2AlarmView extends LinearLayout
                     sensorData.getBatteryLevelDrawable(this.context.getResources()));
             this.signalStrengthViews.get(sensorData.getMacAddress()).setImageDrawable(
                     sensorData.getSignalStrengthDrawable(this.context.getResources()));
-            this.temperatureViews.get(sensorData.getMacAddress()).setText(
-                    this.context.getString(R.string.temperature, sensorData.getTemperature()));
-            this.humidityViews.get(sensorData.getMacAddress()).setText(
-                    this.context.getString(R.string.humidity, sensorData.getRelativeHumidity()));
+            String temperature = "-/- °C";
+            String humidity = "-/- %";
+            if (!sensorData.isTimedOut())
+            {
+                temperature = this.context.getString(R.string.temperature,
+                        sensorData.getTemperature());
+                humidity = this.context.getString(R.string.humidity,
+                        sensorData.getRelativeHumidity());
+            }
+            this.temperatureViews.get(sensorData.getMacAddress()).setText(temperature);
+            this.humidityViews.get(sensorData.getMacAddress()).setText(humidity);
         }
     }
 

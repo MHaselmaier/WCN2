@@ -69,11 +69,15 @@ class TrackedSensorView extends LinearLayout
         this.lastSeen.setText(LastSeenSinceUtil.getTimeSinceString(this.context,
                 sensorData.getTimestamp()));
 
-        this.temperature.setText(this.context.getResources().getString(R.string.temperature,
-                sensorData.getTemperature()));
-
-        this.humidity.setText(this.context.getResources().getString(R.string.humidity,
-                sensorData.getRelativeHumidity()));
+        String temperature = "-/- °C";
+        String humidity = "-/- %";
+        if (!sensorData.isTimedOut())
+        {
+            temperature = this.context.getString(R.string.temperature, sensorData.getTemperature());
+            humidity = this.context.getString(R.string.humidity, sensorData.getRelativeHumidity());
+        }
+        this.temperature.setText(temperature);
+        this.humidity.setText(humidity);
 
         this.batteryLevel.setImageDrawable(sensorData.getBatteryLevelDrawable(this.context
                 .getResources()));
