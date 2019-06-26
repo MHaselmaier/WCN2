@@ -120,7 +120,7 @@ public class AlarmNotifications
                .setContentTitle(context.getString(R.string.alarm_trigger_service))
                .setContentText(context.getString(R.string.alarm_trigger_service_content))
                .setContentIntent(pendingIntent)
-               .setSmallIcon(R.drawable.ic_more);
+               .setSmallIcon(R.drawable.ic_alarms_monitored);
         return builder.build();
     }
 
@@ -134,7 +134,7 @@ public class AlarmNotifications
 
         Notification.Builder builder = createNotificationBuilder(context, alarm.getName());
         builder.setContentTitle(context.getString(R.string.alarm_triggered, alarm.getName()))
-                .setSmallIcon(R.drawable.ic_add)
+                .setSmallIcon(R.drawable.ic_alarm)
                 .setContentText(context.getString(R.string.alarm_triggered_content, alarm.getName()))
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
@@ -163,7 +163,7 @@ public class AlarmNotifications
         Notification.Builder builder = createNotificationBuilder(context,
                 AlarmNotifications.BATTERY_LOW_CHANNEL_ID);
         builder.setContentTitle(context.getString(R.string.battery_low))
-                .setSmallIcon(R.drawable.ic_down)
+                .setSmallIcon(R.drawable.ic_battery_low)
                 .setContentText(context.getString(R.string.battery_low_content,
                         sensorData.getSensorID()))
                 .setContentIntent(pendingIntent)
