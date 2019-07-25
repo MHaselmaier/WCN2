@@ -90,5 +90,5 @@
     <string name="select_tracked_sensors_description">Select the sensors which should be tracked during the measurements.</string>
     <string name="perform_measurement_description">Start the measurement and select the currently performed action.</string>
 
-    <string name="version_info" translatable="false">19.03</string>
+    <string name="version_info" translatable="false">19.07</string>
 </resources>

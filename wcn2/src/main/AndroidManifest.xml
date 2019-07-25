@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="de.hs_kl.wcn2"
-        android:versionCode="4"
+        android:versionCode="5"
         android:versionName="@string/version_info">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
