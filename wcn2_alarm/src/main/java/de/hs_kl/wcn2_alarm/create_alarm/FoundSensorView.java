@@ -31,7 +31,7 @@ public class FoundSensorView extends LinearLayout
         this.selected = findViewById(R.id.selected);
 
         TextView sensorID = findViewById(R.id.sensor_id);
-        sensorID.setText(this.context.getString(R.string.sensor_id, sensorData.getSensorID()));
+        sensorID.setText(this.context.getString(R.string.sensor_id, sensorData.getSensorID() & 0xFF));
 
         update(sensorData);
     }

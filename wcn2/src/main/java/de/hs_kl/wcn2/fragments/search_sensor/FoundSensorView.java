@@ -44,7 +44,7 @@ class FoundSensorView extends ConstraintLayout
 
         TextView sensorID = findViewById(R.id.sensor_id);
         sensorID.setText(this.context.getResources().getString(R.string.sensor_id,
-                sensorData.getSensorID()));
+                sensorData.getSensorID() & 0xFF));
 
         this.lastSeen = findViewById(R.id.last_seen);
         this.mnemonic = findViewById(R.id.mnemonic);

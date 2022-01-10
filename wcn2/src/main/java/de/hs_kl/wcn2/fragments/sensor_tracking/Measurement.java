@@ -125,7 +125,7 @@ class Measurement
         writer.write("Sensor ID\tMAC Address\tMnemonic\n");
         for (WCN2SensorData sensorData: this.sensors.values())
         {
-            writer.format("%d\t%s\t%s\n", sensorData.getSensorID(), sensorData.getMacAddress(),
+            writer.format("%d\t%s\t%s\n", sensorData.getSensorID() & 0xFF, sensorData.getMacAddress(),
                     sensorData.getMnemonic());
         }
 

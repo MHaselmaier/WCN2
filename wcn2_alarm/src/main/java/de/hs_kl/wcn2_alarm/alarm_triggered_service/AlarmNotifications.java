@@ -165,7 +165,7 @@ public class AlarmNotifications
         builder.setContentTitle(context.getString(R.string.battery_low))
                 .setSmallIcon(R.drawable.ic_battery_low)
                 .setContentText(context.getString(R.string.battery_low_content,
-                        sensorData.getSensorID()))
+                        sensorData.getSensorID() & 0xFF))
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .setOnlyAlertOnce(true);

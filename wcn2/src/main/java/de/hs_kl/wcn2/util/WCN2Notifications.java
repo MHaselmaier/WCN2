@@ -46,11 +46,11 @@ public class WCN2Notifications
         intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
-        String content = context.getString(R.string.sensor_data_content_mnemonic, sensorID,
+        String content = context.getString(R.string.sensor_data_content_mnemonic, sensorID & 0xFF,
                 mnemonic);
         if (mnemonic.equals("null"))
         {
-            content = context.getString(R.string.sensor_data_content, sensorID);
+            content = context.getString(R.string.sensor_data_content, sensorID & 0xFF);
         }
         builder.setOngoing(true)
                 .setSmallIcon(R.drawable.ic_sensor_warning)
@@ -74,10 +74,10 @@ public class WCN2Notifications
         intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
-        String content = context.getString(R.string.sensor_battery_low_content_mnemonic, sensorID, mnemonic);
+        String content = context.getString(R.string.sensor_battery_low_content_mnemonic, sensorID & 0xFF, mnemonic);
         if (mnemonic.equals("null"))
         {
-            content = context.getString(R.string.sensor_battery_low_content, sensorID);
+            content = context.getString(R.string.sensor_battery_low_content, sensorID & 0xFF);
         }
         builder.setOngoing(true)
                 .setSmallIcon(R.drawable.ic_sensor_warning)

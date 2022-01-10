@@ -91,7 +91,7 @@ public class WCN2AlarmView extends LinearLayout
         this.batteryLevelViews.put(sensorData.getMacAddress(), batteryLevel);
 
         TextView sensorID = sensorView.findViewById(R.id.sensor_id);
-        sensorID.setText(this.context.getString(R.string.sensor_id, sensorData.getSensorID()));
+        sensorID.setText(this.context.getString(R.string.sensor_id, sensorData.getSensorID()& 0xFF));
 
         TextView temperature = sensorView.findViewById(R.id.temperature);
         this.temperatureViews.put(sensorData.getMacAddress(), temperature);

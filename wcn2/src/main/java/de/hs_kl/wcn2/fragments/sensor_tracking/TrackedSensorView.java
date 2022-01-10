@@ -53,7 +53,7 @@ class TrackedSensorView extends LinearLayout
         }
 
         this.sensorID.setText(this.context.getResources().getString(R.string.sensor_id,
-                sensorData.getSensorID()));
+                sensorData.getSensorID() & 0xFF));
 
         String mnemonic = sensorData.getMnemonic();
         if (mnemonic.equals("null"))
