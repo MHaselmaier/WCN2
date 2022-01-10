@@ -76,7 +76,7 @@
     <string name="university">Kaiserslautern University of Applied Sciences</string>
     <string name="university_info">www.hs-kl.de</string>
     <string name="development">App Development:</string>
-    <string name="development_info">Matthias Haselmaier, B. Sc.\nmatthias.haselmaier@hs-kl.de</string>
+    <string name="development_info" translatable="false">Matthias Haselmaier, M. Sc.\nmhaselmaier@gmail.com</string>
     <string name="version">Version:</string>
     <string name="wcn2">Wireless Climate Network - WCN2 -\nSensor Development:</string>
     <string name="wcn2_info">FB Informatik und Mikrosystemtechnik\nAG Picard\nD 66482 Zweibrücken\nantoni.picard@hs-kl.de</string>
@@ -90,5 +90,5 @@
     <string name="select_tracked_sensors_description">Select the sensors which should be tracked during the measurements.</string>
     <string name="perform_measurement_description">Start the measurement and select the currently performed action.</string>
 
-    <string name="version_info" translatable="false">19.07</string>
+    <string name="version_info" translatable="false">22.01</string>
 </resources>
